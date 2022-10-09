@@ -28,12 +28,6 @@ struct bomb {
     int exploded;
 };
 
-struct bomb bomb(){
-    struct bomb bomb;
-    memset(&bomb, 0, sizeof(struct bomb));
-    return bomb;
-}
-
 void bomb_init(struct bomb *bomb, int x, int y, int ttl, int t0, int range, int north_range, int south_range, int east_range, int west_range, int exploded) {
     assert(bomb);
     bomb->x = x;
