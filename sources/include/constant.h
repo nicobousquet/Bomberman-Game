@@ -8,11 +8,11 @@
 #define WINDOW_NAME "[PG110] Bombeirb 2018-2019"
 
 // Size (# of pixels) of a cell of the map
-#define SIZE_BLOC       40
+#define SIZE_BLOC       60
 
 // Size (# of pixels) of banner
-#define LINE_HEIGHT    4
-#define BANNER_HEIGHT    40
+#define LINE_HEIGHT    6
+#define BANNER_HEIGHT    60
 
 // Time management
 #define DEFAULT_GAME_FPS 30
