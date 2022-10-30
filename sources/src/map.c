@@ -213,7 +213,7 @@ void map_set_monsters(struct map *map) {
         for (int j = 0; j < map_get_height(map); j++) {
             if ((map_get_cell_value(map, i, j) & 0xf0) == CELL_MONSTER) {
                 /* creating new monster */
-                struct monster *monster = malloc(sizeof(monster_get_size()));
+                struct monster *monster = malloc(monster_get_size());
                 if (!monster) {
                     perror("malloc");
                 }
