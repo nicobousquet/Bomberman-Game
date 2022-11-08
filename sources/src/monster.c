@@ -12,8 +12,7 @@
 struct monster {
     int x, y;
     enum direction direction;
-    /* timer */
-    int t0;
+    int t0; /* timer */
 };
 
 void monster_free(struct monster *monster) {
@@ -67,7 +66,7 @@ int monster_meets_player(int monster_x, int monster_y, int player_x, int player_
     return 0;
 }
 
-int monster_meets_monster(struct map *map, int x, int y){
+int monster_meets_monster(struct map *map, int x, int y) {
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
         if (monster_array[i] != NULL) {
@@ -163,11 +162,12 @@ void monster_update(struct map *map, struct player *player) {
 }
 
 /* displaying monster */
-void monsters_display(struct map* map) {
+void monsters_display(struct map *map) {
     struct monster **monster_array = map_get_monster_array(map);
-    for (int i =0; i < NUM_MONSTER_MAX; i++) {
+    for (int i = 0; i < NUM_MONSTER_MAX; i++) {
         if (monster_array[i] != NULL) {
-            window_display_image(sprite_get_monster(monster_array[i]->direction), monster_array[i]->x * SIZE_BLOC, monster_array[i]->y * SIZE_BLOC);
+            window_display_image(sprite_get_monster(monster_array[i]->direction), monster_array[i]->x * SIZE_BLOC,
+                                 monster_array[i]->y * SIZE_BLOC);
         }
     }
 }

@@ -10,25 +10,24 @@
 #include <SDL/SDL.h>
 
 struct bomb {
-    /* position x */
-    int x;
-    /* position y */
-    int y;
-    /* time to live */
-    enum bomb_type ttl;
-    /* timer of 1 sec */
-    int t0;
-    /* range of explosion */
-    int range;
+    int x; /* position x */
+    int y; /* position y */
+    enum bomb_type ttl; /* time to live */
+    int t0; /* timer of 1 sec */
+    int range; /* range of explosion */
+
     /* range of explosion in each direction */
     int north_range;
     int south_range;
     int east_range;
     int west_range;
+
     int exploded;
 };
 
-void bomb_init(struct bomb *bomb, int x, int y, int ttl, int t0, int range, int north_range, int south_range, int east_range, int west_range, int exploded) {
+void
+bomb_init(struct bomb *bomb, int x, int y, int ttl, int t0, int range, int north_range, int south_range, int east_range,
+          int west_range, int exploded) {
     assert(bomb);
     bomb->x = x;
     bomb->y = y;
@@ -117,7 +116,8 @@ int bomb_meets_player(int explosion_x, int explosion_y, int player_x, int player
 struct monster **bomb_meets_monster(struct map *map, int bomb_x, int bomb_y) {
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monster_array[i] && monster_get_x(monster_array[i]) == bomb_x && monster_get_y(monster_array[i]) == bomb_y) {
+        if (monster_array[i] && monster_get_x(monster_array[i]) == bomb_x &&
+            monster_get_y(monster_array[i]) == bomb_y) {
             return &monster_array[i];
         }
     }

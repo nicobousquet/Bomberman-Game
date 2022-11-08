@@ -14,14 +14,10 @@
 #include <unistd.h>
 
 struct game {
-    /* the game's maps */
-    struct map **maps;
-    /* game's number of maps */
-    short levels;
-    /* current level */
-    short level;
-    /* player of the game */
-    struct player *player;
+    struct map **maps; /* the game's maps */
+    short levels; /* game's number of maps */
+    short level; /* current level */
+    struct player *player; /* player of the game */
 };
 
 void game_set_level(struct game *game, int level) {
@@ -88,8 +84,7 @@ struct game *game_new(void) {
         }
         /* once backup loaded, delete backup file */
         remove("backup/data.bin");
-    } /* loading new game */
-    else {
+    } else { /* loading new game */
         game->levels = 8;
         game->level = 0;
         game->player = player_init(9);
@@ -202,7 +197,7 @@ void game_display(struct game *game) {
 }
 
 /* saving game's data in file backup/data.bin */
-void game_backup(struct game* game) {
+void game_backup(struct game *game) {
     struct player *player = game_get_player(game);
     int fd = open("backup/data.bin", O_RDWR | O_CREAT, S_IRWXU);
     write(fd, game, sizeof(struct game));
@@ -228,10 +223,11 @@ void game_backup(struct game* game) {
     printf("#########################################\n");
 }
 
-void game_set_bomb(struct game* game){
+void game_set_bomb(struct game *game) {
     struct player *player = game_get_player(game);
     /* cannot destroy a door */
-    if ((map_get_cell_value(game_get_current_map(game), player_get_x(player), player_get_y(player)) & 0xf0) == CELL_DOOR) {
+    if ((map_get_cell_value(game_get_current_map(game), player_get_x(player), player_get_y(player)) & 0xf0) ==
+        CELL_DOOR) {
         return;
     }
 
@@ -241,7 +237,8 @@ void game_set_bomb(struct game* game){
             perror("malloc");
         }
         /* initializing bomb properties */
-        bomb_init(bomb, player_get_x(player), player_get_y(player), TTL4, SDL_GetTicks(),player_get_range(player), 0, 0, 0, 0, 0);
+        bomb_init(bomb, player_get_x(player), player_get_y(player), TTL4, SDL_GetTicks(), player_get_range(player), 0,
+                  0, 0, 0, 0);
         /* adding bomb in BOMBS_ARRAY */
         struct bomb **map_bomb_array = map_get_bomb_array(game->maps[game->level]);
         for (int i = 0; i < NUM_MAX_BOMBS; i++)
@@ -275,7 +272,7 @@ static short input_keyboard(struct game *game) {
                 switch (event.key.keysym.sym) {
                     /* quit game with backup */
                     case SDLK_ESCAPE:
-                         /* backup game's data */
+                        /* backup game's data */
                         game_backup(game);
                         return 1;
                         /* going north */

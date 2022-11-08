@@ -20,8 +20,7 @@ struct map {
     int width;
     int height;
     unsigned char *grid;
-    /* bombs of current map */
-    struct bomb *bomb_array[NUM_MAX_BOMBS];
+    struct bomb *bomb_array[NUM_MAX_BOMBS]; /* bombs of current map */
     struct monster *monster_array[NUM_MONSTER_MAX];
 };
 
@@ -138,29 +137,30 @@ void map_display(struct map *map) {
             unsigned char type = map->grid[CELL(i, j)];
 
             switch ((enum cell_type) (type & 0xf0)) {
-                case CELL_SCENERY: {
+                case CELL_SCENERY:
                     window_display_image(sprite_get_scenery((enum scenery_type) (type & 0x0f)), x, y);
                     break;
-                }
-                case CELL_BOX: {
+
+                case CELL_BOX:
                     window_display_image(sprite_get_box(), x, y);
                     break;
-                }
-                case CELL_BONUS: {
+
+                case CELL_BONUS:
                     window_display_image(sprite_get_bonus((enum bonus_type) (type & 0x0f)), x, y);
                     break;
-                }
-                case CELL_KEY: {
+
+                case CELL_KEY:
                     window_display_image(sprite_get_key(), x, y);
                     break;
-                }
-                case CELL_DOOR: {
+
+                case CELL_DOOR:
                     window_display_image(sprite_get_door((enum door_status) (type & 0x01)), x, y);
                     break;
-                }
+
                 case CELL_BOMB:
                     window_display_image(sprite_get_bomb((type & 0x0f)), x, y);
                     break;
+
                 default:
                     break;
             }

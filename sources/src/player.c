@@ -12,19 +12,13 @@
 #include <stdlib.h>
 
 struct player {
-    /* player's position */
-    int x, y;
+    int x, y; /* player's position */
     enum direction direction;
-    /* number of bombs */
-    int bombs;
-    /* range of bombs */
-    int range;
-    /* number of lives */
-    int life;
-    /* number of keys */
-    int keys;
-    /* timer */
-    int t0;
+    int bombs; /* number of bombs */
+    int range; /* range of bombs */
+    int life; /* number of lives */
+    int keys; /* number of keys */
+    int t0; /* timer */
 };
 
 int player_get_t0(struct player *player) {
@@ -146,7 +140,7 @@ void player_inc_nb_keys(struct player *player) {
     }
 }
 
-void player_dec_nb_keys(struct player* player) {
+void player_dec_nb_keys(struct player *player) {
     assert(player);
     if (player->keys > 0) {
         player->keys--;
@@ -219,7 +213,7 @@ void player_get_bonus(struct game *game, int x, int y, enum cell_type type) {
     map_set_cell_type(game_get_current_map(game), x, y, CELL_EMPTY);
 }
 
-void player_open_door(struct map* map) {
+void player_open_door(struct map *map) {
     for (int i = 0; i < map_get_width(map); i++) {
         for (int j = 0; j < map_get_height(map); j++) {
             enum cell_type type = map_get_cell_value(map, i, j);
@@ -266,31 +260,31 @@ static int player_move_aux(struct game *game, int x, int y) {
                 return 1;
             }
             return 0;
-        /* if player goes to CELL_BOX */
+            /* if player goes to CELL_BOX */
         case CELL_BOX:
             /* checking if player can push the box */
             if (player_can_push_box(game, x, y)) {
                 return 1;
             }
             return 0;
-        /* if player goes to CELL_BONUS */
+            /* if player goes to CELL_BONUS */
         case CELL_BONUS:
             player_get_bonus(game, x, y, cell);
             return 1;
-        /* if player goes to CELL_BOMB */
+            /* if player goes to CELL_BOMB */
         case CELL_BOMB:
             if ((cell & 0x0f) == EXPLOSION) {
                 player_dec_nb_life(player);
             }
             return 1;
-        /* if player goes to CELL_KEY */
+            /* if player goes to CELL_KEY */
         case CELL_KEY:
             player_inc_nb_keys(player);
             map_set_cell_type(map, x, y, CELL_EMPTY);
             /* setting door as OPENED */
             player_open_door(map);
             return 1;
-        /* if player goes to CELL_DOOR */
+            /* if player goes to CELL_DOOR */
         case CELL_DOOR:
             if ((cell & 0x01) == OPENED) {
                 player_dec_nb_keys(player);
