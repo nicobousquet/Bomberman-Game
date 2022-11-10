@@ -102,9 +102,8 @@ static void bomb_load() {
 }
 
 static void bomb_unload() {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++)
         SDL_FreeSurface(bomb_img[i]);
-    }
 }
 
 static void banner_load() {
@@ -129,9 +128,8 @@ static void banner_load() {
 
 static void banner_unload() {
     // numbers imgs
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
         SDL_FreeSurface(numbers[i]);
-    }
 
     // other banner sprites
     SDL_FreeSurface(banner_life);
@@ -198,9 +196,8 @@ static void monster_load() {
 }
 
 static void monster_unload() {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
         SDL_FreeSurface(monster_img[i]);
-    }
 }
 
 void sprite_load() {

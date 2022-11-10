@@ -51,17 +51,15 @@ struct map *map_new(int width, int height) {
     assert(width > 0 && height > 0);
 
     struct map *map = malloc(sizeof(struct map));
-    if (map == NULL) {
+    if (map == NULL)
         perror("map_new : malloc map failed");
-    }
 
     map->width = width;
     map->height = height;
 
     map->grid = malloc(height * width);
-    if (!map->grid) {
+    if (!map->grid)
         perror("map_new : malloc grid failed");
-    }
 
     // Grid cleaning
     int i, j;
@@ -74,9 +72,8 @@ struct map *map_new(int width, int height) {
 
 int map_is_inside(struct map *map, int x, int y) {
     assert(map);
-    if (x >= 0 && x < map->width && y >= 0 && y < map->height) {
+    if (x >= 0 && x < map->width && y >= 0 && y < map->height)
         return 1;
-    }
     return 0;
 }
 
@@ -84,14 +81,12 @@ void map_free(struct map *map) {
     if (map == NULL)
         return;
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (map->monster_array[i] != NULL) {
+        if (map->monster_array[i] != NULL)
             monster_free(map->monster_array[i]);
-        }
     }
     for (int j = 0; j < NUM_MAX_BOMBS; j++) {
-        if (map->bomb_array[j] != NULL) {
+        if (map->bomb_array[j] != NULL)
             bomb_free(map->bomb_array[j]);
-        }
     }
     free(map->grid);
     free(map);
@@ -172,19 +167,19 @@ struct map *map_get_map(char *filename) {
     assert(filename);
     /* opening map file */
     int fd = open(filename, O_RDONLY);
-    if (fd == -1) {
+    if (fd == -1)
         perror("open");
-    }
+
     /* getting size of file */
     struct stat s;
-    if (fstat(fd, &s) == -1) {
+    if (fstat(fd, &s) == -1)
         perror("fstat");
-    }
+
     off_t size = s.st_size;
     char *grid = malloc(size);
-    if (!grid) {
+    if (!grid)
         perror("malloc");
-    }
+
     int offset = 0;
     /* reading file  and setting map->grid */
     while (offset < size) {
@@ -214,9 +209,9 @@ void map_set_monsters(struct map *map) {
             if ((map_get_cell_value(map, i, j) & 0xf0) == CELL_MONSTER) {
                 /* creating new monster */
                 struct monster *monster = malloc(monster_get_size());
-                if (!monster) {
+                if (!monster)
                     perror("malloc");
-                }
+
                 monster_set_x(monster, i);
                 monster_set_y(monster, j);
                 monster_set_direction(monster, WEST);

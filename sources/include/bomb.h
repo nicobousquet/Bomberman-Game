@@ -12,7 +12,7 @@ struct player;
 
 struct bomb;
 
-void *bomb_update(struct map *map, struct player *player);
+void bomb_update(struct map *map, struct player *player);
 
 int bomb_propagation(struct map *map, struct player *player, struct bomb *bomb, enum direction dir);
 

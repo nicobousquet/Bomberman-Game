@@ -184,7 +184,7 @@ int bomb_propagation(struct map *map, struct player *player, struct bomb *bomb, 
 }
 
 /* reset cell type to CELL_EMPTY after explosion */
-void *bomb_extinction(struct map *map, struct bomb *bomb) {
+void bomb_extinction(struct map *map, struct bomb *bomb) {
     int x = bomb->x;
     int y = bomb->y;
     map_set_cell_type(map, bomb->x, bomb->y, CELL_EMPTY);
@@ -200,11 +200,10 @@ void *bomb_extinction(struct map *map, struct bomb *bomb) {
     for (int i = 1; i <= bomb->west_range; i++) {
         map_set_cell_type(map, x - i, y, CELL_EMPTY);
     }
-    return NULL;
 }
 
 
-void *bomb_update(struct map *map, struct player *player) {
+void bomb_update(struct map *map, struct player *player) {
     assert(map);
     assert(player);
     /* running through BOMBS_ARRAY*/
@@ -241,5 +240,4 @@ void *bomb_update(struct map *map, struct player *player) {
             }
         }
     }
-    return NULL;
 }
