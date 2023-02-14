@@ -4,7 +4,6 @@
  ******************************************************************************/
 #include "../include/player.h"
 #include "../include/sprite.h"
-#include "../include/game.h"
 #include "../include/misc.h"
 #include "../include/monster.h"
 #include "../include/window.h"

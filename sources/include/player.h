@@ -6,8 +6,7 @@
 #define PLAYER_H_
 
 #include "constant.h"
-
-struct game;
+#include "game.h"
 
 struct player;
 

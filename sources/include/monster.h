@@ -9,8 +9,6 @@
 #include "player.h"
 #include "constant.h"
 
-struct player;
-
 struct monster;
 
 void monster_free(struct monster* monster);

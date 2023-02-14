@@ -7,8 +7,7 @@
 
 #include "map.h"
 #include "bomb.h"
-
-struct player;
+#include "player.h"
 
 struct bomb;
 
