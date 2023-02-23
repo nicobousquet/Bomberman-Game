@@ -200,7 +200,7 @@ void player_get_bonus(struct player *player, struct map *map, int x, int y, enum
     map_set_cell_type(map, x, y, CELL_EMPTY);
 }
 
-void player_open_door(struct map *map) {
+void player_open_door(struct map *map, struct player *player) {
     for (int i = 0; i < map_get_width(map); i++) {
         for (int j = 0; j < map_get_height(map); j++) {
             enum cell_type type = map_get_cell_value(map, i, j);
@@ -267,7 +267,7 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
             player_inc_nb_keys(player);
             map_set_cell_type(map, x, y, CELL_EMPTY);
             /* setting door as OPENED */
-            player_open_door(map);
+            player_open_door(map, player);
             return 1;
             /* if player goes to CELL_DOOR */
         case CELL_DOOR:
