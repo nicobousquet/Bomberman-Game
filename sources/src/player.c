@@ -206,6 +206,7 @@ void player_open_door(struct map *map) {
             enum cell_type type = map_get_cell_value(map, i, j);
             if ((type & 0xf0) == CELL_DOOR && (type & 0x01) == CLOSED) {
                 map_set_cell_type(map, i, j, type & 0xfe);
+                player_dec_nb_keys(player);
                 break;
             }
         }

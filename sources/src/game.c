@@ -313,9 +313,9 @@ static short input_keyboard(struct game *game) {
                     default:
                         break;
                 }
+
                 enum cell_type cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
                 if ((cell & 0xf0) == CELL_DOOR) {
-                    player_dec_nb_keys(player);
                     /* level of next level */
                     int level = (cell & 0x0e) / 2;
                     game_change_level(game, level);
