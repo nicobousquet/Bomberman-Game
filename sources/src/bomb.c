@@ -165,11 +165,11 @@ int bomb_propagation(struct map *map, struct player *player, struct bomb *bomb, 
                     return range - 1;
                 } else if ((dead_monster = bomb_meets_monster(map, x, y)) != NULL) {
                     bomb_kill_monster(dead_monster, map);
-                    map_set_cell_type(map, x, y, BOMB_EXPLOSION);
+                    map_set_cell_type(map, x, y, CELL_BOMB | EXPLOSION);
                     return range;
                 } else {
                     /* setting cell type to BOMB_EXPLOSION */
-                    map_set_cell_type(map, x, y, BOMB_EXPLOSION);
+                    map_set_cell_type(map, x, y, CELL_BOMB | EXPLOSION);
                 }
             } /* if bomb cannot propagate */
             else {
@@ -224,7 +224,7 @@ void bomb_update(struct map *map, struct player *player) {
                         player_dec_nb_life(player);
                     }
                     /* setting bomb range  and cell type to CELL_EXPLOSION */
-                    map_set_cell_type(map, bomb->x, bomb->y, BOMB_EXPLOSION);
+                    map_set_cell_type(map, bomb->x, bomb->y, CELL_BOMB | EXPLOSION);
                     bomb->north_range = bomb_propagation(map, player, bomb, NORTH);
                     bomb->south_range = bomb_propagation(map, player, bomb, SOUTH);
                     bomb->east_range = bomb_propagation(map, player, bomb, EAST);

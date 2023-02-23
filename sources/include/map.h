@@ -57,6 +57,7 @@ enum cell_type {
     CELL_MONSTER = 0x60,        // 	0110 0000 = 96
     CELL_BOMB = 0x70,        // 	0111 0000
 
+    /*
     CELL_TREE = CELL_SCENERY | SCENERY_TREE,
     CELL_STONE = CELL_SCENERY | SCENERY_STONE,
     CELL_PRINCESS = CELL_SCENERY | SCENERY_PRINCESS,
@@ -85,6 +86,7 @@ enum cell_type {
     BOMB_NB_INC = CELL_BONUS | BONUS_BOMB_NB_INC,
     MONSTER = CELL_BONUS | BONUS_MONSTER,
     LIFE = CELL_BONUS | BONUS_LIFE
+    */
 };
 
 struct map;
