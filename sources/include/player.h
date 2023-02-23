@@ -6,7 +6,7 @@
 #define PLAYER_H_
 
 #include "constant.h"
-#include "game.h"
+#include "map.h"
 
 struct player;
 
@@ -30,8 +30,12 @@ void player_inc_nb_bomb(struct player *player);
 
 void player_dec_nb_bomb(struct player *player);
 
+void player_set_nb_bombs(struct player *player, int num);
+
+void player_dec_nb_keys(struct player *player);
+
 // Move the player according to the current direction
-void player_move(struct game *game);
+void player_move(struct player *player, struct map *map);
 
 // Display the player on the screen
 void player_display(struct player *player);

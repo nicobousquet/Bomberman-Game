@@ -26,6 +26,8 @@
 
 #define CELL(i, j) ((i) + (j) * map->width)
 
+#define NUM_BONUS_TYPE 6
+
 enum direction {
     NORTH = 0,
     EAST,  // 1

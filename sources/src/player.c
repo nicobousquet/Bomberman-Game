@@ -83,6 +83,13 @@ void player_dec_nb_bomb(struct player *player) {
         player->bombs--;
 }
 
+void player_set_nb_bombs(struct player *player, int num) {
+    assert(player);
+    if (num <= 9 && num >= 0) {
+        player->bombs = num;
+    }
+}
+
 int player_get_nb_life(struct player *player) {
     assert(player);
     return player->life;
@@ -138,14 +145,6 @@ void player_dec_nb_keys(struct player *player) {
         player->keys--;
 }
 
-void player_change_level(struct game *game, int level) {
-    /* changing level */
-    game_set_level(game, level);
-    game_get_player(game)->bombs = 9;
-    /* loading monsters in monster_array */
-    map_set_monsters(game_get_current_map(game));
-}
-
 int box_meets_monster(struct map *map, int x, int y) {
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
@@ -158,9 +157,7 @@ int box_meets_monster(struct map *map, int x, int y) {
     return 0;
 }
 
-int player_can_push_box(struct game *game, int x_src, int y_src) {
-    struct map *map = game_get_current_map(game);
-    struct player *player = game_get_player(game);
+int player_can_push_box(struct map *map, struct player *player, int x_src, int y_src) {
     int x_dst = x_src;
     int y_dst = y_src;
     if (player->direction == NORTH) {
@@ -186,8 +183,7 @@ int player_can_push_box(struct game *game, int x_src, int y_src) {
     return 0;
 }
 
-void player_get_bonus(struct game *game, int x, int y, enum cell_type type) {
-    struct player *player = game_get_player(game);
+void player_get_bonus(struct player *player, struct map *map, int x, int y, enum cell_type type) {
     enum bonus_type bonus_type = type & 0x0f;
     if (bonus_type == BONUS_BOMB_RANGE_INC) {
         player_inc_range(player);
@@ -201,7 +197,7 @@ void player_get_bonus(struct game *game, int x, int y, enum cell_type type) {
         player_inc_nb_life(player);
     }
 
-    map_set_cell_type(game_get_current_map(game), x, y, CELL_EMPTY);
+    map_set_cell_type(map, x, y, CELL_EMPTY);
 }
 
 void player_open_door(struct map *map) {
@@ -228,9 +224,7 @@ int player_meets_monster(struct map *map, int x, int y) {
 }
 
 /* allow player to move */
-static int player_move_aux(struct game *game, int x, int y) {
-    struct player *player = game_get_player(game);
-    struct map *map = game_get_current_map(game);
+static int player_move_aux(struct player *player, struct map *map, int x, int y) {
 
     if (!map_is_inside(map, x, y))
         return 0;
@@ -253,13 +247,13 @@ static int player_move_aux(struct game *game, int x, int y) {
             /* if player goes to CELL_BOX */
         case CELL_BOX:
             /* checking if player can push the box */
-            if (player_can_push_box(game, x, y))
+            if (player_can_push_box(map, player, x, y))
                 return 1;
 
             return 0;
             /* if player goes to CELL_BONUS */
         case CELL_BONUS:
-            player_get_bonus(game, x, y, cell);
+            player_get_bonus(player, map, x, y, cell);
             return 1;
             /* if player goes to CELL_BOMB */
         case CELL_BOMB:
@@ -277,10 +271,6 @@ static int player_move_aux(struct game *game, int x, int y) {
             /* if player goes to CELL_DOOR */
         case CELL_DOOR:
             if ((cell & 0x01) == OPENED) {
-                player_dec_nb_keys(player);
-                /* level of next level */
-                int level = (cell & 0x0e) / 2;
-                player_change_level(game, level);
                 return 1;
             }
             return 0;
@@ -290,8 +280,7 @@ static int player_move_aux(struct game *game, int x, int y) {
     return 1;
 }
 
-void player_move(struct game *game) {
-    struct player *player = game_get_player(game);
+void player_move(struct player *player, struct map *map) {
     int x = player_get_x(player);
     int y = player_get_y(player);
 
@@ -305,7 +294,7 @@ void player_move(struct game *game) {
         x++;
     }
 
-    if (player_move_aux(game, x, y)) {
+    if (player_move_aux(player, map, x, y)) {
         player->x = x;
         player->y = y;
     }

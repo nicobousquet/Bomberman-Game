@@ -38,10 +38,6 @@ int map_get_size() {
     return sizeof(struct map);
 }
 
-int map_get_size_ptr() {
-    return sizeof(struct map *);
-}
-
 unsigned char *map_get_grid(struct map *map) {
     assert(map);
     return map->grid;

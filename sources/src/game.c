@@ -47,7 +47,7 @@ struct game *game_new(void) {
 
         read(fd, game->player, player_get_size());
         /* loading maps */
-        game->maps = malloc(game->levels * map_get_size_ptr());
+        game->maps = malloc(game->levels * sizeof(struct map *));
         if (!game->maps)
             perror("malloc");
 
@@ -88,7 +88,7 @@ struct game *game_new(void) {
         game->levels = 8;
         game->level = 0;
         game->player = player_init(9);
-        game->maps = malloc(game->levels * map_get_size_ptr());
+        game->maps = malloc(game->levels * sizeof(struct map *));
         if (!game->maps)
             perror("malloc");
 
@@ -256,10 +256,20 @@ void game_pause(SDL_Event *event) {
     } while (event->key.keysym.sym != SDLK_p);
 }
 
+void game_change_level(struct game *game, int level) {
+    /* changing level */
+    struct map *map = game_get_current_map(game);
+    struct player *player = game_get_player(game);
+    game_set_level(game, level);
+    player_set_nb_bombs(player, 9);
+    /* loading monsters in monster_array */
+    map_set_monsters(map);
+}
+
 static short input_keyboard(struct game *game) {
     SDL_Event event = {0};
     struct player *player = game_get_player(game);
-
+    struct map *map = game_get_current_map(game);
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             /* quit game with no backup */
@@ -275,22 +285,22 @@ static short input_keyboard(struct game *game) {
                         /* going north */
                     case SDLK_UP:
                         player_set_current_way(player, NORTH);
-                        player_move(game);
+                        player_move(player, map);
                         break;
                         /* going south */
                     case SDLK_DOWN:
                         player_set_current_way(player, SOUTH);
-                        player_move(game);
+                        player_move(player, map);
                         break;
                         /* going east */
                     case SDLK_RIGHT:
                         player_set_current_way(player, EAST);
-                        player_move(game);
+                        player_move(player, map);
                         break;
                         /* going west */
                     case SDLK_LEFT:
                         player_set_current_way(player, WEST);
-                        player_move(game);
+                        player_move(player, map);
                         break;
                         /* set a bomb */
                     case SDLK_SPACE:
@@ -302,6 +312,13 @@ static short input_keyboard(struct game *game) {
                         break;
                     default:
                         break;
+                }
+                enum cell_type cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
+                if ((cell & 0xf0) == CELL_DOOR) {
+                    player_dec_nb_keys(player);
+                    /* level of next level */
+                    int level = (cell & 0x0e) / 2;
+                    game_change_level(game, level);
                 }
                 break;
             }

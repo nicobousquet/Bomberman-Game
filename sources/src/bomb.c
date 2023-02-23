@@ -87,7 +87,7 @@ void bomb_set_bonus(struct map *map, int x, int y) {
     enum bonus_type bonus_type = map_get_cell_value(map, x, y) & 0x0f;
     /* if CELL_BOX is empty, sets a bonus randomly */
     if (bonus_type == EMPTY) {
-        bonus_type = rand() % 6 + 1;
+        bonus_type = rand() % NUM_BONUS_TYPE + 1;
     }
     if (bonus_type == BONUS_MONSTER) {
         set_bonus_monster(map, x, y);

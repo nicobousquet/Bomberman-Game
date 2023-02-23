@@ -117,8 +117,6 @@ struct bomb **map_get_bomb_array(struct map *map);
 
 int map_get_size();
 
-int map_get_size_ptr();
-
 unsigned char *map_get_grid(struct map *map);
 
 void map_set_grid(struct map *map, unsigned char *grid);
