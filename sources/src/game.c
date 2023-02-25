@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdio.h>
 
 struct game {
     struct map **maps; /* the game's maps */
@@ -34,18 +35,17 @@ struct game *game_new(void) {
         perror("malloc");
     }
     memset(game, 0, sizeof(struct game));
-    /* trying to open file backup/data.bin */
-    int fd = open("backup/data.bin", O_RDWR);
-    /* if file exists, loading the backup */
-    if (fd != -1) {
+    const char *filename = "backup/data.bin";
+    FILE *file = fopen(filename, "rb");
+    if (file != NULL) {
         /* loading game structure */
-        read(fd, game, sizeof(struct game));
+        fread(game, sizeof(struct game), 1, file);
         /* loading player */
         game->player = malloc(player_get_size());
         if (!game->player)
             perror("malloc");
 
-        read(fd, game->player, player_get_size());
+        fread(game->player, player_get_size(), 1, file);
         /* loading maps */
         game->maps = malloc(game->levels * sizeof(struct map *));
         if (!game->maps)
@@ -56,20 +56,20 @@ struct game *game_new(void) {
             if (!game->maps[i])
                 perror("malloc");
 
-            read(fd, game->maps[i], map_get_size());
+            fread(game->maps[i], map_get_size(), 1, file);
             /* loading maps' grid */
             unsigned char *grid = malloc(STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT);
             if (!grid)
                 perror("malloc");
 
-            read(fd, grid, STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT);
+            fread(grid, STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT, 1, file);
             map_set_grid(game->maps[i], grid);
             /* loading maps' bomb */
             struct bomb **map_bomb_array = map_get_bomb_array(game->maps[i]);
             for (int j = 0; j < NUM_MAX_BOMBS; j++) {
                 if (map_bomb_array[j] != NULL) {
                     map_bomb_array[j] = malloc(bomb_get_size());
-                    read(fd, map_bomb_array[j], bomb_get_size());
+                    fread(map_bomb_array[j], bomb_get_size(), 1, file);
                     bomb_set_t0(map_bomb_array[j], 0);
                 }
             }
@@ -77,13 +77,14 @@ struct game *game_new(void) {
             for (int j = 0; j < NUM_MONSTER_MAX; j++) {
                 if (monster_array[j] != NULL) {
                     monster_array[j] = malloc(monster_get_size());
-                    read(fd, monster_array[j], monster_get_size());
+                    fread(monster_array[j], monster_get_size(), 1, file);
                     monster_set_t0(monster_array[j], 0);
                 }
             }
         }
         /* once backup loaded, delete backup file */
-        remove("backup/data.bin");
+        fclose(file);
+        remove(filename);
     } else { /* loading new game */
         game->levels = 8;
         game->level = 0;
@@ -196,26 +197,36 @@ void game_display(struct game *game) {
     window_refresh();
 }
 
-/* saving game's data in file backup/data.bin */
 void game_backup(struct game *game) {
     struct player *player = game_get_player(game);
-    int fd = open("backup/data.bin", O_RDWR | O_CREAT, S_IRWXU);
-    write(fd, game, sizeof(struct game));
-    write(fd, player, player_get_size());
+    FILE *file = fopen("backup/data.bin", "wb");
+    if (!file) {
+        perror("fopen");
+        return;
+    }
+
+    fwrite(game, sizeof(struct game), 1, file);
+    fwrite(player, player_get_size(), 1, file);
+
     for (int i = 0; i < game->levels; i++) {
-        write(fd, game->maps[i], map_get_size());
-        write(fd, map_get_grid(game->maps[i]), STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT);
+        fwrite(game->maps[i], map_get_size(), 1, file);
+        fwrite(map_get_grid(game->maps[i]), STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT, 1, file);
+
         struct bomb **map_bomb_array = map_get_bomb_array(game->maps[i]);
         for (int j = 0; j < NUM_MAX_BOMBS; j++) {
             if (map_bomb_array[j] != NULL)
-                write(fd, map_bomb_array[j], bomb_get_size());
+                fwrite(map_bomb_array[j], bomb_get_size(), 1, file);
         }
+
         struct monster **monster_array = map_get_monster_array(game->maps[i]);
-        for (int j = 0; j < NUM_MAX_BOMBS; j++) {
+        for (int j = 0; j < NUM_MONSTER_MAX; j++) {
             if (monster_array[j] != NULL)
-                write(fd, monster_array[j], monster_get_size());
+                fwrite(monster_array[j], monster_get_size(), 1, file);
         }
     }
+
+    fclose(file);
+
     printf("#########################################\n");
     printf("  Current game saved in backup/data.bin\n");
     printf("#########################################\n");
@@ -258,9 +269,9 @@ void game_pause(SDL_Event *event) {
 
 void game_change_level(struct game *game, int level) {
     /* changing level */
+    game_set_level(game, level);
     struct map *map = game_get_current_map(game);
     struct player *player = game_get_player(game);
-    game_set_level(game, level);
     player_set_nb_bombs(player, 9);
     /* loading monsters in monster_array */
     map_set_monsters(map);
@@ -277,11 +288,13 @@ static short input_keyboard(struct game *game) {
                 return 1;
             case SDL_KEYDOWN: {
                 switch (event.key.keysym.sym) {
-                    /* quit game with backup */
-                    case SDLK_ESCAPE:
-                        /* backup game's data */
-                        game_backup(game);
-                        return 1;
+                    /* Ctrl + S ==> quit game with backup */
+                    case SDLK_s:
+                        if (event.key.keysym.mod & KMOD_CTRL) {
+                            game_backup(game);
+                            return 1;
+                        }
+                        break;
                         /* going north */
                     case SDLK_UP:
                         player_set_current_way(player, NORTH);

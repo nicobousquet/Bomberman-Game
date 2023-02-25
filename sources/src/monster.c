@@ -7,7 +7,7 @@
 #include "../include/sprite.h"
 #include <assert.h>
 #include <stdlib.h>
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 struct monster {
     int x, y;
