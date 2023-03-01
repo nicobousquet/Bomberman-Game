@@ -41,25 +41,29 @@ struct game *game_new(void) {
         fread(game, sizeof(struct game), 1, file);
         /* loading player */
         game->player = malloc(player_get_size());
-        if (!game->player)
+        if (!game->player) {
             perror("malloc");
+        }
 
         fread(game->player, player_get_size(), 1, file);
         /* loading maps */
         game->maps = malloc(game->levels * sizeof(struct map *));
-        if (!game->maps)
+        if (!game->maps) {
             perror("malloc");
+        }
 
         for (int i = 0; i < game->levels; i++) {
             game->maps[i] = malloc(map_get_size());
-            if (!game->maps[i])
+            if (!game->maps[i]) {
                 perror("malloc");
+            }
 
             fread(game->maps[i], map_get_size(), 1, file);
             /* loading maps' grid */
             unsigned char *grid = malloc(STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT);
-            if (!grid)
+            if (!grid) {
                 perror("malloc");
+            }
 
             fread(grid, STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT, 1, file);
             map_set_grid(game->maps[i], grid);
@@ -89,8 +93,9 @@ struct game *game_new(void) {
         game->level = 0;
         game->player = player_init(9);
         game->maps = malloc(game->levels * sizeof(struct map *));
-        if (!game->maps)
+        if (!game->maps) {
             perror("malloc");
+        }
 
         char *maps_name[] = {
                 "map/map_0",
@@ -107,13 +112,14 @@ struct game *game_new(void) {
             game->maps[i] = map_get_map(maps_name[i]);
             /* initializing maps' bomb array  */
             struct bomb **map_bomb_array = map_get_bomb_array(game->maps[i]);
-            for (int j = 0; j < NUM_MAX_BOMBS; j++)
+            for (int j = 0; j < NUM_MAX_BOMBS; j++) {
                 map_bomb_array[j] = NULL;
+            }
 
             struct monster **monster_array = map_get_monster_array(game->maps[i]);
-            for (int j = 0; j < NUM_MONSTER_MAX; j++)
+            for (int j = 0; j < NUM_MONSTER_MAX; j++) {
                 monster_array[j] = NULL;
-
+            }
         }
     }
     /* setting monsters on current map */
@@ -125,8 +131,9 @@ struct game *game_new(void) {
 void game_free(struct game *game) {
     assert(game);
     player_free(game->player);
-    for (int i = 0; i < game->levels; i++)
+    for (int i = 0; i < game->levels; i++) {
         map_free(game->maps[i]);
+    }
 
     free(game->maps);
     free(game);
@@ -151,8 +158,9 @@ void game_banner_display(struct game *game) {
     struct player *player = game_get_player(game);
 
     int y = (map_get_height(map)) * SIZE_BLOC;
-    for (int i = 0; i < map_get_width(map); i++)
+    for (int i = 0; i < map_get_width(map); i++) {
         window_display_image(sprite_get_banner_line(), i * SIZE_BLOC, y);
+    }
 
     int white_bloc = SIZE_BLOC;
     int x = 0;
@@ -213,14 +221,16 @@ void game_backup(struct game *game) {
 
         struct bomb **map_bomb_array = map_get_bomb_array(game->maps[i]);
         for (int j = 0; j < NUM_MAX_BOMBS; j++) {
-            if (map_bomb_array[j] != NULL)
+            if (map_bomb_array[j] != NULL) {
                 fwrite(map_bomb_array[j], bomb_get_size(), 1, file);
+            }
         }
 
         struct monster **monster_array = map_get_monster_array(game->maps[i]);
         for (int j = 0; j < NUM_MONSTER_MAX; j++) {
-            if (monster_array[j] != NULL)
+            if (monster_array[j] != NULL) {
                 fwrite(monster_array[j], monster_get_size(), 1, file);
+            }
         }
     }
 
@@ -235,13 +245,15 @@ void game_set_bomb(struct game *game) {
     struct player *player = game_get_player(game);
     /* cannot destroy a door */
     if ((map_get_cell_value(game_get_current_map(game), player_get_x(player), player_get_y(player)) & 0xf0) ==
-        CELL_DOOR)
+        CELL_DOOR) {
         return;
+    }
 
     if (player_get_nb_bomb(player) > 0) {
         struct bomb *bomb = malloc(bomb_get_size());
-        if (!bomb)
+        if (!bomb) {
             perror("malloc");
+        }
 
         /* initializing bomb properties */
         bomb_init(bomb, player_get_x(player), player_get_y(player), TTL4, SDL_GetTicks(), player_get_range(player), 0,

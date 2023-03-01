@@ -60,8 +60,9 @@ void monster_set_current_way(struct monster *monster, enum direction way) {
 }
 
 int monster_meets_player(int monster_x, int monster_y, int player_x, int player_y) {
-    if (monster_x == player_x && monster_y == player_y)
+    if (monster_x == player_x && monster_y == player_y) {
         return 1;
+    }
 
     return 0;
 }
@@ -80,8 +81,9 @@ int monster_meets_monster(struct map *map, int x, int y) {
 
 /* returns 1 if monster can move, else 0 */
 static int monster_move_aux(struct map *map, struct player *player, int x, int y) {
-    if (!map_is_inside(map, x, y))
+    if (!map_is_inside(map, x, y)) {
         return 0;
+    }
 
     if (monster_meets_player(x, y, player_get_x(player), player_get_y(player))) {
         if (SDL_GetTicks() - player_get_t0(player) > 1000) {
@@ -90,8 +92,9 @@ static int monster_move_aux(struct map *map, struct player *player, int x, int y
         }
         return 0;
     }
-    if (monster_meets_monster(map, x, y))
+    if (monster_meets_monster(map, x, y)) {
         return 0;
+    }
 
     switch (map_get_cell_value(map, x, y) & 0xf0) {
         case CELL_SCENERY:

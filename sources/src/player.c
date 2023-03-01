@@ -73,14 +73,16 @@ int player_get_nb_bomb(struct player *player) {
 
 void player_inc_nb_bomb(struct player *player) {
     assert(player);
-    if (player->bombs < 9)
+    if (player->bombs < 9) {
         player->bombs++;
+    }
 }
 
 void player_dec_nb_bomb(struct player *player) {
     assert(player);
-    if (player->bombs > 0)
+    if (player->bombs > 0) {
         player->bombs--;
+    }
 }
 
 void player_set_nb_bombs(struct player *player, int num) {
@@ -97,14 +99,16 @@ int player_get_nb_life(struct player *player) {
 
 void player_dec_nb_life(struct player *player) {
     assert(player);
-    if (player->life > 0)
+    if (player->life > 0) {
         player->life--;
+    }
 }
 
 void player_inc_nb_life(struct player *player) {
     assert(player);
-    if (player->life < 9)
+    if (player->life < 9) {
         player->life++;
+    }
 }
 
 int player_get_size() {
@@ -118,14 +122,16 @@ int player_get_range(struct player *player) {
 
 void player_inc_range(struct player *player) {
     assert(player);
-    if (player->range < 9)
+    if (player->range < 9) {
         player->range++;
+    }
 }
 
 void player_dec_range(struct player *player) {
     assert(player);
-    if (player->range > 1)
+    if (player->range > 1) {
         player->range--;
+    }
 }
 
 int player_get_nb_keys(struct player *player) {
@@ -135,14 +141,16 @@ int player_get_nb_keys(struct player *player) {
 
 void player_inc_nb_keys(struct player *player) {
     assert(player);
-    if (player->keys < 9)
+    if (player->keys < 9) {
         player->keys++;
+    }
 }
 
 void player_dec_nb_keys(struct player *player) {
     assert(player);
-    if (player->keys > 0)
+    if (player->keys > 0) {
         player->keys--;
+    }
 }
 
 int box_meets_monster(struct map *map, int x, int y) {
@@ -217,8 +225,9 @@ int player_meets_monster(struct map *map, int x, int y) {
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
         if (monster_array[i] != NULL) {
-            if (monster_get_x(monster_array[i]) == x && monster_get_y(monster_array[i]) == y)
+            if (monster_get_x(monster_array[i]) == x && monster_get_y(monster_array[i]) == y) {
                 return 1;
+            }
         }
     }
     return 0;
@@ -227,8 +236,9 @@ int player_meets_monster(struct map *map, int x, int y) {
 /* allow player to move */
 static int player_move_aux(struct player *player, struct map *map, int x, int y) {
 
-    if (!map_is_inside(map, x, y))
+    if (!map_is_inside(map, x, y)) {
         return 0;
+    }
 
     if (player_meets_monster(map, x, y)) {
         if (SDL_GetTicks() - player->t0 > 1000) {
@@ -241,15 +251,17 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
     switch (cell & 0xf0) {
         /* if player goes to CELL_SCENERY */
         case CELL_SCENERY:
-            if ((cell & 0x0f) == SCENERY_PRINCESS)
+            if ((cell & 0x0f) == SCENERY_PRINCESS) {
                 return 1;
+            }
 
             return 0;
             /* if player goes to CELL_BOX */
         case CELL_BOX:
             /* checking if player can push the box */
-            if (player_can_push_box(map, player, x, y))
+            if (player_can_push_box(map, player, x, y)) {
                 return 1;
+            }
 
             return 0;
             /* if player goes to CELL_BONUS */
@@ -258,9 +270,9 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
             return 1;
             /* if player goes to CELL_BOMB */
         case CELL_BOMB:
-            if ((cell & 0x0f) == EXPLOSION)
+            if ((cell & 0x0f) == EXPLOSION) {
                 player_dec_nb_life(player);
-
+            }
             return 1;
             /* if player goes to CELL_KEY */
         case CELL_KEY:
