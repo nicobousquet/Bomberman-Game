@@ -4,6 +4,9 @@
  ******************************************************************************/
 #include "../include/misc.h"
 #include <SDL/SDL_image.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 void error(const char *s, ...) {
     va_list ap;

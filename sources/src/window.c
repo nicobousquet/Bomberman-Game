@@ -6,6 +6,7 @@
 #include "../include/constant.h"
 #include "../include/misc.h"
 #include <assert.h>
+#include <stdlib.h>
 
 SDL_Surface *window;
 

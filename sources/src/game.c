@@ -9,8 +9,9 @@
 #include "../include/monster.h"
 #include "../include/window.h"
 #include <assert.h>
-#include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct game {
     struct map **maps; /* the game's maps */

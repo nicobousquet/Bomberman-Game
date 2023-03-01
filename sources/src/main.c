@@ -7,6 +7,7 @@
 #include "../include/misc.h"
 #include "../include/window.h"
 #include "../include/constant.h"
+#include <stdlib.h>
 #include <SDL/SDL.h>
 
 int main(int argc, char *argv[]) {

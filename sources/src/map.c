@@ -11,8 +11,6 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 
 
@@ -162,26 +160,30 @@ void map_display(struct map *map) {
 struct map *map_get_map(char *filename) {
     assert(filename);
     /* opening map file */
-    int fd = open(filename, O_RDONLY);
-    if (fd == -1)
-        perror("open");
+    FILE *fp = fopen(filename, "rb");
+    if (!fp) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
 
     /* getting size of file */
-    struct stat s;
-    if (fstat(fd, &s) == -1)
-        perror("fstat");
-
-    off_t size = s.st_size;
+    fseek(fp, 0, SEEK_END);
+    long int size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
     char *grid = malloc(size);
-    if (!grid)
+    if (!grid) {
         perror("malloc");
-
-    int offset = 0;
-    /* reading file  and setting map->grid */
-    while (offset < size) {
-        int numread = read(fd, grid + offset, size - offset);
-        offset += numread;
+        exit(EXIT_FAILURE);
     }
+
+    /* reading file and setting map->grid */
+    size_t numread = fread(grid, sizeof(char), size, fp);
+    if ((long int) numread != size) {
+        perror("fread");
+        exit(EXIT_FAILURE);
+    }
+    fclose(fp);
+
     int width = atoi(grid);
     int height = atoi(grid + 3);
     char *grid_addr = grid;
