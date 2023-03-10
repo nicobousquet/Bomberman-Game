@@ -12,6 +12,8 @@
 // load game's sprites
 void sprite_load();
 
+void sprite_free();
+
 SDL_Surface *sprite_get_princess();
 
 SDL_Surface *sprite_get_player(enum direction direction);

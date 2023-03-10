@@ -134,7 +134,7 @@ static void banner_unload() {
     }
 
     // other banner sprites
-    SDL_FreeSurface(banner_life);
+    SDL_FreeSurface(banner_line);
     SDL_FreeSurface(banner_bomb);
     SDL_FreeSurface(banner_range);
     SDL_FreeSurface(banner_life);

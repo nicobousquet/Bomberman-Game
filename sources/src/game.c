@@ -137,6 +137,8 @@ void game_free(struct game *game) {
 
     free(game->maps);
     free(game);
+
+    sprite_free();
 }
 
 struct map *game_get_current_map(struct game *game) {
