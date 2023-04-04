@@ -15,7 +15,7 @@ struct player {
     enum direction direction;
     int bombs; /* number of bombs */
     int range; /* range of bombs */
-    int life; /* number of lives */
+    int lives; /* number of lives */
     int keys; /* number of keys */
     int t0; /* timer */
 };
@@ -31,6 +31,7 @@ void player_set_t0(struct player *player, int t0) {
 }
 
 struct player *player_init(int bombs) {
+    assert(bombs >= 0 && bombs <= 9);
     struct player *player = malloc(sizeof(struct player));
     if (!player) {
         error("Memory error");
@@ -38,7 +39,7 @@ struct player *player_init(int bombs) {
     player->direction = NORTH;
     player->bombs = bombs;
     player->range = 1;
-    player->life = 3;
+    player->lives = 3;
     player->keys = 0;
     player->t0 = 0;
     player->x = 1;
@@ -52,12 +53,12 @@ void player_free(struct player *player) {
 }
 
 int player_get_x(struct player *player) {
-    assert(player != NULL);
+    assert(player);
     return player->x;
 }
 
 int player_get_y(struct player *player) {
-    assert(player != NULL);
+    assert(player);
     return player->y;
 }
 
@@ -66,48 +67,48 @@ void player_set_current_way(struct player *player, enum direction way) {
     player->direction = way;
 }
 
-int player_get_nb_bomb(struct player *player) {
+int player_get_num_bomb(struct player *player) {
     assert(player);
     return player->bombs;
 }
 
-void player_inc_nb_bomb(struct player *player) {
+void player_inc_num_bomb(struct player *player) {
     assert(player);
     if (player->bombs < 9) {
         player->bombs++;
     }
 }
 
-void player_dec_nb_bomb(struct player *player) {
+void player_dec_num_bomb(struct player *player) {
     assert(player);
     if (player->bombs > 0) {
         player->bombs--;
     }
 }
 
-void player_set_nb_bombs(struct player *player, int num) {
+void player_set_num_bombs(struct player *player, int num) {
     assert(player);
     if (num <= 9 && num >= 0) {
         player->bombs = num;
     }
 }
 
-int player_get_nb_life(struct player *player) {
+int player_get_num_lives(struct player *player) {
     assert(player);
-    return player->life;
+    return player->lives;
 }
 
-void player_dec_nb_life(struct player *player) {
+void player_dec_num_lives(struct player *player) {
     assert(player);
-    if (player->life > 0) {
-        player->life--;
+    if (player->lives > 0) {
+        player->lives--;
     }
 }
 
-void player_inc_nb_life(struct player *player) {
+void player_inc_num_lives(struct player *player) {
     assert(player);
-    if (player->life < 9) {
-        player->life++;
+    if (player->lives < 9) {
+        player->lives++;
     }
 }
 
@@ -134,19 +135,19 @@ void player_dec_range(struct player *player) {
     }
 }
 
-int player_get_nb_keys(struct player *player) {
+int player_get_num_keys(struct player *player) {
     assert(player);
     return player->keys;
 }
 
-void player_inc_nb_keys(struct player *player) {
+void player_inc_num_keys(struct player *player) {
     assert(player);
     if (player->keys < 9) {
         player->keys++;
     }
 }
 
-void player_dec_nb_keys(struct player *player) {
+void player_dec_num_keys(struct player *player) {
     assert(player);
     if (player->keys > 0) {
         player->keys--;
@@ -154,6 +155,7 @@ void player_dec_nb_keys(struct player *player) {
 }
 
 int box_meets_monster(struct map *map, int x, int y) {
+    assert(map);
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
         if (monster_array[i] != NULL) {
@@ -166,6 +168,8 @@ int box_meets_monster(struct map *map, int x, int y) {
 }
 
 int player_can_push_box(struct map *map, struct player *player, int x_src, int y_src) {
+    assert(map);
+    assert(player);
     int x_dst = x_src;
     int y_dst = y_src;
     if (player->direction == NORTH) {
@@ -192,29 +196,33 @@ int player_can_push_box(struct map *map, struct player *player, int x_src, int y
 }
 
 void player_get_bonus(struct player *player, struct map *map, int x, int y, enum cell_type type) {
+    assert(player);
+    assert(map);
     enum bonus_type bonus_type = type & 0x0f;
     if (bonus_type == BONUS_BOMB_RANGE_INC) {
         player_inc_range(player);
     } else if (bonus_type == BONUS_BOMB_RANGE_DEC) {
         player_dec_range(player);
     } else if (bonus_type == BONUS_BOMB_NB_DEC) {
-        player_dec_nb_bomb(player);
+        player_dec_num_bomb(player);
     } else if (bonus_type == BONUS_BOMB_NB_INC) {
-        player_inc_nb_bomb(player);
+        player_inc_num_bomb(player);
     } else if (bonus_type == BONUS_LIFE) {
-        player_inc_nb_life(player);
+        player_inc_num_lives(player);
     }
 
     map_set_cell_type(map, x, y, CELL_EMPTY);
 }
 
 void player_open_door(struct map *map, struct player *player) {
+    assert(map);
+    assert(player);
     for (int i = 0; i < map_get_width(map); i++) {
         for (int j = 0; j < map_get_height(map); j++) {
             enum cell_type type = map_get_cell_value(map, i, j);
             if ((type & 0xf0) == CELL_DOOR && (type & 0x01) == CLOSED) {
                 map_set_cell_type(map, i, j, type & 0xfe);
-                player_dec_nb_keys(player);
+                player_dec_num_keys(player);
                 break;
             }
         }
@@ -222,6 +230,7 @@ void player_open_door(struct map *map, struct player *player) {
 }
 
 int player_meets_monster(struct map *map, int x, int y) {
+    assert(map);
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
         if (monster_array[i] != NULL) {
@@ -235,14 +244,14 @@ int player_meets_monster(struct map *map, int x, int y) {
 
 /* allow player to move */
 static int player_move_aux(struct player *player, struct map *map, int x, int y) {
-
+    assert(player);
     if (!map_is_inside(map, x, y)) {
         return 0;
     }
 
     if (player_meets_monster(map, x, y)) {
         if (SDL_GetTicks() - player->t0 > 1000) {
-            player_dec_nb_life(player);
+            player_dec_num_lives(player);
             player->t0 = SDL_GetTicks();
         }
         return 0;
@@ -271,12 +280,12 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
             /* if player goes to CELL_BOMB */
         case CELL_BOMB:
             if ((cell & 0x0f) == EXPLOSION) {
-                player_dec_nb_life(player);
+                player_dec_num_lives(player);
             }
             return 1;
             /* if player goes to CELL_KEY */
         case CELL_KEY:
-            player_inc_nb_keys(player);
+            player_inc_num_keys(player);
             map_set_cell_type(map, x, y, CELL_EMPTY);
             /* setting door as OPENED */
             player_open_door(map, player);
@@ -293,7 +302,9 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
     return 1;
 }
 
-void player_move(struct player *player, struct map *map) {
+int player_move(struct player *player, struct map *map) {
+    assert(player);
+    assert(map);
     int x = player_get_x(player);
     int y = player_get_y(player);
 
@@ -310,7 +321,9 @@ void player_move(struct player *player, struct map *map) {
     if (player_move_aux(player, map, x, y)) {
         player->x = x;
         player->y = y;
+        return 1;
     }
+    return 0;
 }
 
 /* displaying player */

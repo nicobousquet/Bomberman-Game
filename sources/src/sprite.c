@@ -42,8 +42,8 @@
 // Sprites of Bonus
 #define IMG_BONUS_BOMB_RANGE_INC  "sprite/bonus_bomb_range_inc.png"
 #define IMG_BONUS_BOMB_RANGE_DEC  "sprite/bonus_bomb_range_dec.png"
-#define IMG_BONUS_BOMB_NB_INC     "sprite/bonus_bomb_nb_inc.png"
-#define IMG_BONUS_BOMB_NB_DEC     "sprite/bonus_bomb_nb_dec.png"
+#define IMG_BONUS_BOMB_NB_INC     "sprite/bonus_bomb_num_inc.png"
+#define IMG_BONUS_BOMB_NB_DEC     "sprite/bonus_bomb_num_dec.png"
 #define IMG_BONUS_LIFE            "sprite/banner_life.png"
 
 // Sprites of Players

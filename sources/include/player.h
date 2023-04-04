@@ -24,31 +24,31 @@ int player_get_y(struct player *player);
 void player_set_current_way(struct player *player, enum direction direction);
 
 // Set, Increase, Decrease the number of bomb that player can put
-int player_get_nb_bomb(struct player *player);
+int player_get_num_bomb(struct player *player);
 
-void player_inc_nb_bomb(struct player *player);
+void player_inc_num_bomb(struct player *player);
 
-void player_dec_nb_bomb(struct player *player);
+void player_dec_num_bomb(struct player *player);
 
-void player_set_nb_bombs(struct player *player, int num);
+void player_set_num_bombs(struct player *player, int num);
 
-void player_dec_nb_keys(struct player *player);
+void player_dec_num_keys(struct player *player);
 
 // Move the player according to the current direction
-void player_move(struct player *player, struct map *map);
+int player_move(struct player *player, struct map *map);
 
 // Display the player on the screen
 void player_display(struct player *player);
 
-int player_get_nb_life(struct player *player);
+int player_get_num_lives(struct player *player);
 
-void player_dec_nb_life(struct player *player);
+void player_dec_num_lives(struct player *player);
 
 int player_get_size();
 
 int player_get_range(struct player *player);
 
-int player_get_nb_keys(struct player *player);
+int player_get_num_keys(struct player *player);
 
 int player_get_t0(struct player *player);
 

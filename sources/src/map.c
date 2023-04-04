@@ -76,9 +76,7 @@ int map_is_inside(struct map *map, int x, int y) {
 }
 
 void map_free(struct map *map) {
-    if (map == NULL) {
-        return;
-    }
+    assert(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
         if (map->monster_array[i] != NULL) {
             monster_free(map->monster_array[i]);
@@ -94,7 +92,7 @@ void map_free(struct map *map) {
 }
 
 int map_get_width(struct map *map) {
-    assert(map != NULL);
+    assert(map);
     return map->width;
 }
 
@@ -104,12 +102,15 @@ int map_get_height(struct map *map) {
 }
 
 enum cell_type map_get_cell_value(struct map *map, int x, int y) {
-    assert(map && map_is_inside(map, x, y));
+    assert(map);
+    assert(map->grid);
+    assert(map_is_inside(map, x, y));
     return map->grid[CELL(x, y)];
 }
 
 void map_set_cell_type(struct map *map, int x, int y, enum cell_type type) {
-    assert(map && map_is_inside(map, x, y));
+    assert(map);
+    assert(map_is_inside(map, x, y));
     map->grid[CELL(x, y)] = type;
 }
 
@@ -122,15 +123,14 @@ void map_set_grid(struct map *map, unsigned char *grid) {
 /* displaying map */
 void map_display(struct map *map) {
     assert(map);
-    assert(map->height > 0 && map->width > 0);
 
     /* running through map->grid and displaying each cell */
-    for (int i = 0; i < map->width; i++) {
-        for (int j = 0; j < map->height; j++) {
+    for (int i = 0; i < map_get_width(map); i++) {
+        for (int j = 0; j < map_get_height(map); j++) {
             int x = i * SIZE_BLOC;
             int y = j * SIZE_BLOC;
 
-            unsigned char type = map->grid[CELL(i, j)];
+            unsigned char type = map_get_cell_value(map, i, j);
 
             switch ((enum cell_type) (type & 0xf0)) {
                 case CELL_SCENERY:
@@ -190,11 +190,9 @@ struct map *map_get_map(char *filename) {
         exit(EXIT_FAILURE);
     }
     fclose(fp);
-
-    int width = atoi(grid);
-    int height = atoi(grid + 3);
     char *grid_addr = grid;
-    grid += 6;
+    int width = strtol(grid, &grid, 10);
+    int height = strtol(grid + 1, &grid, 10);
     struct map *map = map_new(width, height);
     for (int i = 0; i < width * height; i++) {
         int ret = strtol(grid, &grid, 10);
@@ -207,7 +205,6 @@ struct map *map_get_map(char *filename) {
 /* filling monster_array */
 void map_set_monsters(struct map *map) {
     assert(map);
-    assert(map_get_height(map) > 0 && map_get_width(map) > 0);
     /* running through the map and looking for CELL_MONSTER */
     for (int i = 0; i < map_get_width(map); i++) {
         for (int j = 0; j < map_get_height(map); j++) {

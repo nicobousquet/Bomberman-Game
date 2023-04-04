@@ -25,10 +25,11 @@ struct bomb {
     int exploded;
 };
 
-void
-bomb_init(struct bomb *bomb, int x, int y, int ttl, int t0, int range, int north_range, int south_range, int east_range,
-          int west_range, int exploded) {
+void bomb_init(struct bomb *bomb, int x, int y, int ttl, int t0, int range, int north_range, int south_range, int east_range, int west_range, int exploded) {
     assert(bomb);
+    assert(ttl > 0);
+    assert(t0 > 0);
+    assert(range > 0);
     bomb->x = x;
     bomb->y = y;
     bomb->ttl = ttl;
@@ -54,6 +55,7 @@ void bomb_set_y(struct bomb *bomb, int y) {
 /* set timer when bomb is set */
 void bomb_set_t0(struct bomb *bomb, int t0) {
     assert(bomb);
+    assert(t0 >= 0);
     bomb->t0 = t0;
 }
 
@@ -62,12 +64,13 @@ int bomb_get_size() {
 }
 
 void bomb_free(struct bomb *bomb) {
-    if (bomb != NULL) {
-        free(bomb);
-    }
+    assert(bomb);
+    free(bomb);
 }
 
 void set_bonus_monster(struct map *map, int x, int y) {
+    assert(map);
+    assert(map_is_inside(map, x, y));
     struct monster *monster = malloc(monster_get_size());
     monster_set_x(monster, x);
     monster_set_y(monster, y);
@@ -84,6 +87,8 @@ void set_bonus_monster(struct map *map, int x, int y) {
 
 /* set bonus type after a CELL_BOX exploded */
 void bomb_set_bonus(struct map *map, int x, int y) {
+    assert(map);
+    assert(map_is_inside(map, x, y));
     enum bonus_type bonus_type = map_get_cell_value(map, x, y) & 0x0f;
     /* if CELL_BOX is empty, sets a bonus randomly */
     if (bonus_type == EMPTY) {
@@ -98,9 +103,7 @@ void bomb_set_bonus(struct map *map, int x, int y) {
 }
 
 int bomb_can_propag(enum cell_type cell_type) {
-    if (cell_type != CELL_SCENERY && (cell_type & 0x0f) != TTL4 && (cell_type & 0x0f) != TTL3 &&
-        (cell_type & 0x0f) != TTL2 && (cell_type & 0x0f) != TTL1 &&
-        cell_type != CELL_DOOR && cell_type != CELL_KEY) {
+    if (cell_type != CELL_SCENERY && (cell_type & 0x0f) != TTL4 && (cell_type & 0x0f) != TTL3 && (cell_type & 0x0f) != TTL2 && (cell_type & 0x0f) != TTL1 && cell_type != CELL_DOOR && cell_type != CELL_KEY) {
         return 1;
     }
     return 0;
@@ -114,10 +117,11 @@ int bomb_meets_player(int explosion_x, int explosion_y, int player_x, int player
 }
 
 struct monster **bomb_meets_monster(struct map *map, int bomb_x, int bomb_y) {
+    assert(map);
+    assert(map_is_inside(map, bomb_x, bomb_y));
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monster_array[i] && monster_get_x(monster_array[i]) == bomb_x &&
-            monster_get_y(monster_array[i]) == bomb_y) {
+        if (monster_array[i] && monster_get_x(monster_array[i]) == bomb_x && monster_get_y(monster_array[i]) == bomb_y) {
             return &monster_array[i];
         }
     }
@@ -125,6 +129,9 @@ struct monster **bomb_meets_monster(struct map *map, int bomb_x, int bomb_y) {
 }
 
 void bomb_kill_monster(struct monster **monster, struct map *map) {
+    assert(monster);
+    assert(*monster);
+    assert(map);
     map_set_cell_type(map, monster_get_x(*monster), monster_get_y(*monster), CELL_EMPTY);
     free(*monster);
     *monster = NULL;
@@ -161,7 +168,7 @@ int bomb_propagation(struct map *map, struct player *player, struct bomb *bomb, 
                     return range - 1;
                 } else if (bomb_meets_player(x, y, player_get_x(player), player_get_y(player))) {
                     /* player looses a life */
-                    player_dec_nb_life(player);
+                    player_dec_num_lives(player);
                     return range - 1;
                 } else if ((dead_monster = bomb_meets_monster(map, x, y)) != NULL) {
                     bomb_kill_monster(dead_monster, map);
@@ -185,6 +192,8 @@ int bomb_propagation(struct map *map, struct player *player, struct bomb *bomb, 
 
 /* reset cell type to CELL_EMPTY after explosion */
 void bomb_extinction(struct map *map, struct bomb *bomb) {
+    assert(map);
+    assert(bomb);
     int x = bomb->x;
     int y = bomb->y;
     map_set_cell_type(map, bomb->x, bomb->y, CELL_EMPTY);
@@ -221,7 +230,7 @@ void bomb_update(struct map *map, struct player *player) {
             } else if (bomb->ttl == TTL1) {
                 if (bomb->exploded == 0) {
                     if (bomb_meets_player(bomb->x, bomb->y, player_get_x(player), player_get_y(player))) {
-                        player_dec_nb_life(player);
+                        player_dec_num_lives(player);
                     }
                     /* setting bomb range  and cell type to CELL_EXPLOSION */
                     map_set_cell_type(map, bomb->x, bomb->y, CELL_BOMB | EXPLOSION);

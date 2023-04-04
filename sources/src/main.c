@@ -4,9 +4,9 @@
  ******************************************************************************/
 
 #include "../include/game.h"
+#include "../include/map.h"
 #include "../include/misc.h"
 #include "../include/window.h"
-#include "../include/constant.h"
 #include <stdlib.h>
 #include <SDL/SDL.h>
 
@@ -16,11 +16,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    window_create(SIZE_BLOC * STATIC_MAP_WIDTH, SIZE_BLOC * STATIC_MAP_HEIGHT + BANNER_HEIGHT + LINE_HEIGHT);
-
-    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
     /* initializing game structure */
     struct game *game = game_new();
+
+    window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
+
+    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
     /* to obtain the DEFAULT_GAME_FPS, we have to reach a loop duration of (1000 / DEFAULT_GAME_FPS) ms */
     int ideal_speed = 1000 / DEFAULT_GAME_FPS;

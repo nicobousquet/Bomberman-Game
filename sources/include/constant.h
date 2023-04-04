@@ -17,10 +17,6 @@
 // Time management
 #define DEFAULT_GAME_FPS 30
 
-// map size
-#define STATIC_MAP_WIDTH  12
-#define STATIC_MAP_HEIGHT 12
-
 #define NUM_MONSTER_MAX 10
 #define NUM_MAX_BOMBS 9
 

@@ -20,8 +20,23 @@ struct game {
     struct player *player; /* player of the game */
 };
 
+struct map *game_get_current_map(struct game *game) {
+    assert(game);
+    assert(game->maps);
+    assert(game->maps[game->level]);
+    return game->maps[game->level];
+}
+
+
+struct player *game_get_player(struct game *game) {
+    assert(game);
+    assert(game->player);
+    return game->player;
+}
+
 void game_set_level(struct game *game, int level) {
     assert(game);
+    assert(level >= 0 && level < game->levels);
     game->level = level;
 }
 
@@ -60,12 +75,12 @@ struct game *game_new(void) {
 
             fread(game->maps[i], map_get_size(), 1, file);
             /* loading maps' grid */
-            unsigned char *grid = malloc(STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT);
+            unsigned char *grid = malloc(map_get_width(game->maps[i]) * map_get_height(game->maps[i]));
             if (!grid) {
                 perror("malloc");
             }
 
-            fread(grid, STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT, 1, file);
+            fread(grid, map_get_width(game->maps[i]) * map_get_height(game->maps[i]), 1, file);
             map_set_grid(game->maps[i], grid);
             /* loading maps' bomb */
             struct bomb **map_bomb_array = map_get_bomb_array(game->maps[i]);
@@ -130,6 +145,12 @@ struct game *game_new(void) {
 /* freeing game */
 void game_free(struct game *game) {
     assert(game);
+    assert(game->maps);
+    for (int i = 0; i < game->levels; i++) {
+        assert(game->maps[i]);
+    }
+    assert(game->player);
+
     player_free(game->player);
     for (int i = 0; i < game->levels; i++) {
         map_free(game->maps[i]);
@@ -139,17 +160,6 @@ void game_free(struct game *game) {
     free(game);
 
     sprite_free();
-}
-
-struct map *game_get_current_map(struct game *game) {
-    assert(game);
-    return game->maps[game->level];
-}
-
-
-struct player *game_get_player(struct game *game) {
-    assert(game);
-    return game->player;
 }
 
 /* displaying banner at the bottom of the window */
@@ -166,19 +176,19 @@ void game_banner_display(struct game *game) {
 
     int white_bloc = SIZE_BLOC;
     int x = 0;
-    /* displaying number of life */
+    /* displaying number of lives */
     y = (map_get_height(map) * SIZE_BLOC) + LINE_HEIGHT;
     window_display_image(sprite_get_banner_life(), x, y);
 
     x = SIZE_BLOC;
-    window_display_image(sprite_get_number(player_get_nb_life(player)), x, y);
+    window_display_image(sprite_get_number(player_get_num_lives(player)), x, y);
 
     /* displaying number of bombs */
     x = white_bloc + 2 * SIZE_BLOC;
     window_display_image(sprite_get_banner_bomb(), x, y);
 
     x = white_bloc + 3 * SIZE_BLOC;
-    window_display_image(sprite_get_number(player_get_nb_bomb(game_get_player(game))), x, y);
+    window_display_image(sprite_get_number(player_get_num_bomb(game_get_player(game))), x, y);
 
     /* displaying bomb range */
     x = 2 * white_bloc + 4 * SIZE_BLOC;
@@ -192,7 +202,7 @@ void game_banner_display(struct game *game) {
     window_display_image(sprite_get_key(), x, y);
 
     x = 3 * white_bloc + 7 * SIZE_BLOC;
-    window_display_image(sprite_get_number(player_get_nb_keys(player)), x, y);
+    window_display_image(sprite_get_number(player_get_num_keys(player)), x, y);
 }
 
 void game_display(struct game *game) {
@@ -200,13 +210,14 @@ void game_display(struct game *game) {
     window_clear();
     map_display(game_get_current_map(game));
     game_banner_display(game);
-    player_display(game->player);
+    player_display(game_get_player(game));
     monsters_display(game_get_current_map(game));
 
     window_refresh();
 }
 
 void game_backup(struct game *game) {
+    assert(game);
     struct player *player = game_get_player(game);
     FILE *file = fopen("backup/data.bin", "wb");
     if (!file) {
@@ -219,7 +230,7 @@ void game_backup(struct game *game) {
 
     for (int i = 0; i < game->levels; i++) {
         fwrite(game->maps[i], map_get_size(), 1, file);
-        fwrite(map_get_grid(game->maps[i]), STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT, 1, file);
+        fwrite(map_get_grid(game->maps[i]), map_get_width(game->maps[i]) * map_get_height(game->maps[i]), 1, file);
 
         struct bomb **map_bomb_array = map_get_bomb_array(game->maps[i]);
         for (int j = 0; j < NUM_MAX_BOMBS; j++) {
@@ -244,22 +255,22 @@ void game_backup(struct game *game) {
 }
 
 void game_set_bomb(struct game *game) {
+    assert(game);
+
     struct player *player = game_get_player(game);
     /* cannot destroy a door */
-    if ((map_get_cell_value(game_get_current_map(game), player_get_x(player), player_get_y(player)) & 0xf0) ==
-        CELL_DOOR) {
+    if ((map_get_cell_value(game_get_current_map(game), player_get_x(player), player_get_y(player)) & 0xf0) == CELL_DOOR) {
         return;
     }
 
-    if (player_get_nb_bomb(player) > 0) {
+    if (player_get_num_bomb(player) > 0) {
         struct bomb *bomb = malloc(bomb_get_size());
         if (!bomb) {
             perror("malloc");
         }
 
         /* initializing bomb properties */
-        bomb_init(bomb, player_get_x(player), player_get_y(player), TTL4, SDL_GetTicks(), player_get_range(player), 0,
-                  0, 0, 0, 0);
+        bomb_init(bomb, player_get_x(player), player_get_y(player), TTL4, SDL_GetTicks(), player_get_range(player), 0, 0, 0, 0, 0);
         /* adding bomb in BOMBS_ARRAY */
         struct bomb **map_bomb_array = map_get_bomb_array(game->maps[game->level]);
         for (int i = 0; i < NUM_MAX_BOMBS; i++)
@@ -268,11 +279,12 @@ void game_set_bomb(struct game *game) {
                 break;
             }
         /* decrease player number of bombs */
-        player_dec_nb_bomb(player);
+        player_dec_num_bomb(player);
     }
 }
 
 void game_pause(SDL_Event *event) {
+    assert(event);
     SDL_WaitEvent(event);
     do {
         /* game paused until next time we type P */
@@ -281,17 +293,20 @@ void game_pause(SDL_Event *event) {
 }
 
 void game_change_level(struct game *game, int level) {
+    assert(game);
     /* changing level */
     game_set_level(game, level);
     struct map *map = game_get_current_map(game);
     struct player *player = game_get_player(game);
-    player_set_nb_bombs(player, 9);
+    player_set_num_bombs(player, 9);
     /* loading monsters in monster_array */
     map_set_monsters(map);
 }
 
 static short input_keyboard(struct game *game) {
+    assert(game);
     SDL_Event event = {0};
+    int move = 0;
     struct player *player = game_get_player(game);
     struct map *map = game_get_current_map(game);
     while (SDL_PollEvent(&event)) {
@@ -311,22 +326,30 @@ static short input_keyboard(struct game *game) {
                         /* going north */
                     case SDLK_UP:
                         player_set_current_way(player, NORTH);
-                        player_move(player, map);
+                        if (player_move(player, map)) {
+                            move = 1;
+                        }
                         break;
                         /* going south */
                     case SDLK_DOWN:
                         player_set_current_way(player, SOUTH);
-                        player_move(player, map);
+                        if (player_move(player, map)) {
+                            move = 1;
+                        }
                         break;
                         /* going east */
                     case SDLK_RIGHT:
                         player_set_current_way(player, EAST);
-                        player_move(player, map);
+                        if (player_move(player, map)) {
+                            move = 1;
+                        }
                         break;
                         /* going west */
                     case SDLK_LEFT:
                         player_set_current_way(player, WEST);
-                        player_move(player, map);
+                        if (player_move(player, map)) {
+                            move = 1;
+                        }
                         break;
                         /* set a bomb */
                     case SDLK_SPACE:
@@ -340,11 +363,13 @@ static short input_keyboard(struct game *game) {
                         break;
                 }
 
-                enum cell_type cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
-                if ((cell & 0xf0) == CELL_DOOR) {
-                    /* level of next level */
-                    int level = (cell & 0x0e) / 2;
-                    game_change_level(game, level);
+                if (move) {
+                    enum cell_type cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
+                    if ((cell & 0xf0) == CELL_DOOR) {
+                        /* level of next level */
+                        int level = (cell & 0x0e) / 2;
+                        game_change_level(game, level);
+                    }
                 }
                 break;
             }
@@ -356,13 +381,14 @@ static short input_keyboard(struct game *game) {
 }
 
 int game_update(struct game *game) {
+    assert(game);
     struct map *map = game_get_current_map(game);
     struct player *player = game_get_player(game);
     if (input_keyboard(game)) {
         /* exit game */
         return 1;
     } /* if player is dead */
-    else if (player_get_nb_life(player) == 0) {
+    else if (player_get_num_lives(player) == 0) {
         printf("===========================================\n");
         printf(" >>>>>>>>>>>>>  YOU LOST!!!  <<<<<<<<<<<<<\n");
         printf("===========================================\n");
