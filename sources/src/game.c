@@ -301,6 +301,7 @@ void game_change_level(struct game *game, int level) {
     player_set_num_bombs(player, 9);
     /* loading monsters in monster_array */
     map_set_monsters(map);
+    window_create(SIZE_BLOC * map_get_width(map), SIZE_BLOC * map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
 }
 
 static short input_keyboard(struct game *game) {
