@@ -16,15 +16,15 @@
 struct game {
     struct map **maps; /* the game's maps */
     short levels; /* game's number of maps */
-    short level; /* current level */
+    short current_level; /* current level */
     struct player *player; /* player of the game */
 };
 
 struct map *game_get_current_map(struct game *game) {
     assert(game);
     assert(game->maps);
-    assert(game->maps[game->level]);
-    return game->maps[game->level];
+    assert(game->maps[game->current_level]);
+    return game->maps[game->current_level];
 }
 
 
@@ -34,10 +34,16 @@ struct player *game_get_player(struct game *game) {
     return game->player;
 }
 
-void game_set_level(struct game *game, int level) {
+void game_set_current_level(struct game *game, int level) {
     assert(game);
     assert(level >= 0 && level < game->levels);
-    game->level = level;
+    game->current_level = level;
+}
+
+int game_get_current_level(struct game *game) {
+    assert(game);
+    assert(game->current_level >= 0 && game->current_level <= game->levels - 1);
+    return game->current_level;
 }
 
 /* launching backup or new game */
@@ -105,7 +111,7 @@ struct game *game_new(void) {
         remove(filename);
     } else { /* loading new game */
         game->levels = 8;
-        game->level = 0;
+        game->current_level = 0;
         game->player = player_init(9);
         game->maps = malloc(game->levels * sizeof(struct map *));
         if (!game->maps) {
@@ -138,7 +144,7 @@ struct game *game_new(void) {
         }
     }
     /* setting monsters on current map */
-    map_set_monsters(game->maps[game->level]);
+    map_set_monsters(game->maps[game->current_level]);
     return game;
 }
 
@@ -174,7 +180,7 @@ void game_banner_display(struct game *game) {
         window_display_image(sprite_get_banner_line(), i * SIZE_BLOC, y);
     }
 
-    int white_bloc = SIZE_BLOC;
+    int white_bloc = 0.5 * SIZE_BLOC;
     int x = 0;
     /* displaying number of lives */
     y = (map_get_height(map) * SIZE_BLOC) + LINE_HEIGHT;
@@ -203,6 +209,13 @@ void game_banner_display(struct game *game) {
 
     x = 3 * white_bloc + 7 * SIZE_BLOC;
     window_display_image(sprite_get_number(player_get_num_keys(player)), x, y);
+
+    x = 4 * white_bloc + 8 * SIZE_BLOC;
+    y = (map_get_height(map)) * SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_banner_line_vert(), x, y);
+
+    x = 5 * white_bloc + 8 * SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_number(game_get_current_level(game) + 1), x, y);
 }
 
 void game_display(struct game *game) {
@@ -272,7 +285,7 @@ void game_set_bomb(struct game *game) {
         /* initializing bomb properties */
         bomb_init(bomb, player_get_x(player), player_get_y(player), TTL4, SDL_GetTicks(), player_get_range(player), 0, 0, 0, 0, 0);
         /* adding bomb in BOMBS_ARRAY */
-        struct bomb **map_bomb_array = map_get_bomb_array(game->maps[game->level]);
+        struct bomb **map_bomb_array = map_get_bomb_array(game->maps[game->current_level]);
         for (int i = 0; i < NUM_MAX_BOMBS; i++)
             if (map_bomb_array[i] == NULL) {
                 map_bomb_array[i] = bomb;
@@ -292,10 +305,10 @@ void game_pause(SDL_Event *event) {
     } while (event->key.keysym.sym != SDLK_p);
 }
 
-void game_change_level(struct game *game, int level) {
+void game_change_current_level(struct game *game, int level) {
     assert(game);
     /* changing level */
-    game_set_level(game, level);
+    game_set_current_level(game, level);
     struct map *map = game_get_current_map(game);
     struct player *player = game_get_player(game);
     player_set_num_bombs(player, 9);
@@ -369,7 +382,7 @@ static short input_keyboard(struct game *game) {
                     if ((cell & 0xf0) == CELL_DOOR) {
                         /* level of next level */
                         int level = (cell & 0x0e) / 2;
-                        game_change_level(game, level);
+                        game_change_current_level(game, level);
                     }
                 }
                 break;

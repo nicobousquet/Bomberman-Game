@@ -26,6 +26,6 @@ void game_display(struct game *game);
 // update
 int game_update(struct game *game);
 
-void game_set_level(struct game *game, int level);
+void game_set_current_level(struct game *game, int level);
 
 #endif /* GAME_H_ */
