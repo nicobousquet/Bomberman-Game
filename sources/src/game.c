@@ -184,38 +184,38 @@ void game_banner_display(struct game *game) {
     int x = 0;
     /* displaying number of lives */
     y = (map_get_height(map) * SIZE_BLOC) + LINE_HEIGHT;
-    window_display_image(sprite_get_banner_life(), x, y);
+    window_display_image(sprite_get_number(game_get_current_level(game) + 1), x, y);
 
     x = SIZE_BLOC;
-    window_display_image(sprite_get_number(player_get_num_lives(player)), x, y);
-
-    /* displaying number of bombs */
-    x = white_bloc + 2 * SIZE_BLOC;
-    window_display_image(sprite_get_banner_bomb(), x, y);
-
-    x = white_bloc + 3 * SIZE_BLOC;
-    window_display_image(sprite_get_number(player_get_num_bomb(game_get_player(game))), x, y);
-
-    /* displaying bomb range */
-    x = 2 * white_bloc + 4 * SIZE_BLOC;
-    window_display_image(sprite_get_banner_range(), x, y);
-
-    x = 2 * white_bloc + 5 * SIZE_BLOC;
-    window_display_image(sprite_get_number(player_get_range(player)), x, y);
-
-    /* displaying number of keys */
-    x = 3 * white_bloc + 6 * SIZE_BLOC;
-    window_display_image(sprite_get_key(), x, y);
-
-    x = 3 * white_bloc + 7 * SIZE_BLOC;
-    window_display_image(sprite_get_number(player_get_num_keys(player)), x, y);
-
-    x = 4 * white_bloc + 8 * SIZE_BLOC;
     y = (map_get_height(map)) * SIZE_BLOC + LINE_HEIGHT;
     window_display_image(sprite_get_banner_line_vert(), x, y);
 
-    x = 5 * white_bloc + 8 * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_number(game_get_current_level(game) + 1), x, y);
+    /* displaying number of bombs */
+    x = white_bloc + SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_banner_life(), x, y);
+
+    x = white_bloc + 2 * SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_number(player_get_num_lives(player)), x, y);
+
+    /* displaying bomb range */
+    x = 2 * white_bloc + 3 * SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_banner_bomb(), x, y);
+
+    x = 2 * white_bloc + 4 * SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_number(player_get_num_bomb(game_get_player(game))), x, y);
+
+    /* displaying number of keys */
+    x = 3 * white_bloc + 5 * SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_banner_range(), x, y);
+
+    x = 3 * white_bloc + 6 * SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_number(player_get_range(player)), x, y);
+
+    x = 4 * white_bloc + 7 * SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_key(), x, y);
+
+    x = 4 * white_bloc + 8 * SIZE_BLOC + LINE_HEIGHT;
+    window_display_image(sprite_get_number(player_get_num_keys(player)), x, y);
 }
 
 void game_display(struct game *game) {
