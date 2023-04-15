@@ -31,10 +31,10 @@ void timer_start(struct timer *timer) {
     timer->is_over = 0;
 }
 
-void timer_reset(struct timer *timer, int duration) {
+void timer_restart(struct timer *timer, int duration) {
     timer->duration = duration;
-    timer->start_time = 0;
-    timer->is_over = 1;
+    timer->start_time = SDL_GetTicks();
+    timer->is_over = 0;
     timer->remaining = timer->duration;
 }
 

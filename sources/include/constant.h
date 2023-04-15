@@ -20,7 +20,9 @@
 #define NUM_MONSTER_MAX 10
 #define NUM_MAX_BOMBS 9
 
-#define TIMER_DURATION 1000
+#define DURATION_BOMB_TTL 1000
+#define DURATION_MONSTER_MOVE 1000
+#define DURATION_INVINCIBILITY_PLAYER 1000
 
 #define CELL(i, j) ((i) + (j) * map->width)
 

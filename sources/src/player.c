@@ -33,7 +33,7 @@ struct player *player_init(int bombs) {
     player->range = 1;
     player->lives = 3;
     player->keys = 0;
-    player->timer_invincibility = timer_init(TIMER_DURATION);
+    player->timer_invincibility = timer_init(DURATION_INVINCIBILITY_PLAYER);
     player->x = 1;
     player->y = 0;
     return player;
@@ -257,8 +257,7 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
         timer_update(timer_invincibility);
         if (timer_is_over(timer_invincibility)) {
             player_dec_num_lives(player);
-            timer_reset(timer_invincibility, TIMER_DURATION);
-            timer_start(timer_invincibility);
+            timer_restart(timer_invincibility, DURATION_INVINCIBILITY_PLAYER);
         }
         return 0;
     }

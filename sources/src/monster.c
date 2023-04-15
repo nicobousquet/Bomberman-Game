@@ -112,8 +112,7 @@ static int monster_move_aux(struct map *map, struct player *player, int x, int y
         timer_update(timer_invincibility);
         if (timer_is_over(timer_invincibility)) {
             player_dec_num_lives(player);
-            timer_reset(timer_invincibility, TIMER_DURATION);
-            timer_start(timer_invincibility);
+            timer_restart(timer_invincibility, DURATION_INVINCIBILITY_PLAYER);
         }
         return 0;
     }
@@ -185,8 +184,7 @@ void monster_update(struct map *map, struct player *player) {
                 int random_dir = rand() % 4;
                 monster->direction = (enum direction) random_dir;
                 monster_move(monster, map, player);
-                timer_reset(monster->timer, TIMER_DURATION);
-                timer_start(monster->timer);
+                timer_restart(monster->timer, DURATION_MONSTER_MOVE);
             }
         }
     }

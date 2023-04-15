@@ -72,7 +72,7 @@ void bomb_free(struct bomb *bomb) {
 void set_bonus_monster(struct map *map, int x, int y) {
     assert(map);
     assert(map_is_inside(map, x, y));
-    struct monster *monster = monster_init(x, y, TIMER_DURATION);
+    struct monster *monster = monster_init(x, y, DURATION_MONSTER_MOVE);
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
         if (monster_array[i] == NULL) {
@@ -220,8 +220,7 @@ void bomb_update(struct map *map, struct player *player) {
             timer_update(bomb->timer);
             if (timer_is_over(bomb->timer)) {
                 bomb->ttl--;
-                timer_reset(bomb->timer, TIMER_DURATION);
-                timer_start(bomb->timer);
+                timer_restart(bomb->timer, DURATION_BOMB_TTL);
             }
             if (bomb->ttl <= TTL4 && bomb->ttl > TTL1) {
                 map_set_cell_type(map, bomb->x, bomb->y, CELL_BOMB | bomb->ttl);
