@@ -12,11 +12,13 @@
 struct monster {
     int x, y;
     enum direction direction;
-    int t0; /* timer */
+    struct timer *timer; /* timer */
 };
 
 void monster_free(struct monster *monster) {
     assert(monster);
+    assert(monster->timer);
+    free(monster->timer);
     free(monster);
 }
 
@@ -44,14 +46,31 @@ void monster_set_direction(struct monster *monster, enum direction direction) {
     monster->direction = direction;
 }
 
-void monster_set_t0(struct monster *monster, int t0) {
-    assert(monster);
-    monster->t0 = t0;
-}
-
 void monster_set_y(struct monster *monster, int y) {
     assert(monster);
     monster->y = y;
+}
+
+struct monster *monster_init(int x, int y, int timer_duration) {
+    struct monster *monster = malloc(monster_get_size());
+    if (!monster) {
+        perror("malloc");
+    }
+    memset(monster, 0, sizeof(struct monster));
+    monster_set_x(monster, x);
+    monster_set_y(monster, y);
+    monster_set_direction(monster, WEST);
+    monster->timer = timer_init(timer_duration);
+    timer_start(monster->timer);
+    return monster;
+}
+
+void monster_set_timer(struct monster *monster, struct timer *timer) {
+    monster->timer = timer;
+}
+
+struct timer *monster_get_timer(struct monster *monster) {
+    return monster->timer;
 }
 
 void monster_set_current_way(struct monster *monster, enum direction way) {
@@ -89,9 +108,12 @@ static int monster_move_aux(struct map *map, struct player *player, int x, int y
     }
 
     if (monster_meets_player(x, y, player_get_x(player), player_get_y(player))) {
-        if (SDL_GetTicks() - player_get_t0(player) > 1000) {
+        struct timer *timer_invincibility = player_get_timer_invincibility(player);
+        timer_update(timer_invincibility);
+        if (timer_is_over(timer_invincibility)) {
             player_dec_num_lives(player);
-            player_set_t0(player, SDL_GetTicks());
+            timer_reset(timer_invincibility, TIMER_DURATION);
+            timer_start(timer_invincibility);
         }
         return 0;
     }
@@ -156,15 +178,15 @@ void monster_update(struct map *map, struct player *player) {
         if (monster_array[i] != NULL) {
             /* getting monster in monster array */
             struct monster *monster = monster_array[i];
-            int t1 = SDL_GetTicks();
+            timer_update(monster->timer);
             /* monster moves randomly */
             /* changing direction every second */
-            if (t1 - monster->t0 > 1000) {
+            if (timer_is_over(monster->timer)) {
                 int random_dir = rand() % 4;
                 monster->direction = (enum direction) random_dir;
                 monster_move(monster, map, player);
-                /* updating timer value */
-                monster_set_t0(monster, t1);
+                timer_reset(monster->timer, TIMER_DURATION);
+                timer_start(monster->timer);
             }
         }
     }

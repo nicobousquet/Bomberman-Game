@@ -8,8 +8,11 @@
 #include "map.h"
 #include "player.h"
 #include "constant.h"
+#include "timer.h"
 
 struct monster;
+
+struct monster *monster_init(int x, int y, int timer_duration);
 
 void monster_free(struct monster* monster);
 
@@ -23,12 +26,14 @@ void monster_set_y(struct monster *monster, int y);
 
 void monster_set_direction(struct monster *monster, enum direction direction);
 
-void monster_set_t0(struct monster *monster, int t0);
-
 int monster_get_x(struct monster *monster);
 
 int monster_get_y(struct monster *monster);
 
 void monsters_display(struct map *map);
+
+void monster_set_timer(struct monster *monster, struct timer *timer);
+
+struct timer *monster_get_timer(struct monster *monster);
 
 #endif //SOURCES_MONSTER_H

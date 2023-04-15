@@ -17,18 +17,8 @@ struct player {
     int range; /* range of bombs */
     int lives; /* number of lives */
     int keys; /* number of keys */
-    int t0; /* timer */
+    struct timer *timer_invincibility; /* timer */
 };
-
-int player_get_t0(struct player *player) {
-    assert(player);
-    return player->t0;
-}
-
-void player_set_t0(struct player *player, int t0) {
-    assert(player);
-    player->t0 = t0;
-}
 
 struct player *player_init(int bombs) {
     assert(bombs >= 0 && bombs <= 9);
@@ -36,19 +26,32 @@ struct player *player_init(int bombs) {
     if (!player) {
         error("Memory error");
     }
+
+    memset(player, 0, sizeof(struct player));
     player->direction = NORTH;
     player->bombs = bombs;
     player->range = 1;
     player->lives = 3;
     player->keys = 0;
-    player->t0 = 0;
+    player->timer_invincibility = timer_init(TIMER_DURATION);
     player->x = 1;
     player->y = 0;
     return player;
 }
 
+struct timer *player_get_timer_invincibility(struct player *player) {
+    assert(player);
+    return player->timer_invincibility;
+}
+
+void player_set_timer_invincibility(struct player *player, struct timer *timer_invincibility) {
+    player->timer_invincibility = timer_invincibility;
+}
+
 void player_free(struct player *player) {
     assert(player);
+    assert(player->timer_invincibility);
+    free(player->timer_invincibility);
     free(player);
 }
 
@@ -250,9 +253,12 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
     }
 
     if (player_meets_monster(map, x, y)) {
-        if (SDL_GetTicks() - player->t0 > 1000) {
+        struct timer *timer_invincibility = player_get_timer_invincibility(player);
+        timer_update(timer_invincibility);
+        if (timer_is_over(timer_invincibility)) {
             player_dec_num_lives(player);
-            player->t0 = SDL_GetTicks();
+            timer_reset(timer_invincibility, TIMER_DURATION);
+            timer_start(timer_invincibility);
         }
         return 0;
     }

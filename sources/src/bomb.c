@@ -7,13 +7,12 @@
 #include <string.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <SDL/SDL.h>
 
 struct bomb {
     int x; /* position x */
     int y; /* position y */
     enum bomb_type ttl; /* time to live */
-    int t0; /* timer of 1 sec */
+    struct timer *timer; /* timer of 1 sec */
     int range; /* range of explosion */
 
     /* range of explosion in each direction */
@@ -25,21 +24,20 @@ struct bomb {
     int exploded;
 };
 
-void bomb_init(struct bomb *bomb, int x, int y, int ttl, int t0, int range, int north_range, int south_range, int east_range, int west_range, int exploded) {
+void bomb_init(struct bomb *bomb, int x, int y, int range, int timer_duration) {
     assert(bomb);
-    assert(ttl > 0);
-    assert(t0 > 0);
     assert(range > 0);
     bomb->x = x;
     bomb->y = y;
-    bomb->ttl = ttl;
-    bomb->t0 = t0;
+    bomb->ttl = TTL4;
+    bomb->timer = timer_init(timer_duration);
+    timer_start(bomb->timer);
     bomb->range = range;
-    bomb->north_range = north_range;
-    bomb->south_range = south_range;
-    bomb->east_range = east_range;
-    bomb->west_range = west_range;
-    bomb->exploded = exploded;
+    bomb->north_range = 0;
+    bomb->south_range = 0;
+    bomb->east_range = 0;
+    bomb->west_range = 0;
+    bomb->exploded = 0;
 }
 
 void bomb_set_x(struct bomb *bomb, int x) {
@@ -52,30 +50,29 @@ void bomb_set_y(struct bomb *bomb, int y) {
     bomb->y = y;
 }
 
-/* set timer when bomb is set */
-void bomb_set_t0(struct bomb *bomb, int t0) {
-    assert(bomb);
-    assert(t0 >= 0);
-    bomb->t0 = t0;
-}
-
 int bomb_get_size() {
     return sizeof(struct bomb);
 }
 
+struct timer *bomb_get_timer(struct bomb *bomb) {
+    return bomb->timer;
+}
+
+void bomb_set_timer(struct bomb *bomb, struct timer *timer) {
+    bomb->timer = timer;
+}
+
 void bomb_free(struct bomb *bomb) {
     assert(bomb);
+    assert(bomb->timer);
+    free(bomb->timer);
     free(bomb);
 }
 
 void set_bonus_monster(struct map *map, int x, int y) {
     assert(map);
     assert(map_is_inside(map, x, y));
-    struct monster *monster = malloc(monster_get_size());
-    monster_set_x(monster, x);
-    monster_set_y(monster, y);
-    monster_set_direction(monster, WEST);
-    monster_set_t0(monster, SDL_GetTicks());
+    struct monster *monster = monster_init(x, y, TIMER_DURATION);
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
         if (monster_array[i] == NULL) {
@@ -133,7 +130,7 @@ void bomb_kill_monster(struct monster **monster, struct map *map) {
     assert(*monster);
     assert(map);
     map_set_cell_type(map, monster_get_x(*monster), monster_get_y(*monster), CELL_EMPTY);
-    free(*monster);
+    monster_free(*monster);
     *monster = NULL;
 }
 
@@ -211,7 +208,6 @@ void bomb_extinction(struct map *map, struct bomb *bomb) {
     }
 }
 
-
 void bomb_update(struct map *map, struct player *player) {
     assert(map);
     assert(player);
@@ -221,9 +217,11 @@ void bomb_update(struct map *map, struct player *player) {
         if (map_bomb_array[i] != NULL) {
             /* updating bomb properties */
             struct bomb *bomb = map_bomb_array[i];
-            if ((SDL_GetTicks() - bomb->t0) >= 1000) {
-                bomb->t0 = SDL_GetTicks();
+            timer_update(bomb->timer);
+            if (timer_is_over(bomb->timer)) {
                 bomb->ttl--;
+                timer_reset(bomb->timer, TIMER_DURATION);
+                timer_start(bomb->timer);
             }
             if (bomb->ttl <= TTL4 && bomb->ttl > TTL1) {
                 map_set_cell_type(map, bomb->x, bomb->y, CELL_BOMB | bomb->ttl);
@@ -244,6 +242,7 @@ void bomb_update(struct map *map, struct player *player) {
             } else if (bomb->ttl == EXPLOSION) {
                 /* setting to CELL_EMPTY after bomb exploded */
                 bomb_extinction(map, bomb);
+                free(bomb->timer);
                 free(bomb);
                 map_bomb_array[i] = NULL;
             }

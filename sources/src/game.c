@@ -6,6 +6,7 @@
 #include "../include/sprite.h"
 #include "../include/player.h"
 #include "../include/bomb.h"
+#include "../include/timer.h"
 #include "../include/monster.h"
 #include "../include/window.h"
 #include <assert.h>
@@ -67,6 +68,15 @@ struct game *game_new(void) {
         }
 
         fread(game->player, player_get_size(), 1, file);
+
+        struct timer *timer_invincibility = malloc(timer_get_size());
+        if (!timer_invincibility) {
+            perror("malloc");
+        }
+
+        fread(timer_invincibility, timer_get_size(), 1, file);
+        player_set_timer_invincibility(game->player, timer_invincibility);
+
         /* loading maps */
         game->maps = malloc(game->levels * sizeof(struct map *));
         if (!game->maps) {
@@ -94,7 +104,14 @@ struct game *game_new(void) {
                 if (map_bomb_array[j] != NULL) {
                     map_bomb_array[j] = malloc(bomb_get_size());
                     fread(map_bomb_array[j], bomb_get_size(), 1, file);
-                    bomb_set_t0(map_bomb_array[j], 0);
+                    struct timer *timer = malloc(timer_get_size());
+
+                    if (!timer) {
+                        perror("malloc");
+                    }
+                    fread(timer, timer_get_size(), 1, file);
+                    timer_set_start_time(timer, SDL_GetTicks() - (timer_get_duration(timer) - timer_get_remaining(timer)));
+                    bomb_set_timer(map_bomb_array[j], timer);
                 }
             }
             struct monster **monster_array = map_get_monster_array(game->maps[i]);
@@ -102,7 +119,14 @@ struct game *game_new(void) {
                 if (monster_array[j] != NULL) {
                     monster_array[j] = malloc(monster_get_size());
                     fread(monster_array[j], monster_get_size(), 1, file);
-                    monster_set_t0(monster_array[j], 0);
+                    struct timer *timer = malloc(timer_get_size());
+
+                    if (!timer) {
+                        perror("malloc");
+                    }
+                    fread(timer, timer_get_size(), 1, file);
+                    timer_set_start_time(timer, SDL_GetTicks() - (timer_get_duration(timer) - timer_get_remaining(timer)));
+                    monster_set_timer(monster_array[j], timer);
                 }
             }
         }
@@ -240,6 +264,7 @@ void game_backup(struct game *game) {
 
     fwrite(game, sizeof(struct game), 1, file);
     fwrite(player, player_get_size(), 1, file);
+    fwrite(player_get_timer_invincibility(player), timer_get_size(), 1, file);
 
     for (int i = 0; i < game->levels; i++) {
         fwrite(game->maps[i], map_get_size(), 1, file);
@@ -249,6 +274,7 @@ void game_backup(struct game *game) {
         for (int j = 0; j < NUM_MAX_BOMBS; j++) {
             if (map_bomb_array[j] != NULL) {
                 fwrite(map_bomb_array[j], bomb_get_size(), 1, file);
+                fwrite(bomb_get_timer(map_bomb_array[j]), timer_get_size(), 1, file);
             }
         }
 
@@ -256,6 +282,7 @@ void game_backup(struct game *game) {
         for (int j = 0; j < NUM_MONSTER_MAX; j++) {
             if (monster_array[j] != NULL) {
                 fwrite(monster_array[j], monster_get_size(), 1, file);
+                fwrite(monster_get_timer(monster_array[j]), timer_get_size(), 1, file);
             }
         }
     }
@@ -281,9 +308,9 @@ void game_set_bomb(struct game *game) {
         if (!bomb) {
             perror("malloc");
         }
-
+        memset(bomb, 0, bomb_get_size());
         /* initializing bomb properties */
-        bomb_init(bomb, player_get_x(player), player_get_y(player), TTL4, SDL_GetTicks(), player_get_range(player), 0, 0, 0, 0, 0);
+        bomb_init(bomb, player_get_x(player), player_get_y(player), player_get_range(player), TIMER_DURATION);
         /* adding bomb in BOMBS_ARRAY */
         struct bomb **map_bomb_array = map_get_bomb_array(game->maps[game->current_level]);
         for (int i = 0; i < NUM_MAX_BOMBS; i++)

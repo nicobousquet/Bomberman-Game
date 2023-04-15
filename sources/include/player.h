@@ -50,8 +50,8 @@ int player_get_range(struct player *player);
 
 int player_get_num_keys(struct player *player);
 
-int player_get_t0(struct player *player);
+struct timer *player_get_timer_invincibility(struct player *player);
 
-void player_set_t0(struct player *player, int t0);
+void player_set_timer_invincibility(struct player *player, struct timer *timer_invincibility);
 
 #endif /* PLAYER_H_ */

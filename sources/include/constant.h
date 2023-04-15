@@ -20,6 +20,8 @@
 #define NUM_MONSTER_MAX 10
 #define NUM_MAX_BOMBS 9
 
+#define TIMER_DURATION 1000
+
 #define CELL(i, j) ((i) + (j) * map->width)
 
 #define NUM_BONUS_TYPE 6

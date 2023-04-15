@@ -17,14 +17,16 @@ int bomb_propagation(struct map *map, struct player *player, struct bomb *bomb, 
 
 int bomb_get_size();
 
+struct timer *bomb_get_timer(struct bomb *bomb);
+
+void bomb_set_timer(struct bomb *bomb, struct timer *timer);
+
 void bomb_set_x(struct bomb *bomb, int x);
 
 void bomb_set_y(struct bomb *bomb, int y);
 
-void bomb_init(struct bomb *bomb, int x, int y, int ttl, int t0, int range, int north_range, int south_range, int east_range, int west_range, int propag);
+void bomb_init(struct bomb *bomb, int x, int y, int range, int timer_duration);
 
 void bomb_free(struct bomb *bomb);
-
-void bomb_set_t0(struct bomb *bomb, int t0);
 
 #endif //SOURCES_BOMB_H
