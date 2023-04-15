@@ -211,6 +211,7 @@ void map_set_monsters(struct map *map) {
             if ((map_get_cell_value(map, i, j) & 0xf0) == CELL_MONSTER) {
                 /* creating new monster */
                 struct monster *monster = monster_init(i, j, DURATION_MONSTER_MOVE);
+                timer_start(monster_get_timer(monster));
                 /* setting new monster in monster_array */
                 struct monster **monster_array = map_get_monster_array(map);
                 for (int k = 0; k < NUM_MONSTER_MAX; k++) {

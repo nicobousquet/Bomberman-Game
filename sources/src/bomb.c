@@ -31,7 +31,6 @@ void bomb_init(struct bomb *bomb, int x, int y, int range, int timer_duration) {
     bomb->y = y;
     bomb->ttl = TTL4;
     bomb->timer = timer_init(timer_duration);
-    timer_start(bomb->timer);
     bomb->range = range;
     bomb->north_range = 0;
     bomb->south_range = 0;
@@ -73,6 +72,7 @@ void set_bonus_monster(struct map *map, int x, int y) {
     assert(map);
     assert(map_is_inside(map, x, y));
     struct monster *monster = monster_init(x, y, DURATION_MONSTER_MOVE);
+    timer_start(monster_get_timer(monster));
     struct monster **monster_array = map_get_monster_array(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
         if (monster_array[i] == NULL) {

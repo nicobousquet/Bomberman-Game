@@ -311,6 +311,7 @@ void game_set_bomb(struct game *game) {
         memset(bomb, 0, bomb_get_size());
         /* initializing bomb properties */
         bomb_init(bomb, player_get_x(player), player_get_y(player), player_get_range(player), DURATION_BOMB_TTL);
+        timer_start(bomb_get_timer(bomb));
         /* adding bomb in BOMBS_ARRAY */
         struct bomb **map_bomb_array = map_get_bomb_array(game->maps[game->current_level]);
         for (int i = 0; i < NUM_MAX_BOMBS; i++)

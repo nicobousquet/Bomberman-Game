@@ -61,7 +61,6 @@ struct monster *monster_init(int x, int y, int timer_duration) {
     monster_set_y(monster, y);
     monster_set_direction(monster, WEST);
     monster->timer = timer_init(timer_duration);
-    timer_start(monster->timer);
     return monster;
 }
 
