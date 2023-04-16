@@ -1,6 +1,6 @@
 #include "../include/direction.h"
 
-int direction_get_next_x(int x_src, enum direction direction, int delta) {
+int direction_get_x(int x_src, enum direction direction, int delta) {
     int x_dst = x_src;
 
     if (direction == EAST) {
@@ -12,7 +12,7 @@ int direction_get_next_x(int x_src, enum direction direction, int delta) {
     return x_dst;
 }
 
-int direction_get_next_y(int y_src, enum direction direction, int delta) {
+int direction_get_y(int y_src, enum direction direction, int delta) {
     int y_dst = y_src;
 
     if (direction == NORTH) {

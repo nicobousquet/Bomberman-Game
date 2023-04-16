@@ -148,8 +148,8 @@ void monster_move(struct monster *monster, struct map *map, struct player *playe
     assert(monster);
     assert(map);
     assert(player);
-    int x = direction_get_next_x(monster_get_x(monster), monster->direction, 1);
-    int y = direction_get_next_y(monster_get_y(monster), monster->direction, 1);
+    int x = direction_get_x(monster_get_x(monster), monster->direction, 1);
+    int y = direction_get_y(monster_get_y(monster), monster->direction, 1);
 
     if (monster_move_aux(map, player, x, y)) {
         monster_set_x(monster, x);

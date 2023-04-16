@@ -403,13 +403,14 @@ static short input_keyboard(struct game *game) {
                         game_pause(&event);
                         break;
                     case SDLK_RETURN: {
-                        int x_next = direction_get_next_x(player_get_x(player), player_get_direction(player), 1);
-                        int y_next = direction_get_next_y(player_get_y(player), player_get_direction(player), 1);
+                        /* open door */
+                        int x_next_player = direction_get_x(player_get_x(player), player_get_direction(player), 1);
+                        int y_next_player = direction_get_y(player_get_y(player), player_get_direction(player), 1);
 
-                        if (map_is_inside(map, x_next, y_next)) {
-                            uint8_t type = map_get_cell_value(map, x_next, y_next);
+                        if (map_is_inside(map, x_next_player, y_next_player)) {
+                            uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);
                             if ((type & 0xf1) == (CELL_DOOR | CLOSED)) {
-                                map_set_cell_type(map, x_next, y_next, type & 0xfe);
+                                map_set_cell_type(map, x_next_player, y_next_player, type & 0xfe);
                                 player_dec_num_keys(player);
                             }
                         }

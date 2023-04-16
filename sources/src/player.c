@@ -176,8 +176,8 @@ int box_meets_monster(struct map *map, int x, int y) {
 
 int player_can_push_box(struct map *map, enum direction direction, int x_box, int y_box) {
     assert(map);
-    int x_dst = direction_get_next_x(x_box, direction, 1);
-    int y_dst = direction_get_next_y(y_box, direction, 1);
+    int x_dst = direction_get_x(x_box, direction, 1);
+    int y_dst = direction_get_y(y_box, direction, 1);
 
     /* if box is on the side of the map, player cannot push the box */
     if (!map_is_inside(map, x_dst, y_dst)) {
@@ -288,8 +288,8 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
 int player_move(struct player *player, struct map *map) {
     assert(player);
     assert(map);
-    int x = direction_get_next_x(player_get_x(player), player->direction, 1);
-    int y = direction_get_next_y(player_get_y(player), player->direction, 1);
+    int x = direction_get_x(player_get_x(player), player->direction, 1);
+    int y = direction_get_y(player_get_y(player), player->direction, 1);
 
     if (player_move_aux(player, map, x, y)) {
         player->x = x;
