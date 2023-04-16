@@ -100,8 +100,8 @@ void bomb_set_bonus(struct map *map, int x, int y) {
 }
 
 int bomb_can_propag(enum cell_type cell_type) {
-    if (cell_type != CELL_SCENERY && (cell_type & 0x0f) != TTL4 && (cell_type & 0x0f) != TTL3 && (cell_type & 0x0f) != TTL2 && (cell_type & 0x0f) != TTL1 && cell_type != CELL_DOOR && cell_type != CELL_KEY) {
-        return 1;
+    if (cell_type != CELL_SCENERY && cell_type != CELL_DOOR && cell_type != CELL_KEY) {
+         return 1;
     }
     return 0;
 }

@@ -101,7 +101,7 @@ int map_get_height(struct map *map) {
     return map->height;
 }
 
-enum cell_type map_get_cell_value(struct map *map, int x, int y) {
+uint8_t map_get_cell_value(struct map *map, int x, int y) {
     assert(map);
     assert(map->grid);
     assert(map_is_inside(map, x, y));
@@ -130,7 +130,7 @@ void map_display(struct map *map) {
             int x = i * SIZE_BLOC;
             int y = j * SIZE_BLOC;
 
-            unsigned char type = map_get_cell_value(map, i, j);
+            uint8_t type = map_get_cell_value(map, i, j);
 
             switch ((enum cell_type) (type & 0xf0)) {
                 case CELL_SCENERY:

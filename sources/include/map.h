@@ -5,6 +5,7 @@
 #ifndef MAP_H_
 #define MAP_H_
 
+#include <stdint.h>
 #include "constant.h"
 
 enum bomb_type {
@@ -102,7 +103,7 @@ int map_get_width(struct map *map);
 int map_get_height(struct map *map);
 
 // Return the type of cell
-enum cell_type map_get_cell_value(struct map *map, int x, int y);
+uint8_t map_get_cell_value(struct map *map, int x, int y);
 
 // Set the type of cell
 void map_set_cell_type(struct map *map, int x, int y, enum cell_type type);

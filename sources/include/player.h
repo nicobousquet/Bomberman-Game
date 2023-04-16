@@ -5,6 +5,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+#include "direction.h"
 #include "constant.h"
 #include "map.h"
 
@@ -12,6 +13,8 @@ struct player;
 
 // Creates a new player with a given number of available bombs
 struct player *player_init(int bomb_number);
+
+enum direction player_get_direction(struct player *player);
 
 void player_free(struct player *player);
 

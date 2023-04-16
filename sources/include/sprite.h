@@ -8,6 +8,7 @@
 #include <SDL/SDL.h>
 #include "map.h"
 #include "constant.h"
+#include "direction.h"
 
 // load game's sprites
 void sprite_load();

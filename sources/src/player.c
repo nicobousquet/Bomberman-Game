@@ -39,6 +39,10 @@ struct player *player_init(int bombs) {
     return player;
 }
 
+enum direction player_get_direction(struct player *player) {
+    return player->direction;
+}
+
 struct timer *player_get_timer_invincibility(struct player *player) {
     assert(player);
     return player->timer_invincibility;
@@ -170,20 +174,11 @@ int box_meets_monster(struct map *map, int x, int y) {
     return 0;
 }
 
-int player_can_push_box(struct map *map, struct player *player, int x_src, int y_src) {
+int player_can_push_box(struct map *map, enum direction direction, int x_box, int y_box) {
     assert(map);
-    assert(player);
-    int x_dst = x_src;
-    int y_dst = y_src;
-    if (player->direction == NORTH) {
-        y_dst = y_src - 1;
-    } else if (player->direction == SOUTH) {
-        y_dst = y_src + 1;
-    } else if (player->direction == EAST) {
-        x_dst = x_src + 1;
-    } else if (player->direction == WEST) {
-        x_dst = x_src - 1;
-    }
+    int x_dst = direction_get_next_x(x_box, direction, 1);
+    int y_dst = direction_get_next_y(y_box, direction, 1);
+
     /* if box is on the side of the map, player cannot push the box */
     if (!map_is_inside(map, x_dst, y_dst)) {
         return 0;
@@ -191,7 +186,7 @@ int player_can_push_box(struct map *map, struct player *player, int x_src, int y
     /* if cell after CELL_BOX is CELL_EMPTY, player can push the box */
     if ((map_get_cell_value(map, x_dst, y_dst) & 0xf0) == CELL_EMPTY && !box_meets_monster(map, x_dst, y_dst)) {
         map_set_cell_type(map, x_dst, y_dst, CELL_BOX);
-        map_set_cell_type(map, x_src, y_src, CELL_EMPTY);
+        map_set_cell_type(map, x_box, y_box, CELL_EMPTY);
         return 1;
     }
     /* if not CELL_EMPTY, player cannot push the box */
@@ -215,21 +210,6 @@ void player_get_bonus(struct player *player, struct map *map, int x, int y, enum
     }
 
     map_set_cell_type(map, x, y, CELL_EMPTY);
-}
-
-void player_open_door(struct map *map, struct player *player) {
-    assert(map);
-    assert(player);
-    for (int i = 0; i < map_get_width(map); i++) {
-        for (int j = 0; j < map_get_height(map); j++) {
-            enum cell_type type = map_get_cell_value(map, i, j);
-            if ((type & 0xf0) == CELL_DOOR && (type & 0x01) == CLOSED) {
-                map_set_cell_type(map, i, j, type & 0xfe);
-                player_dec_num_keys(player);
-                break;
-            }
-        }
-    }
 }
 
 int player_meets_monster(struct map *map, int x, int y) {
@@ -261,7 +241,7 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
         }
         return 0;
     }
-    enum cell_type cell = map_get_cell_value(map, x, y);
+    uint8_t cell = map_get_cell_value(map, x, y);
     switch (cell & 0xf0) {
         /* if player goes to CELL_SCENERY */
         case CELL_SCENERY:
@@ -273,7 +253,7 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
             /* if player goes to CELL_BOX */
         case CELL_BOX:
             /* checking if player can push the box */
-            if (player_can_push_box(map, player, x, y)) {
+            if (player_can_push_box(map, player->direction, x, y)) {
                 return 1;
             }
 
@@ -292,8 +272,6 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
         case CELL_KEY:
             player_inc_num_keys(player);
             map_set_cell_type(map, x, y, CELL_EMPTY);
-            /* setting door as OPENED */
-            player_open_door(map, player);
             return 1;
             /* if player goes to CELL_DOOR */
         case CELL_DOOR:
@@ -310,18 +288,8 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
 int player_move(struct player *player, struct map *map) {
     assert(player);
     assert(map);
-    int x = player_get_x(player);
-    int y = player_get_y(player);
-
-    if (player->direction == NORTH) {
-        y--;
-    } else if (player->direction == SOUTH) {
-        y++;
-    } else if (player->direction == WEST) {
-        x--;
-    } else if (player->direction == EAST) {
-        x++;
-    }
+    int x = direction_get_next_x(player_get_x(player), player->direction, 1);
+    int y = direction_get_next_y(player_get_y(player), player->direction, 1);
 
     if (player_move_aux(player, map, x, y)) {
         player->x = x;

@@ -9,6 +9,7 @@
 #include "../include/timer.h"
 #include "../include/monster.h"
 #include "../include/window.h"
+#include "../include/direction.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -401,12 +402,25 @@ static short input_keyboard(struct game *game) {
                     case SDLK_p:
                         game_pause(&event);
                         break;
+                    case SDLK_RETURN: {
+                        int x_next = direction_get_next_x(player_get_x(player), player_get_direction(player), 1);
+                        int y_next = direction_get_next_y(player_get_y(player), player_get_direction(player), 1);
+
+                        if (map_is_inside(map, x_next, y_next)) {
+                            uint8_t type = map_get_cell_value(map, x_next, y_next);
+                            if ((type & 0xf1) == (CELL_DOOR | CLOSED)) {
+                                map_set_cell_type(map, x_next, y_next, type & 0xfe);
+                                player_dec_num_keys(player);
+                            }
+                        }
+                        break;
+                    }
                     default:
                         break;
                 }
 
                 if (move) {
-                    enum cell_type cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
+                    uint8_t cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
                     if ((cell & 0xf0) == CELL_DOOR) {
                         /* level of next level */
                         int level = (cell & 0x0e) / 2;

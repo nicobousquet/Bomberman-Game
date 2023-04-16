@@ -28,11 +28,4 @@
 
 #define NUM_BONUS_TYPE 6
 
-enum direction {
-    NORTH = 0,
-    EAST,  // 1
-    SOUTH, // 2
-    WEST   // 3
-};
-
 #endif /* CONSTANT_H_ */
