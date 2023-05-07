@@ -163,10 +163,10 @@ void player_dec_num_keys(struct player *player) {
 
 int box_meets_monster(struct map *map, int x, int y) {
     assert(map);
-    struct monster **monster_array = map_get_monster_array(map);
+    struct monster **monsters_list = map_get_monsters_list(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monster_array[i] != NULL) {
-            if (monster_get_x(monster_array[i]) == x && monster_get_y(monster_array[i]) == y) {
+        if (monsters_list[i] != NULL) {
+            if (monster_get_x(monsters_list[i]) == x && monster_get_y(monsters_list[i]) == y) {
                 return 1;
             }
         }
@@ -214,10 +214,10 @@ void player_get_bonus(struct player *player, struct map *map, int x, int y, enum
 
 int player_meets_monster(struct map *map, int x, int y) {
     assert(map);
-    struct monster **monster_array = map_get_monster_array(map);
+    struct monster **monsters_list = map_get_monsters_list(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monster_array[i] != NULL) {
-            if (monster_get_x(monster_array[i]) == x && monster_get_y(monster_array[i]) == y) {
+        if (monsters_list[i] != NULL) {
+            if (monster_get_x(monsters_list[i]) == x && monster_get_y(monsters_list[i]) == y) {
                 return 1;
             }
         }

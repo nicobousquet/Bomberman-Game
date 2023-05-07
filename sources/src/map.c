@@ -18,18 +18,18 @@ struct map {
     int width;
     int height;
     unsigned char *grid;
-    struct bomb *bomb_array[NUM_MAX_BOMBS]; /* bombs of current map */
-    struct monster *monster_array[NUM_MONSTER_MAX];
+    struct bomb *bombs_list[NUM_MAX_BOMBS]; /* bombs of current map */
+    struct monster *monsters_list[NUM_MONSTER_MAX];
 };
 
-struct bomb **map_get_bomb_array(struct map *map) {
+struct bomb **map_get_bombs_list(struct map *map) {
     assert(map);
-    return map->bomb_array;
+    return map->bombs_list;
 }
 
-struct monster **map_get_monster_array(struct map *map) {
+struct monster **map_get_monsters_list(struct map *map) {
     assert(map);
-    return map->monster_array;
+    return map->monsters_list;
 }
 
 int map_get_size() {
@@ -78,13 +78,13 @@ int map_is_inside(struct map *map, int x, int y) {
 void map_free(struct map *map) {
     assert(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (map->monster_array[i] != NULL) {
-            monster_free(map->monster_array[i]);
+        if (map->monsters_list[i] != NULL) {
+            monster_free(map->monsters_list[i]);
         }
     }
     for (int j = 0; j < NUM_MAX_BOMBS; j++) {
-        if (map->bomb_array[j] != NULL) {
-            bomb_free(map->bomb_array[j]);
+        if (map->bombs_list[j] != NULL) {
+            bomb_free(map->bombs_list[j]);
         }
     }
     free(map->grid);
@@ -202,7 +202,7 @@ struct map *map_get_map(char *filename) {
     return map;
 }
 
-/* filling monster_array */
+/* filling monsters_list */
 void map_set_monsters(struct map *map) {
     assert(map);
     /* running through the map and looking for CELL_MONSTER */
@@ -212,11 +212,11 @@ void map_set_monsters(struct map *map) {
                 /* creating new monster */
                 struct monster *monster = monster_init(i, j, DURATION_MONSTER_MOVE);
                 timer_start(monster_get_timer(monster));
-                /* setting new monster in monster_array */
-                struct monster **monster_array = map_get_monster_array(map);
+                /* setting new monster in monsters_list */
+                struct monster **monsters_list = map_get_monsters_list(map);
                 for (int k = 0; k < NUM_MONSTER_MAX; k++) {
-                    if (monster_array[k] == NULL) {
-                        monster_array[k] = monster;
+                    if (monsters_list[k] == NULL) {
+                        monsters_list[k] = monster;
                         break;
                     }
                 }

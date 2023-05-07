@@ -116,7 +116,7 @@ void map_display(struct map *map);
 
 void display_bonus(int x, int y, unsigned char type);
 
-struct bomb **map_get_bomb_array(struct map *map);
+struct bomb **map_get_bombs_list(struct map *map);
 
 int map_get_size();
 
@@ -126,7 +126,7 @@ void map_set_grid(struct map *map, unsigned char *grid);
 
 struct map *map_get_map(char *filename);
 
-struct monster **map_get_monster_array(struct map *map);
+struct monster **map_get_monsters_list(struct map *map);
 
 void map_set_monsters(struct map *map);
 

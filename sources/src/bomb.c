@@ -73,10 +73,10 @@ void set_bonus_monster(struct map *map, int x, int y) {
     assert(map_is_inside(map, x, y));
     struct monster *monster = monster_init(x, y, DURATION_MONSTER_MOVE);
     timer_start(monster_get_timer(monster));
-    struct monster **monster_array = map_get_monster_array(map);
+    struct monster **monsters_list = map_get_monsters_list(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monster_array[i] == NULL) {
-            monster_array[i] = monster;
+        if (monsters_list[i] == NULL) {
+            monsters_list[i] = monster;
             break;
         }
     }
@@ -116,10 +116,10 @@ int bomb_meets_player(int explosion_x, int explosion_y, int player_x, int player
 struct monster **bomb_meets_monster(struct map *map, int bomb_x, int bomb_y) {
     assert(map);
     assert(map_is_inside(map, bomb_x, bomb_y));
-    struct monster **monster_array = map_get_monster_array(map);
+    struct monster **monsters_list = map_get_monsters_list(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monster_array[i] && monster_get_x(monster_array[i]) == bomb_x && monster_get_y(monster_array[i]) == bomb_y) {
-            return &monster_array[i];
+        if (monsters_list[i] && monster_get_x(monsters_list[i]) == bomb_x && monster_get_y(monsters_list[i]) == bomb_y) {
+            return &monsters_list[i];
         }
     }
     return NULL;
@@ -212,11 +212,11 @@ void bomb_update(struct map *map, struct player *player) {
     assert(map);
     assert(player);
     /* running through BOMBS_ARRAY*/
-    struct bomb **map_bomb_array = map_get_bomb_array(map);
+    struct bomb **bombs_list = map_get_bombs_list(map);
     for (int i = 0; i < NUM_MAX_BOMBS; i++) {
-        if (map_bomb_array[i] != NULL) {
+        if (bombs_list[i] != NULL) {
             /* updating bomb properties */
-            struct bomb *bomb = map_bomb_array[i];
+            struct bomb *bomb = bombs_list[i];
             timer_update(bomb->timer);
             if (timer_is_over(bomb->timer)) {
                 bomb->ttl--;
@@ -243,7 +243,7 @@ void bomb_update(struct map *map, struct player *player) {
                 bomb_extinction(map, bomb);
                 free(bomb->timer);
                 free(bomb);
-                map_bomb_array[i] = NULL;
+                bombs_list[i] = NULL;
             }
         }
     }

@@ -87,10 +87,10 @@ int monster_meets_player(int monster_x, int monster_y, int player_x, int player_
 
 int monster_meets_monster(struct map *map, int x, int y) {
     assert(map);
-    struct monster **monster_array = map_get_monster_array(map);
+    struct monster **monsters_list = map_get_monsters_list(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monster_array[i] != NULL) {
-            if (monster_array[i]->x == x && monster_array[i]->y == y) {
+        if (monsters_list[i] != NULL) {
+            if (monsters_list[i]->x == x && monsters_list[i]->y == y) {
                 return 1;
             }
         }
@@ -160,12 +160,12 @@ void monster_move(struct monster *monster, struct map *map, struct player *playe
 void monster_update(struct map *map, struct player *player) {
     assert(map);
     assert(player);
-    /* running through monster_array */
-    struct monster **monster_array = map_get_monster_array(map);
+    /* running through monsters_list */
+    struct monster **monsters_list = map_get_monsters_list(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monster_array[i] != NULL) {
-            /* getting monster in monster array */
-            struct monster *monster = monster_array[i];
+        if (monsters_list[i] != NULL) {
+            /* getting monster in monster list */
+            struct monster *monster = monsters_list[i];
             timer_update(monster->timer);
             /* monster moves randomly */
             /* changing direction every second */
@@ -182,10 +182,10 @@ void monster_update(struct map *map, struct player *player) {
 /* displaying monster */
 void monsters_display(struct map *map) {
     assert(map);
-    struct monster **monster_array = map_get_monster_array(map);
+    struct monster **monsters_list = map_get_monsters_list(map);
     for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monster_array[i] != NULL) {
-            window_display_image(sprite_get_monster(monster_array[i]->direction), monster_get_x(monster_array[i]) * SIZE_BLOC, monster_get_y(monster_array[i]) * SIZE_BLOC);
+        if (monsters_list[i] != NULL) {
+            window_display_image(sprite_get_monster(monsters_list[i]->direction), monster_get_x(monsters_list[i]) * SIZE_BLOC, monster_get_y(monsters_list[i]) * SIZE_BLOC);
         }
     }
 }
