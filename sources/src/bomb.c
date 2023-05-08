@@ -11,7 +11,7 @@
 struct bomb {
     int x; /* position x */
     int y; /* position y */
-    enum bomb_type ttl; /* time to live */
+    enum bomb_type ttl; /* time to live for the bomb */
     struct timer *timer; /* timer of 1 sec */
     int range; /* range of explosion */
 

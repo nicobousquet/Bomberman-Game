@@ -49,7 +49,7 @@ void player_dec_num_lives(struct player *player);
 
 int player_get_size();
 
-int player_get_range(struct player *player);
+int player_get_bombs_range(struct player *player);
 
 int player_get_num_keys(struct player *player);
 

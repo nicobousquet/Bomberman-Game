@@ -13,10 +13,10 @@
 struct player {
     int x, y; /* player's position */
     enum direction direction;
-    int bombs; /* number of bombs */
-    int range; /* range of bombs */
-    int lives; /* number of lives */
-    int keys; /* number of keys */
+    int num_bombs; /* number of bombs */
+    int bombs_range; /* range of bombs */
+    int num_lives; /* number of lives */
+    int num_keys; /* number of keys */
     struct timer *timer_invincibility; /* timer */
 };
 
@@ -29,10 +29,10 @@ struct player *player_init(int bombs) {
 
     memset(player, 0, sizeof(struct player));
     player->direction = NORTH;
-    player->bombs = bombs;
-    player->range = 1;
-    player->lives = 3;
-    player->keys = 0;
+    player->num_bombs = bombs;
+    player->bombs_range = 1;
+    player->num_lives = 3;
+    player->num_keys = 0;
     player->timer_invincibility = timer_init(DURATION_INVINCIBILITY_PLAYER);
     player->x = 1;
     player->y = 0;
@@ -76,46 +76,46 @@ void player_set_current_way(struct player *player, enum direction way) {
 
 int player_get_num_bomb(struct player *player) {
     assert(player);
-    return player->bombs;
+    return player->num_bombs;
 }
 
 void player_inc_num_bomb(struct player *player) {
     assert(player);
-    if (player->bombs < 9) {
-        player->bombs++;
+    if (player->num_bombs < 9) {
+        player->num_bombs++;
     }
 }
 
 void player_dec_num_bomb(struct player *player) {
     assert(player);
-    if (player->bombs > 0) {
-        player->bombs--;
+    if (player->num_bombs > 0) {
+        player->num_bombs--;
     }
 }
 
 void player_set_num_bombs(struct player *player, int num) {
     assert(player);
     if (num <= 9 && num >= 0) {
-        player->bombs = num;
+        player->num_bombs = num;
     }
 }
 
 int player_get_num_lives(struct player *player) {
     assert(player);
-    return player->lives;
+    return player->num_lives;
 }
 
 void player_dec_num_lives(struct player *player) {
     assert(player);
-    if (player->lives > 0) {
-        player->lives--;
+    if (player->num_lives > 0) {
+        player->num_lives--;
     }
 }
 
 void player_inc_num_lives(struct player *player) {
     assert(player);
-    if (player->lives < 9) {
-        player->lives++;
+    if (player->num_lives < 9) {
+        player->num_lives++;
     }
 }
 
@@ -123,41 +123,41 @@ int player_get_size() {
     return sizeof(struct player);
 }
 
-int player_get_range(struct player *player) {
+int player_get_bombs_range(struct player *player) {
     assert(player);
-    return player->range;
+    return player->bombs_range;
 }
 
-void player_inc_range(struct player *player) {
+void player_inc_bombs_range(struct player *player) {
     assert(player);
-    if (player->range < 9) {
-        player->range++;
+    if (player->bombs_range < 9) {
+        player->bombs_range++;
     }
 }
 
-void player_dec_range(struct player *player) {
+void player_dec_bombs_range(struct player *player) {
     assert(player);
-    if (player->range > 1) {
-        player->range--;
+    if (player->bombs_range > 1) {
+        player->bombs_range--;
     }
 }
 
 int player_get_num_keys(struct player *player) {
     assert(player);
-    return player->keys;
+    return player->num_keys;
 }
 
 void player_inc_num_keys(struct player *player) {
     assert(player);
-    if (player->keys < 9) {
-        player->keys++;
+    if (player->num_keys < 9) {
+        player->num_keys++;
     }
 }
 
 void player_dec_num_keys(struct player *player) {
     assert(player);
-    if (player->keys > 0) {
-        player->keys--;
+    if (player->num_keys > 0) {
+        player->num_keys--;
     }
 }
 
@@ -198,9 +198,9 @@ void player_get_bonus(struct player *player, struct map *map, int x, int y, enum
     assert(map);
     enum bonus_type bonus_type = type & 0x0f;
     if (bonus_type == BONUS_BOMB_RANGE_INC) {
-        player_inc_range(player);
+        player_inc_bombs_range(player);
     } else if (bonus_type == BONUS_BOMB_RANGE_DEC) {
-        player_dec_range(player);
+        player_dec_bombs_range(player);
     } else if (bonus_type == BONUS_BOMB_NB_DEC) {
         player_dec_num_bomb(player);
     } else if (bonus_type == BONUS_BOMB_NB_INC) {
