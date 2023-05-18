@@ -13,7 +13,7 @@ struct bomb;
 
 void bomb_update(struct map *map, struct player *player);
 
-int bomb_propagation(struct map *map, struct player *player, struct bomb *bomb, enum direction dir);
+int bomb_explosion(struct map *map, struct player *player, struct bomb *bomb, enum direction dir);
 
 int bomb_get_size();
 
@@ -25,7 +25,7 @@ void bomb_set_x(struct bomb *bomb, int x);
 
 void bomb_set_y(struct bomb *bomb, int y);
 
-void bomb_init(struct bomb *bomb, int x, int y, int range, int timer_duration);
+void bomb_init(struct bomb *bomb, int x, int y, int range);
 
 void bomb_free(struct bomb *bomb);
 

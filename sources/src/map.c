@@ -19,7 +19,7 @@ struct map {
     int height;
     unsigned char *grid;
     struct bomb *bombs_list[NUM_MAX_BOMBS]; /* bombs of current map */
-    struct monster *monsters_list[NUM_MONSTER_MAX];
+    struct monster *monsters_list[NUM_MAX_MONSTERS];
 };
 
 struct bomb **map_get_bombs_list(struct map *map) {
@@ -77,7 +77,7 @@ int map_is_inside(struct map *map, int x, int y) {
 
 void map_free(struct map *map) {
     assert(map);
-    for (int i = 0; i < NUM_MONSTER_MAX; i++) {
+    for (int i = 0; i < NUM_MAX_MONSTERS; i++) {
         if (map->monsters_list[i] != NULL) {
             monster_free(map->monsters_list[i]);
         }
@@ -211,10 +211,10 @@ void map_set_monsters(struct map *map) {
             if ((map_get_cell_value(map, i, j) & 0xf0) == CELL_MONSTER) {
                 /* creating new monster */
                 struct monster *monster = monster_init(i, j, DURATION_MONSTER_MOVE);
-                timer_start(monster_get_timer(monster));
+                timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
                 /* setting new monster in monsters_list */
                 struct monster **monsters_list = map_get_monsters_list(map);
-                for (int k = 0; k < NUM_MONSTER_MAX; k++) {
+                for (int k = 0; k < NUM_MAX_MONSTERS; k++) {
                     if (monsters_list[k] == NULL) {
                         monsters_list[k] = monster;
                         break;

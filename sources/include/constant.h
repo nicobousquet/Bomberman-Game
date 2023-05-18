@@ -17,12 +17,18 @@
 // Time management
 #define DEFAULT_GAME_FPS 30
 
-#define NUM_MONSTER_MAX 10
+#define NUM_MAX_MONSTERS 10
 #define NUM_MAX_BOMBS 9
+#define NUM_MAX_KEYS 9
+#define NUM_MAX_LIVES 9
+#define RANGE_MAX_BOMBS 9
 
 #define DURATION_BOMB_TTL 1000
 #define DURATION_MONSTER_MOVE 1000
 #define DURATION_INVINCIBILITY_PLAYER 1000
+
+#define NUM_LEVELS 8
+#define NUM_START_LEVEL 0
 
 #define CELL(i, j) ((i) + (j) * map->width)
 

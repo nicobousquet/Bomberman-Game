@@ -21,7 +21,7 @@ struct player {
 };
 
 struct player *player_init(int bombs) {
-    assert(bombs >= 0 && bombs <= 9);
+    assert(bombs >= 0 && bombs <= NUM_MAX_BOMBS);
     struct player *player = malloc(sizeof(struct player));
     if (!player) {
         error("Memory error");
@@ -81,7 +81,7 @@ int player_get_num_bomb(struct player *player) {
 
 void player_inc_num_bomb(struct player *player) {
     assert(player);
-    if (player->num_bombs < 9) {
+    if (player->num_bombs < NUM_MAX_BOMBS) {
         player->num_bombs++;
     }
 }
@@ -95,7 +95,7 @@ void player_dec_num_bomb(struct player *player) {
 
 void player_set_num_bombs(struct player *player, int num) {
     assert(player);
-    if (num <= 9 && num >= 0) {
+    if (num <= NUM_MAX_BOMBS && num >= 0) {
         player->num_bombs = num;
     }
 }
@@ -114,7 +114,7 @@ void player_dec_num_lives(struct player *player) {
 
 void player_inc_num_lives(struct player *player) {
     assert(player);
-    if (player->num_lives < 9) {
+    if (player->num_lives < NUM_MAX_LIVES) {
         player->num_lives++;
     }
 }
@@ -130,7 +130,7 @@ int player_get_bombs_range(struct player *player) {
 
 void player_inc_bombs_range(struct player *player) {
     assert(player);
-    if (player->bombs_range < 9) {
+    if (player->bombs_range < RANGE_MAX_BOMBS) {
         player->bombs_range++;
     }
 }
@@ -149,7 +149,7 @@ int player_get_num_keys(struct player *player) {
 
 void player_inc_num_keys(struct player *player) {
     assert(player);
-    if (player->num_keys < 9) {
+    if (player->num_keys < NUM_MAX_KEYS) {
         player->num_keys++;
     }
 }
@@ -164,7 +164,7 @@ void player_dec_num_keys(struct player *player) {
 int box_meets_monster(struct map *map, int x, int y) {
     assert(map);
     struct monster **monsters_list = map_get_monsters_list(map);
-    for (int i = 0; i < NUM_MONSTER_MAX; i++) {
+    for (int i = 0; i < NUM_MAX_MONSTERS; i++) {
         if (monsters_list[i] != NULL) {
             if (monster_get_x(monsters_list[i]) == x && monster_get_y(monsters_list[i]) == y) {
                 return 1;
@@ -215,7 +215,7 @@ void player_get_bonus(struct player *player, struct map *map, int x, int y, enum
 int player_meets_monster(struct map *map, int x, int y) {
     assert(map);
     struct monster **monsters_list = map_get_monsters_list(map);
-    for (int i = 0; i < NUM_MONSTER_MAX; i++) {
+    for (int i = 0; i < NUM_MAX_MONSTERS; i++) {
         if (monsters_list[i] != NULL) {
             if (monster_get_x(monsters_list[i]) == x && monster_get_y(monsters_list[i]) == y) {
                 return 1;
@@ -235,9 +235,9 @@ static int player_move_aux(struct player *player, struct map *map, int x, int y)
     if (player_meets_monster(map, x, y)) {
         struct timer *timer_invincibility = player_get_timer_invincibility(player);
         timer_update(timer_invincibility);
-        if (timer_is_over(timer_invincibility)) {
+        if (timer_get_state(timer_invincibility) == IS_OVER) {
             player_dec_num_lives(player);
-            timer_restart(timer_invincibility, DURATION_INVINCIBILITY_PLAYER);
+            timer_start(timer_invincibility, DURATION_INVINCIBILITY_PLAYER);
         }
         return 0;
     }

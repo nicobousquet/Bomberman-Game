@@ -1,11 +1,16 @@
 #ifndef SOURCES_TIMER_H
 #define SOURCES_TIMER_H
 
+enum timer_state {
+    RUNNING = 0,
+    IS_OVER
+};
+
 struct timer;
 
 int timer_get_size();
 
-struct timer *timer_init(int duration);
+struct timer *timer_init();
 
 int timer_get_duration(struct timer *timer);
 
@@ -15,10 +20,8 @@ void timer_set_start_time(struct timer *timer, long start_time);
 
 void timer_update(struct timer *timer);
 
-int timer_is_over(struct timer *timer);
+enum timer_state timer_get_state(struct timer *timer);
 
-void timer_start(struct timer *timer);
-
-void timer_restart(struct timer *timer, int duration);
+void timer_start(struct timer *timer, int duration);
 
 #endif //SOURCES_TIMER_H

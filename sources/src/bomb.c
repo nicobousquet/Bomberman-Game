@@ -20,23 +20,20 @@ struct bomb {
     int south_range;
     int east_range;
     int west_range;
-
-    int exploded;
 };
 
-void bomb_init(struct bomb *bomb, int x, int y, int range, int timer_duration) {
+void bomb_init(struct bomb *bomb, int x, int y, int range) {
     assert(bomb);
     assert(range > 0);
     bomb->x = x;
     bomb->y = y;
     bomb->ttl = TTL4;
-    bomb->timer = timer_init(timer_duration);
+    bomb->timer = timer_init();
     bomb->range = range;
     bomb->north_range = 0;
     bomb->south_range = 0;
     bomb->east_range = 0;
     bomb->west_range = 0;
-    bomb->exploded = 0;
 }
 
 void bomb_set_x(struct bomb *bomb, int x) {
@@ -72,9 +69,9 @@ void set_bonus_monster(struct map *map, int x, int y) {
     assert(map);
     assert(map_is_inside(map, x, y));
     struct monster *monster = monster_init(x, y, DURATION_MONSTER_MOVE);
-    timer_start(monster_get_timer(monster));
+    timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
     struct monster **monsters_list = map_get_monsters_list(map);
-    for (int i = 0; i < NUM_MONSTER_MAX; i++) {
+    for (int i = 0; i < NUM_MAX_MONSTERS; i++) {
         if (monsters_list[i] == NULL) {
             monsters_list[i] = monster;
             break;
@@ -101,7 +98,7 @@ void bomb_set_bonus(struct map *map, int x, int y) {
 
 int bomb_can_propag(enum cell_type cell_type) {
     if (cell_type != CELL_SCENERY && cell_type != CELL_DOOR && cell_type != CELL_KEY) {
-         return 1;
+        return 1;
     }
     return 0;
 }
@@ -117,8 +114,9 @@ struct monster **bomb_meets_monster(struct map *map, int bomb_x, int bomb_y) {
     assert(map);
     assert(map_is_inside(map, bomb_x, bomb_y));
     struct monster **monsters_list = map_get_monsters_list(map);
-    for (int i = 0; i < NUM_MONSTER_MAX; i++) {
-        if (monsters_list[i] && monster_get_x(monsters_list[i]) == bomb_x && monster_get_y(monsters_list[i]) == bomb_y) {
+    for (int i = 0; i < NUM_MAX_MONSTERS; i++) {
+        if (monsters_list[i] && monster_get_x(monsters_list[i]) == bomb_x &&
+            monster_get_y(monsters_list[i]) == bomb_y) {
             return &monsters_list[i];
         }
     }
@@ -136,7 +134,7 @@ void bomb_kill_monster(struct monster **monster, struct map *map) {
 
 /* managing propagation of bombs */
 /* return bomb range*/
-int bomb_propagation(struct map *map, struct player *player, struct bomb *bomb, enum direction dir) {
+int bomb_explosion(struct map *map, struct player *player, struct bomb *bomb, enum direction dir) {
     assert(map);
     assert(player);
     assert(bomb);
@@ -218,32 +216,29 @@ void bomb_update(struct map *map, struct player *player) {
             /* updating bomb properties */
             struct bomb *bomb = bombs_list[i];
             timer_update(bomb->timer);
-            if (timer_is_over(bomb->timer)) {
-                bomb->ttl--;
-                timer_restart(bomb->timer, DURATION_BOMB_TTL);
-            }
-            if (bomb->ttl <= TTL4 && bomb->ttl > TTL1) {
-                map_set_cell_type(map, bomb->x, bomb->y, CELL_BOMB | bomb->ttl);
-            } else if (bomb->ttl == TTL1) {
-                if (bomb->exploded == 0) {
+            if (timer_get_state(bomb->timer) == IS_OVER) {
+                if (bomb->ttl <= TTL4 && bomb->ttl > TTL1) {
+                    map_set_cell_type(map, bomb->x, bomb->y, CELL_BOMB | bomb->ttl);
+                } else if (bomb->ttl == TTL1) {
                     if (bomb_meets_player(bomb->x, bomb->y, player_get_x(player), player_get_y(player))) {
                         player_dec_num_lives(player);
                     }
                     /* setting bomb range  and cell type to CELL_EXPLOSION */
                     map_set_cell_type(map, bomb->x, bomb->y, CELL_BOMB | EXPLOSION);
-                    bomb->north_range = bomb_propagation(map, player, bomb, NORTH);
-                    bomb->south_range = bomb_propagation(map, player, bomb, SOUTH);
-                    bomb->east_range = bomb_propagation(map, player, bomb, EAST);
-                    bomb->west_range = bomb_propagation(map, player, bomb, WEST);
-                    /* setting .exploded to 1 to enter only once in that loop */
-                    bomb->exploded = 1;
+                    bomb->north_range = bomb_explosion(map, player, bomb, NORTH);
+                    bomb->south_range = bomb_explosion(map, player, bomb, SOUTH);
+                    bomb->east_range = bomb_explosion(map, player, bomb, EAST);
+                    bomb->west_range = bomb_explosion(map, player, bomb, WEST);
+                } else if (bomb->ttl == EXPLOSION) {
+                    /* setting to CELL_EMPTY after bomb exploded */
+                    bomb_extinction(map, bomb);
+                    free(bomb->timer);
+                    free(bomb);
+                    bombs_list[i] = NULL;
+                    continue;
                 }
-            } else if (bomb->ttl == EXPLOSION) {
-                /* setting to CELL_EMPTY after bomb exploded */
-                bomb_extinction(map, bomb);
-                free(bomb->timer);
-                free(bomb);
-                bombs_list[i] = NULL;
+                bomb->ttl--;
+                timer_start(bomb->timer, DURATION_BOMB_TTL);
             }
         }
     }
