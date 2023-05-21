@@ -1,7 +1,3 @@
-/*******************************************************************************
- * This file is part of Bombeirb.
- * Copyright (C) 2018 by Laurent Réveillère
- ******************************************************************************/
 #include "../include/window.h"
 #include "../include/constant.h"
 #include "../include/misc.h"

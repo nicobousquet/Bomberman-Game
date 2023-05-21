@@ -1,7 +1,3 @@
-/*******************************************************************************
- * This file is part of Bombeirb.
- * Copyright (C) 2018 by Laurent Réveillère
- ******************************************************************************/
 #ifndef CONSTANT_H_
 #define CONSTANT_H_
 
@@ -17,21 +13,20 @@
 // Time management
 #define DEFAULT_GAME_FPS 30
 
-#define NUM_MAX_MONSTERS 10
-#define NUM_MAX_BOMBS 9
-#define NUM_MAX_KEYS 9
-#define NUM_MAX_LIVES 9
-#define RANGE_MAX_BOMBS 9
+#define NUM_MONSTERS_MAX 10
+#define NUM_BOMBS_MAX 9
+#define NUM_KEYS_MAX 9
+#define NUM_LIVES_MAX 9
+#define NUM_BOMBS_MAX 9
 
 #define DURATION_BOMB_TTL 1000
 #define DURATION_MONSTER_MOVE 1000
-#define DURATION_INVINCIBILITY_PLAYER 1000
+#define DURATION_PLAYER_INVINCIBILITY 1000
 
 #define NUM_LEVELS 8
-#define NUM_START_LEVEL 0
 
 #define CELL(i, j) ((i) + (j) * map->width)
 
-#define NUM_BONUS_TYPE 6
+#define NUM_BONUS_TYPES 6
 
 #endif /* CONSTANT_H_ */

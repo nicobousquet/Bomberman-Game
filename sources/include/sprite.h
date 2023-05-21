@@ -1,14 +1,9 @@
-/*******************************************************************************
- * This file is part of Bombeirb.
- * Copyright (C) 2018 by Laurent Réveillère
- ******************************************************************************/
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
 #include <SDL/SDL.h>
-#include "map.h"
-#include "constant.h"
 #include "direction.h"
+#include "cell_types.h"
 
 // load game's sprites
 void sprite_load();
@@ -39,7 +34,7 @@ SDL_Surface *sprite_get_banner_bomb();
 
 SDL_Surface *sprite_get_banner_line();
 
-SDL_Surface *sprite_get_banner_line_vert();
+SDL_Surface *sprite_get_banner_vertical_line();
 
 SDL_Surface *sprite_get_banner_range();
 

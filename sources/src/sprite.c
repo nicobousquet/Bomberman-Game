@@ -1,7 +1,3 @@
-/*******************************************************************************
- * This file is part of Bombeirb.
- * Copyright (C) 2018 by Laurent Réveillère
- ******************************************************************************/
 #include "../include/sprite.h"
 #include "../include/misc.h"
 #include <assert.h>
@@ -258,7 +254,7 @@ SDL_Surface *sprite_get_banner_line() {
     return banner_line;
 }
 
-SDL_Surface *sprite_get_banner_line_vert() {
+SDL_Surface *sprite_get_banner_vertical_line() {
     assert(banner_line_vert);
     return banner_line_vert;
 }

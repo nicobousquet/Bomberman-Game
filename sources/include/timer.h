@@ -1,5 +1,5 @@
-#ifndef SOURCES_TIMER_H
-#define SOURCES_TIMER_H
+#ifndef TIMER_H_
+#define TIMER_H_
 
 enum timer_state {
     RUNNING = 0,
@@ -24,4 +24,4 @@ enum timer_state timer_get_state(struct timer *timer);
 
 void timer_start(struct timer *timer, int duration);
 
-#endif //SOURCES_TIMER_H
+#endif //TIMER_H_

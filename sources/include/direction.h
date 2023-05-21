@@ -1,5 +1,5 @@
-#ifndef SOURCES_DIRECTION_H
-#define SOURCES_DIRECTION_H
+#ifndef DIRECTION_H_
+#define DIRECTION_H_
 
 enum direction {
     NORTH = 0,
@@ -12,4 +12,4 @@ int direction_get_x(int x_src, enum direction, int delta);
 
 int direction_get_y(int y_src, enum direction, int delta);
 
-#endif //SOURCES_DIRECTION_H
+#endif //DIRECTION_H_

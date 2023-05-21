@@ -1,10 +1,6 @@
-/*******************************************************************************
- * This file is part of Bombeirb.
- * Copyright (C) 2018 by Laurent Réveillère
- ******************************************************************************/
 #include "../include/bomb.h"
-#include "../include/monster.h"
-#include <string.h>
+#include "../include/timer.h"
+#include "../include/cell_types.h"
 #include <assert.h>
 #include <stdlib.h>
 
@@ -36,6 +32,23 @@ void bomb_init(struct bomb *bomb, int x, int y, int range) {
     bomb->west_range = 0;
 }
 
+void bomb_free(struct bomb *bomb) {
+    assert(bomb);
+    assert(bomb->timer);
+    free(bomb->timer);
+    free(bomb);
+}
+
+int bomb_get_x(struct bomb *bomb) {
+    assert(bomb);
+    return bomb->x;
+}
+
+int bomb_get_y(struct bomb *bomb) {
+    assert(bomb);
+    return bomb->y;
+}
+
 void bomb_set_x(struct bomb *bomb, int x) {
     assert(bomb);
     bomb->x = x;
@@ -46,200 +59,92 @@ void bomb_set_y(struct bomb *bomb, int y) {
     bomb->y = y;
 }
 
+int bomb_get_range(struct bomb *bomb) {
+    assert(bomb);
+    return bomb->range;
+}
+
+int bomb_get_north_range(struct bomb *bomb) {
+    assert(bomb);
+    return bomb->north_range;
+}
+
+int bomb_get_south_range(struct bomb *bomb) {
+    assert(bomb);
+    return bomb->south_range;
+}
+
+int bomb_get_east_range(struct bomb *bomb) {
+    assert(bomb);
+    return bomb->east_range;
+}
+
+int bomb_get_west_range(struct bomb *bomb) {
+    assert(bomb);
+    return bomb->west_range;
+}
+
+int *bomb_get_north_range_ptr(struct bomb *bomb) {
+    assert(bomb);
+    return &bomb->north_range;
+}
+
+int *bomb_get_south_range_ptr(struct bomb *bomb) {
+    assert(bomb);
+    return &bomb->south_range;
+}
+
+int *bomb_get_east_range_ptr(struct bomb *bomb) {
+    assert(bomb);
+    return &bomb->east_range;
+}
+
+int *bomb_get_west_range_ptr(struct bomb *bomb) {
+    assert(bomb);
+    return &bomb->west_range;
+}
+
+void bomb_set_north_range(struct bomb *bomb, int north_range) {
+    assert(bomb);
+    bomb->north_range = north_range;
+}
+
+void bomb_set_south_range(struct bomb *bomb, int south_range) {
+    assert(bomb);
+    bomb->south_range = south_range;
+}
+
+void bomb_set_east_range(struct bomb *bomb, int east_range) {
+    assert(bomb);
+    bomb->east_range = east_range;
+}
+
+void bomb_set_west_range(struct bomb *bomb, int west_range) {
+    assert(bomb);
+    bomb->west_range = west_range;
+}
+
+enum bomb_type bomb_get_ttl(struct bomb *bomb) {
+    assert(bomb);
+    return bomb->ttl;
+}
+
+void bomb_dec_ttl(struct bomb *bomb) {
+    assert(bomb);
+    bomb->ttl--;
+}
+
 int bomb_get_size() {
     return sizeof(struct bomb);
 }
 
 struct timer *bomb_get_timer(struct bomb *bomb) {
+    assert(bomb);
     return bomb->timer;
 }
 
 void bomb_set_timer(struct bomb *bomb, struct timer *timer) {
+    assert(bomb);
+    assert(timer);
     bomb->timer = timer;
-}
-
-void bomb_free(struct bomb *bomb) {
-    assert(bomb);
-    assert(bomb->timer);
-    free(bomb->timer);
-    free(bomb);
-}
-
-void set_bonus_monster(struct map *map, int x, int y) {
-    assert(map);
-    assert(map_is_inside(map, x, y));
-    struct monster *monster = monster_init(x, y, DURATION_MONSTER_MOVE);
-    timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
-    struct monster **monsters_list = map_get_monsters_list(map);
-    for (int i = 0; i < NUM_MAX_MONSTERS; i++) {
-        if (monsters_list[i] == NULL) {
-            monsters_list[i] = monster;
-            break;
-        }
-    }
-}
-
-/* set bonus type after a CELL_BOX exploded */
-void bomb_set_bonus(struct map *map, int x, int y) {
-    assert(map);
-    assert(map_is_inside(map, x, y));
-    enum bonus_type bonus_type = map_get_cell_value(map, x, y) & 0x0f;
-    /* if CELL_BOX is empty, sets a bonus randomly */
-    if (bonus_type == EMPTY) {
-        bonus_type = rand() % NUM_BONUS_TYPE + 1;
-    }
-    if (bonus_type == BONUS_MONSTER) {
-        set_bonus_monster(map, x, y);
-        map_set_cell_type(map, x, y, CELL_EMPTY);
-    } else {
-        map_set_cell_type(map, x, y, CELL_BONUS | bonus_type);
-    }
-}
-
-int bomb_can_propag(enum cell_type cell_type) {
-    if (cell_type != CELL_SCENERY && cell_type != CELL_DOOR && cell_type != CELL_KEY) {
-        return 1;
-    }
-    return 0;
-}
-
-int bomb_meets_player(int explosion_x, int explosion_y, int player_x, int player_y) {
-    if (explosion_x == player_x && explosion_y == player_y) {
-        return 1;
-    }
-    return 0;
-}
-
-struct monster **bomb_meets_monster(struct map *map, int bomb_x, int bomb_y) {
-    assert(map);
-    assert(map_is_inside(map, bomb_x, bomb_y));
-    struct monster **monsters_list = map_get_monsters_list(map);
-    for (int i = 0; i < NUM_MAX_MONSTERS; i++) {
-        if (monsters_list[i] && monster_get_x(monsters_list[i]) == bomb_x &&
-            monster_get_y(monsters_list[i]) == bomb_y) {
-            return &monsters_list[i];
-        }
-    }
-    return NULL;
-}
-
-void bomb_kill_monster(struct monster **monster, struct map *map) {
-    assert(monster);
-    assert(*monster);
-    assert(map);
-    map_set_cell_type(map, monster_get_x(*monster), monster_get_y(*monster), CELL_EMPTY);
-    monster_free(*monster);
-    *monster = NULL;
-}
-
-/* managing propagation of bombs */
-/* return bomb range*/
-int bomb_explosion(struct map *map, struct player *player, struct bomb *bomb, enum direction dir) {
-    assert(map);
-    assert(player);
-    assert(bomb);
-    int x = bomb->x;
-    int y = bomb->y;
-    int range;
-    for (range = 1; range <= bomb->range; range++) {
-        if (dir == NORTH) {
-            y--;
-        } else if (dir == SOUTH) {
-            y++;
-        } else if (dir == EAST) {
-            x++;
-        } else if (dir == WEST) {
-            x--;
-        }
-        if (map_is_inside(map, x, y)) {
-            enum cell_type cell_type = map_get_cell_value(map, x, y) & 0xf0;
-            struct monster **dead_monster = NULL;
-            /* if bomb can propagate */
-            if (bomb_can_propag(cell_type)) {
-                if (cell_type == CELL_BOX) {
-                    /* setting cell type to BONUS_TYPE */
-                    bomb_set_bonus(map, x, y);
-                    /* stopping propagation */
-                    return range - 1;
-                } else if (bomb_meets_player(x, y, player_get_x(player), player_get_y(player))) {
-                    /* player looses a life */
-                    player_dec_num_lives(player);
-                    return range - 1;
-                } else if ((dead_monster = bomb_meets_monster(map, x, y)) != NULL) {
-                    bomb_kill_monster(dead_monster, map);
-                    map_set_cell_type(map, x, y, CELL_BOMB | EXPLOSION);
-                    return range;
-                } else {
-                    /* setting cell type to BOMB_EXPLOSION */
-                    map_set_cell_type(map, x, y, CELL_BOMB | EXPLOSION);
-                }
-            } /* if bomb cannot propagate */
-            else {
-                return range - 1;
-            }
-        } /* if cell is not inside map */
-        else {
-            return range - 1;
-        }
-    }
-    return range - 1;
-}
-
-/* reset cell type to CELL_EMPTY after explosion */
-void bomb_extinction(struct map *map, struct bomb *bomb) {
-    assert(map);
-    assert(bomb);
-    int x = bomb->x;
-    int y = bomb->y;
-    map_set_cell_type(map, bomb->x, bomb->y, CELL_EMPTY);
-    for (int i = 1; i <= bomb->north_range; i++) {
-        map_set_cell_type(map, x, y - i, CELL_EMPTY);
-    }
-    for (int i = 1; i <= bomb->south_range; i++) {
-        map_set_cell_type(map, x, y + i, CELL_EMPTY);
-    }
-    for (int i = 1; i <= bomb->east_range; i++) {
-        map_set_cell_type(map, x + i, y, CELL_EMPTY);
-    }
-    for (int i = 1; i <= bomb->west_range; i++) {
-        map_set_cell_type(map, x - i, y, CELL_EMPTY);
-    }
-}
-
-void bomb_update(struct map *map, struct player *player) {
-    assert(map);
-    assert(player);
-    /* running through BOMBS_ARRAY*/
-    struct bomb **bombs_list = map_get_bombs_list(map);
-    for (int i = 0; i < NUM_MAX_BOMBS; i++) {
-        if (bombs_list[i] != NULL) {
-            /* updating bomb properties */
-            struct bomb *bomb = bombs_list[i];
-            timer_update(bomb->timer);
-            if (timer_get_state(bomb->timer) == IS_OVER) {
-                if (bomb->ttl <= TTL4 && bomb->ttl > TTL1) {
-                    map_set_cell_type(map, bomb->x, bomb->y, CELL_BOMB | bomb->ttl);
-                } else if (bomb->ttl == TTL1) {
-                    if (bomb_meets_player(bomb->x, bomb->y, player_get_x(player), player_get_y(player))) {
-                        player_dec_num_lives(player);
-                    }
-                    /* setting bomb range  and cell type to CELL_EXPLOSION */
-                    map_set_cell_type(map, bomb->x, bomb->y, CELL_BOMB | EXPLOSION);
-                    bomb->north_range = bomb_explosion(map, player, bomb, NORTH);
-                    bomb->south_range = bomb_explosion(map, player, bomb, SOUTH);
-                    bomb->east_range = bomb_explosion(map, player, bomb, EAST);
-                    bomb->west_range = bomb_explosion(map, player, bomb, WEST);
-                } else if (bomb->ttl == EXPLOSION) {
-                    /* setting to CELL_EMPTY after bomb exploded */
-                    bomb_extinction(map, bomb);
-                    free(bomb->timer);
-                    free(bomb);
-                    bombs_list[i] = NULL;
-                    continue;
-                }
-                bomb->ttl--;
-                timer_start(bomb->timer, DURATION_BOMB_TTL);
-            }
-        }
-    }
 }

@@ -1,12 +1,9 @@
-/*******************************************************************************
- * This file is part of Bombeirb.
- * Copyright (C) 2018 by Laurent Réveillère
- ******************************************************************************/
 
 #include "../include/game.h"
 #include "../include/map.h"
 #include "../include/misc.h"
 #include "../include/window.h"
+#include "../include/constant.h"
 #include <stdlib.h>
 #include <SDL/SDL.h>
 
