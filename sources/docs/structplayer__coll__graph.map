@@ -1,0 +1,5 @@
+<map id="player" name="player">
+<area shape="rect" id="Node000001" title="Structure representing the player." alt="" coords="5,193,193,379"/>
+<area shape="rect" id="Node000002" href="$structtimer.html" title="Structure representing a timer." alt="" coords="9,5,190,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,131,102,177,97,177,97,131"/>
+</map>

@@ -1,0 +1,15 @@
+<map id="game" name="game">
+<area shape="rect" id="Node000001" title="Structure representing the game." alt="" coords="220,800,371,885"/>
+<area shape="rect" id="Node000002" href="$structmap.html" title="Structure representing a map." alt="" coords="131,632,291,737"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="242,736,267,784,263,787,237,739"/>
+<area shape="rect" id="Node000003" href="$structbomb.html" title="Structure representing a bomb." alt="" coords="5,193,167,399"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="72,399,70,449,73,503,84,557,104,607,121,629,117,632,100,609,79,558,68,504,65,450,67,399"/>
+<area shape="rect" id="Node000004" href="$structtimer.html" title="Structure representing a timer." alt="" coords="194,5,375,131"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="232,133,179,193,175,189,228,129"/>
+<area shape="rect" id="Node000005" href="$structmonster.html" title="Structure representing a monster." alt="" coords="191,243,379,349"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="287,131,287,227,282,227,282,131"/>
+<area shape="rect" id="Node000006" href="$structplayer.html" title="Structure representing the player." alt="" coords="323,423,511,608"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="352,129,375,159,392,192,410,245,420,300,425,355,427,406,421,406,420,355,415,301,405,247,388,194,370,162,348,133"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="245,350,224,385,209,423,199,472,196,523,202,615,196,616,190,523,194,472,203,422,219,383,241,348"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="402,609,379,692,346,777,340,787,335,785,341,775,374,691,397,608"/>
+</map>

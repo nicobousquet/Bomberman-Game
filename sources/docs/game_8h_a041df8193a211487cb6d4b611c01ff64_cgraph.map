@@ -1,0 +1,53 @@
+<map id="game_update" name="game_update">
+<area shape="rect" id="Node000001" title="Update the game state." alt="" coords="5,421,116,447"/>
+<area shape="rect" id="Node000002" href="$game_8c.html#ab1b060ae09540621ccfa83c5ab65e47b" title="Get the current map of the game." alt="" coords="164,224,340,249"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,420,75,388,95,344,124,298,162,259,170,253,173,258,166,263,128,301,100,346,80,390,68,422"/>
+<area shape="rect" id="Node000003" href="$game_8c.html#a754382a8964b89feb582b8dd545ac735" title="Get the player of the current game." alt="" coords="185,273,319,299"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="67,420,103,366,130,334,162,308,173,302,176,306,166,312,134,338,107,369,71,423"/>
+<area shape="rect" id="Node000004" href="$map_8c.html#add03333232b0c883829c8c4a18b626d6" title="Get the value of the cell at the specified coordinates (x, y)." alt="" coords="176,323,328,348"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,419,113,388,163,357,179,350,181,355,165,362,116,392,78,423"/>
+<area shape="rect" id="Node000006" href="$map_8c.html#a9475ffae296369da471dc290c6b4f4d9" title="Update the state of bombs on the map." alt="" coords="175,372,329,397"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="110,419,188,398,189,403,111,424"/>
+<area shape="rect" id="Node000018" href="$map_8c.html#a48ef951e0a5606a2f616aa1b6feeda14" title="Update the state of monsters on the map." alt="" coords="167,471,337,496"/>
+<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="111,444,189,464,188,470,110,449"/>
+<area shape="rect" id="Node000022" href="$player_8c.html#ac385bb7543ce248d000252ba2461eb53" title="Get the number of lives the player has." alt="" coords="169,520,335,545"/>
+<area shape="poly" id="edge25_Node000001_Node000022" title=" " alt="" coords="78,445,116,475,165,505,185,513,182,518,163,510,113,479,75,449"/>
+<area shape="rect" id="Node000023" href="$player_8c.html#a96cf6794e68f4855df28f7955271d49e" title="Get the current x&#45;coordinate of the player&#39;s position." alt="" coords="199,569,305,595"/>
+<area shape="poly" id="edge26_Node000001_Node000023" title=" " alt="" coords="71,445,107,498,134,529,165,554,187,565,184,570,163,559,130,532,103,502,67,448"/>
+<area shape="rect" id="Node000024" href="$player_8c.html#ab51e706dc2803b17dfcdc601952cb51a" title="Get the current y&#45;coordinate of the player&#39;s position." alt="" coords="199,619,305,644"/>
+<area shape="poly" id="edge27_Node000001_Node000024" title=" " alt="" coords="68,446,80,478,100,521,129,566,166,604,187,616,184,620,162,608,124,569,96,523,75,480,63,448"/>
+<area shape="rect" id="Node000005" href="$map_8c.html#a28f7d80a8ed56a6bb626ea0c638dfa41" title="Test if the specified coordinates (x, y) are within the map boundaries." alt="" coords="611,173,725,199"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="322,320,338,308,359,274,366,240,364,205,357,170,350,135,350,100,360,67,386,36,408,20,430,9,451,4,472,3,516,13,564,36,598,61,625,94,646,128,660,159,655,161,641,131,621,97,594,65,561,40,514,18,472,8,452,9,432,14,411,24,390,40,365,70,355,101,356,134,362,169,369,204,371,240,364,276,342,312,325,325"/>
+<area shape="rect" id="Node000007" href="$bomb_8c.html#a6d0cd0a8562bfe339108cec76884458e" title="Decrement the time to live (TTL) of the bomb." alt="" coords="420,396,531,421"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="330,390,407,399,406,404,330,396"/>
+<area shape="rect" id="Node000008" href="$bomb_8c.html#a93f5c98234c26e22cb94250dbe6d15f6" title="Get the timer of the bomb." alt="" coords="411,51,540,76"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="322,370,338,357,360,324,368,291,367,257,361,223,356,189,355,155,363,120,386,85,397,76,400,80,390,89,368,122,360,156,361,189,366,223,372,257,373,291,365,326,342,361,325,374"/>
+<area shape="rect" id="Node000009" href="$bomb_8c.html#ab0a6afe863965fe76d1459f67e3d19d1" title="Get the time to live (TTL) of the bomb." alt="" coords="421,100,529,125"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="322,370,338,357,357,330,364,303,365,276,361,248,358,220,358,192,366,163,386,135,406,121,409,125,390,138,371,165,364,192,363,220,366,247,370,276,369,304,361,333,342,361,325,374"/>
+<area shape="rect" id="Node000010" href="$bomb_8c.html#a3e11a6a4efb8b9c8befc64f5eb352873" title="Get the x&#45;coordinate of the bomb." alt="" coords="424,149,527,175"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="321,370,338,357,353,337,361,316,361,272,362,228,370,206,386,184,410,169,413,173,390,188,374,209,367,229,367,272,366,317,358,339,342,361,324,374"/>
+<area shape="rect" id="Node000011" href="$bomb_8c.html#a1b8cbc2fc3e978db151225bd92e29795" title="Get the y&#45;coordinate of the bomb." alt="" coords="424,199,527,224"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="319,370,338,357,351,343,357,328,361,297,366,265,373,249,386,233,409,219,412,224,390,237,377,252,371,266,367,297,362,329,355,345,342,361,322,374"/>
+<area shape="rect" id="Node000012" href="$map_8c.html#ad7c6ae9088f9f92412612b7abb5d0be4" title="Get the list of bombs on the map." alt="" coords="397,248,554,273"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="316,369,338,357,354,339,361,321,369,301,386,283,395,277,398,281,390,287,374,304,366,323,359,342,342,361,318,374"/>
+<area shape="rect" id="Node000013" href="$map_8c.html#a42c97d76a0aced5d45dfba0cd886235a" title="Set the value of the cell at the specified coordinates (x, y)." alt="" coords="400,347,551,372"/>
+<area shape="poly" id="edge12_Node000006_Node000013" title=" " alt="" coords="330,373,386,367,387,372,330,378"/>
+<area shape="rect" id="Node000014" href="$player_8c.html#ab77f42c8db1b93a67bbb76e31fa0a8b0" title="Decrease the number of lives for the player." alt="" coords="392,297,559,323"/>
+<area shape="poly" id="edge14_Node000006_Node000014" title=" " alt="" coords="303,369,339,357,387,331,407,324,409,329,389,336,341,362,304,374"/>
+<area shape="rect" id="Node000015" href="$timer_8c.html#a3bd18d960881cb78f50d6b38d4dc9f2d" title="Get the state of the timer." alt="" coords="413,445,538,471"/>
+<area shape="poly" id="edge15_Node000006_Node000015" title=" " alt="" coords="288,395,389,430,417,439,415,444,387,435,287,400"/>
+<area shape="rect" id="Node000016" href="$timer_8c.html#a201306d85a2cc6eb75104a8c72f0741d" title="Start the timer with a specified duration." alt="" coords="428,495,523,520"/>
+<area shape="poly" id="edge16_Node000006_Node000016" title=" " alt="" coords="269,395,320,436,354,459,389,480,416,490,414,495,387,484,351,464,317,441,266,400"/>
+<area shape="rect" id="Node000017" href="$timer_8c.html#a97c47d61d40501e92daf9867e20bba43" title="Update the timer." alt="" coords="421,544,530,569"/>
+<area shape="poly" id="edge17_Node000006_Node000017" title=" " alt="" coords="273,395,306,422,342,456,356,477,364,496,373,513,390,529,409,540,406,545,386,533,369,516,360,498,352,480,338,460,303,426,270,399"/>
+<area shape="poly" id="edge13_Node000013_Node000005" title=" " alt="" coords="537,344,561,332,592,304,618,271,653,210,658,212,622,274,596,308,564,336,540,349"/>
+<area shape="poly" id="edge22_Node000018_Node000015" title=" " alt="" coords="337,471,399,464,399,469,338,476"/>
+<area shape="poly" id="edge23_Node000018_Node000016" title=" " alt="" coords="338,490,415,498,414,503,337,495"/>
+<area shape="poly" id="edge24_Node000018_Node000017" title=" " alt="" coords="306,493,341,505,389,529,413,537,411,542,387,534,339,510,305,499"/>
+<area shape="rect" id="Node000019" href="$map_8c.html#a15422efeaeb3184bc930d2fecb2e7036" title="Get the list of monsters on the map." alt="" coords="388,593,563,619"/>
+<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="320,494,342,505,359,524,367,543,374,561,390,579,401,585,398,590,386,583,369,564,362,545,354,527,338,509,318,498"/>
+<area shape="rect" id="Node000020" href="$monster_8c.html#a6f226151e8ff5b99b61afe1f40e0253e" title="Get the timer of the monster." alt="" coords="402,643,549,668"/>
+<area shape="poly" id="edge20_Node000018_Node000020" title=" " alt="" coords="325,494,342,505,355,521,362,537,367,568,371,599,378,613,390,628,397,634,394,638,386,632,373,616,366,600,361,569,357,538,351,524,338,509,322,498"/>
+<area shape="rect" id="Node000021" href="$monster_8c.html#ab01dc2b6cdeacd8a774ab573fffd7d28" title="Set the direction of the monster." alt="" coords="392,692,559,717"/>
+<area shape="poly" id="edge21_Node000018_Node000021" title=" " alt="" coords="326,494,342,505,358,527,366,550,367,594,367,637,374,658,390,679,394,682,390,686,386,682,370,660,362,638,361,594,361,551,354,530,338,509,323,498"/>
+</map>

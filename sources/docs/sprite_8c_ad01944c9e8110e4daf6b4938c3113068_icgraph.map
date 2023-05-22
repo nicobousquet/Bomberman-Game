@@ -1,0 +1,9 @@
+<map id="sprite_get_bomb" name="sprite_get_bomb">
+<area shape="rect" id="Node000001" title="Get the sprite for a bomb with a specific time to live." alt="" coords="423,5,553,31"/>
+<area shape="rect" id="Node000002" href="$map_8c.html#a5af23287b0ef372ddf2a5cab733d6f93" title="Display the map on the screen." alt="" coords="269,5,375,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="409,21,375,21,375,15,409,15"/>
+<area shape="rect" id="Node000003" href="$game_8c.html#a9a2923cc7bb23817fe4914c97d06c5bb" title="Display the game on the screen." alt="" coords="108,5,221,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="256,21,222,21,222,15,256,15"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,60,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,21,60,21,60,15,94,15"/>
+</map>

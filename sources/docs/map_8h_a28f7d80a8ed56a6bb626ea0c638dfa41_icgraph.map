@@ -1,0 +1,27 @@
+<map id="map_is_inside" name="map_is_inside">
+<area shape="rect" id="Node000001" title="Test if the specified coordinates (x, y) are within the map boundaries." alt="" coords="692,80,807,105"/>
+<area shape="rect" id="Node000002" href="$map_8c.html#add03333232b0c883829c8c4a18b626d6" title="Get the value of the cell at the specified coordinates (x, y)." alt="" coords="492,105,644,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="679,105,645,110,644,105,678,100"/>
+<area shape="rect" id="Node000010" href="$map_8c.html#a42c97d76a0aced5d45dfba0cd886235a" title="Set the value of the cell at the specified coordinates (x, y)." alt="" coords="493,55,643,80"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="678,85,643,80,644,75,679,80"/>
+<area shape="rect" id="Node000003" href="$game_8c.html#a041df8193a211487cb6d4b611c01ff64" title="Update the game state." alt="" coords="109,56,220,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="478,116,378,107,269,94,217,84,218,79,270,89,378,102,479,110"/>
+<area shape="rect" id="Node000005" href="$map_8c.html#a5af23287b0ef372ddf2a5cab733d6f93" title="Display the map on the screen." alt="" coords="304,205,409,231"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="540,141,496,169,445,196,411,209,409,204,443,192,494,165,537,137"/>
+<area shape="rect" id="Node000007" href="$map_8c.html#a3510ed0f84d0ca7247138ff262bbaef5" title="Initialize the list of monsters on the map." alt="" coords="269,55,444,80"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="500,105,410,83,411,77,502,99"/>
+<area shape="rect" id="Node000009" href="$map_8c.html#a102187d2d9be199d2d4a62970ec2bdf2" title="Set a bomb on the map at the player&#39;s current position." alt="" coords="295,156,418,181"/>
+<area shape="poly" id="edge10_Node000002_Node000009" title=" " alt="" coords="502,137,411,159,410,153,500,131"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,105,60,131"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="118,89,61,110,59,105,116,84"/>
+<area shape="rect" id="Node000006" href="$game_8c.html#a9a2923cc7bb23817fe4914c97d06c5bb" title="Display the game on the screen." alt="" coords="108,155,221,180"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="294,204,213,183,214,178,295,199"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="116,152,59,131,61,126,118,147"/>
+<area shape="rect" id="Node000008" href="$game_8c.html#a07349658cd9e4bd4b41e7a6182acf9a5" title="Create a new game." alt="" coords="118,105,211,131"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="295,86,212,108,211,103,294,81"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="104,121,60,121,60,115,104,115"/>
+<area shape="poly" id="edge12_Node000010_Node000007" title=" " alt="" coords="479,70,444,70,444,65,479,65"/>
+<area shape="rect" id="Node000011" href="$map_8c.html#a9475ffae296369da471dc290c6b4f4d9" title="Update the state of bombs on the map." alt="" coords="279,5,434,31"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="499,54,411,33,413,28,500,49"/>
+<area shape="poly" id="edge14_Node000011_Node000003" title=" " alt="" coords="295,37,214,58,213,53,294,32"/>
+</map>
