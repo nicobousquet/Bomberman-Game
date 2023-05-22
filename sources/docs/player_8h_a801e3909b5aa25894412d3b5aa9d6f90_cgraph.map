@@ -1,7 +1,0 @@
-<map id="player_init" name="player_init">
-<area shape="rect" id="Node000001" title="Creates a new player with a given number of available bombs." alt="" coords="5,31,96,56"/>
-<area shape="rect" id="Node000002" href="$misc_8c.html#a647a2785dc1cd0a8958a10822581e821" title="Print an error message on stderr and exit." alt="" coords="160,5,213,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,32,146,23,147,28,97,38"/>
-<area shape="rect" id="Node000003" href="$timer_8c.html#af56453b20018ba7b585a7cb5c81e8ad3" title="Initialize a timer." alt="" coords="144,55,229,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,49,131,55,130,60,96,54"/>
-</map>
