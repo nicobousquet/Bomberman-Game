@@ -1,5 +1,0 @@
-<map id="bomb_init" name="bomb_init">
-<area shape="rect" id="Node000001" title="Initialize a bomb with the specified coordinates and range." alt="" coords="5,5,92,31"/>
-<area shape="rect" id="Node000002" href="$timer_8c.html#af56453b20018ba7b585a7cb5c81e8ad3" title="Initialize a timer." alt="" coords="140,5,225,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,15,126,15,126,21,92,21"/>
-</map>

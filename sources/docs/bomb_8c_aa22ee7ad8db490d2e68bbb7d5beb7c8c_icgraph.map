@@ -1,9 +1,0 @@
-<map id="bomb_get_size" name="bomb_get_size">
-<area shape="rect" id="Node000001" title="Get the size of the bomb." alt="" coords="279,31,399,56"/>
-<area shape="rect" id="Node000002" href="$game_8c.html#a07349658cd9e4bd4b41e7a6182acf9a5" title="Create a new game." alt="" coords="123,5,216,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="265,35,216,28,217,22,265,30"/>
-<area shape="rect" id="Node000004" href="$map_8c.html#a102187d2d9be199d2d4a62970ec2bdf2" title="Set a bomb on the map at the player&#39;s current position." alt="" coords="108,55,231,80"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="266,56,232,61,231,56,265,51"/>
-<area shape="rect" id="Node000003" href="$main_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,60,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="109,21,60,21,60,15,109,15"/>
-</map>

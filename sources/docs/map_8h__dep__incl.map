@@ -1,9 +1,0 @@
-<map id="include/map.h" name="include/map.h">
-<area shape="rect" id="Node000001" title="This file contains the declarations of functions and data types for the game map." alt="" coords="111,5,225,31"/>
-<area shape="rect" id="Node000002" href="$game_8c.html" title=" " alt="" coords="5,79,99,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,40,72,81,70,76,136,35"/>
-<area shape="rect" id="Node000003" href="$main_8c.html" title=" " alt="" coords="123,79,213,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,44,171,79,165,79,165,44"/>
-<area shape="rect" id="Node000004" href="$map_8c.html" title=" " alt="" coords="237,79,323,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="199,36,263,76,260,81,196,40"/>
-</map>

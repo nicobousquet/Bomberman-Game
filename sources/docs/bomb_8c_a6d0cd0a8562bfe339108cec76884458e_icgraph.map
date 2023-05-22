@@ -1,9 +1,0 @@
-<map id="bomb_dec_ttl" name="bomb_dec_ttl">
-<area shape="rect" id="Node000001" title="Decrement the time to live (TTL) of the bomb." alt="" coords="469,5,580,31"/>
-<area shape="rect" id="Node000002" href="$map_8c.html#a9475ffae296369da471dc290c6b4f4d9" title="Update the state of bombs on the map." alt="" coords="267,5,421,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="455,21,422,21,422,15,455,15"/>
-<area shape="rect" id="Node000003" href="$game_8c.html#a041df8193a211487cb6d4b611c01ff64" title="Update the game state." alt="" coords="108,5,219,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="253,21,219,21,219,15,253,15"/>
-<area shape="rect" id="Node000004" href="$main_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,60,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,21,60,21,60,15,94,15"/>
-</map>
