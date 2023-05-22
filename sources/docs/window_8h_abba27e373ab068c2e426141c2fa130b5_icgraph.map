@@ -1,0 +1,15 @@
+<map id="window_display_image" name="window_display_image">
+<area shape="rect" id="Node000001" title="Display an SDL surface at the specified location." alt="" coords="491,55,665,80"/>
+<area shape="rect" id="Node000002" href="$map_8c.html#a5af23287b0ef372ddf2a5cab733d6f93" title="Display the map on the screen." alt="" coords="303,5,409,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="506,54,408,32,409,27,507,49"/>
+<area shape="rect" id="Node000005" href="$map_8c.html#ab2e80e7c03b02b940b9d0f4f26a9c06e" title="Display the monsters on the map." alt="" coords="269,55,443,80"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="477,70,443,70,443,65,477,65"/>
+<area shape="rect" id="Node000006" href="$player_8c.html#a0c27eb4b4a9be457effcd969c1134296" title="Display the player on the screen." alt="" coords="297,104,415,129"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="507,86,415,107,413,101,506,80"/>
+<area shape="rect" id="Node000003" href="$game_8c.html#a9a2923cc7bb23817fe4914c97d06c5bb" title="Display the game on the screen." alt="" coords="108,55,221,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="294,37,216,57,214,52,292,32"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,55,60,80"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,70,60,70,60,65,94,65"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="255,70,221,70,221,65,255,65"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="292,103,214,83,216,78,294,98"/>
+</map>

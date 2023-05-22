@@ -1,0 +1,17 @@
+<map id="include/timer.h" name="include/timer.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="305,5,423,31"/>
+<area shape="rect" id="Node000002" href="$monster_8h.html" title="This file contains the declarations of functions and data types for monsters." alt="" coords="96,79,235,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="320,38,199,81,197,76,318,33"/>
+<area shape="rect" id="Node000006" href="$bomb_8c.html" title=" " alt="" coords="259,79,352,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="348,43,317,80,313,77,344,40"/>
+<area shape="rect" id="Node000007" href="$player_8c.html" title=" " alt="" coords="376,79,472,104"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="385,40,416,77,412,80,381,43"/>
+<area shape="rect" id="Node000008" href="$timer_8c.html" title=" " alt="" coords="496,79,587,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="406,33,513,76,511,81,404,38"/>
+<area shape="rect" id="Node000003" href="$game_8c.html" title=" " alt="" coords="5,152,99,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="137,114,72,154,69,150,134,109"/>
+<area shape="rect" id="Node000004" href="$map_8c.html" title=" " alt="" coords="123,152,208,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="168,118,168,152,163,152,163,118"/>
+<area shape="rect" id="Node000005" href="$monster_8c.html" title=" " alt="" coords="232,152,341,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="198,109,268,149,265,154,196,113"/>
+</map>

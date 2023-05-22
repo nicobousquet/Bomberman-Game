@@ -1,0 +1,5 @@
+<map id="player_inc_num_bomb" name="player_inc_num_bomb">
+<area shape="rect" id="Node000001" title="Increase the number of bombs the player can put." alt="" coords="191,5,360,31"/>
+<area shape="rect" id="Node000002" href="$player_8c.html#a1d9eb54cb940fc42826804dddee9dbc9" title="Get the bonus of the specified type for the player." alt="" coords="5,5,143,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,21,143,21,143,15,177,15"/>
+</map>

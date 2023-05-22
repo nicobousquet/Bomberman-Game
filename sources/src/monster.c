@@ -3,10 +3,14 @@
 #include <stdlib.h>
 #include <SDL/SDL.h>
 
+/**
+ * @brief Structure representing a monster.
+ */
 struct monster {
-    int x, y;
-    enum direction direction;
-    struct timer *timer; /* timer */
+    int x; /**< X-coordinate of the monster */
+    int y; /**< Y-coordinate of the monster */
+    enum direction direction; /**< Current direction of the monster */
+    struct timer *timer; /**< Timer for the monster */
 };
 
 struct monster *monster_init(int x, int y, int timer_duration) {

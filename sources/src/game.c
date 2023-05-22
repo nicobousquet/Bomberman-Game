@@ -1,9 +1,7 @@
 #include "../include/game.h"
 #include "../include/sprite.h"
 #include "../include/bomb.h"
-#include "../include/player.h"
 #include "../include/map.h"
-#include "../include/timer.h"
 #include "../include/monster.h"
 #include "../include/window.h"
 #include "../include/constant.h"
@@ -12,12 +10,54 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @struct game
+ * @brief Structure representing the game.
+ */
 struct game {
-    struct map **maps_list; /* the game's maps */
-    short num_levels; /* game's number of maps */
-    short current_level; /* current level */
-    struct player *player; /* player of the game */
+    struct map **list_maps; /**< List of game maps */
+    short num_levels; /**< Number of game maps */
+    short current_level; /**< Current level */
+    struct player *player; /**< Player of the game */
 };
+
+static struct map *read_new_map(char *filename) {
+    assert(filename);
+    /* opening map file */
+    FILE *fp = fopen(filename, "rb");
+    if (!fp) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
+
+    /* getting size of file */
+    fseek(fp, 0, SEEK_END);
+    long int size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+    char *grid = malloc(size);
+    if (!grid) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
+    /* reading file and setting map->grid */
+    size_t numread = fread(grid, sizeof(char), size, fp);
+    if ((long int) numread != size) {
+        perror("fread");
+        exit(EXIT_FAILURE);
+    }
+    fclose(fp);
+
+    int width = strtol(grid, &grid, 10);
+    int height = strtol(grid + 1, &grid, 10);
+    struct map *map = map_new(width, height);
+    for (int i = 0; i < width * height; i++) {
+        int ret = strtol(grid, &grid, 10);
+        map_get_grid(map)[i] = (unsigned char) ret;
+    }
+
+    return map;
+}
 
 /* launching backup or new game */
 struct game *game_new(void) {
@@ -50,32 +90,32 @@ struct game *game_new(void) {
         player_set_timer_invincibility(game->player, timer_invincibility);
 
         /* loading maps */
-        game->maps_list = malloc(game->num_levels * sizeof(struct map *));
-        if (!game->maps_list) {
+        game->list_maps = malloc(game->num_levels * sizeof(struct map *));
+        if (!game->list_maps) {
             perror("malloc");
         }
 
         for (int i = 0; i < game->num_levels; i++) {
-            game->maps_list[i] = malloc(map_get_size());
-            if (!game->maps_list[i]) {
+            game->list_maps[i] = malloc(map_get_size());
+            if (!game->list_maps[i]) {
                 perror("malloc");
             }
 
-            fread(game->maps_list[i], map_get_size(), 1, file);
+            fread(game->list_maps[i], map_get_size(), 1, file);
             /* loading maps' grid */
-            unsigned char *grid = malloc(map_get_width(game->maps_list[i]) * map_get_height(game->maps_list[i]));
+            unsigned char *grid = malloc(map_get_width(game->list_maps[i]) * map_get_height(game->list_maps[i]));
             if (!grid) {
                 perror("malloc");
             }
 
-            fread(grid, map_get_width(game->maps_list[i]) * map_get_height(game->maps_list[i]), 1, file);
-            map_set_grid(game->maps_list[i], grid);
+            fread(grid, map_get_width(game->list_maps[i]) * map_get_height(game->list_maps[i]), 1, file);
+            map_set_grid(game->list_maps[i], grid);
             /* loading maps' bomb */
-            struct bomb **bombs_list = map_get_bombs_list(game->maps_list[i]);
+            struct bomb **list_bombs = map_get_list_bombs(game->list_maps[i]);
             for (int j = 0; j < NUM_BOMBS_MAX; j++) {
-                if (bombs_list[j] != NULL) {
-                    bombs_list[j] = malloc(bomb_get_size());
-                    fread(bombs_list[j], bomb_get_size(), 1, file);
+                if (list_bombs[j] != NULL) {
+                    list_bombs[j] = malloc(bomb_get_size());
+                    fread(list_bombs[j], bomb_get_size(), 1, file);
                     struct timer *timer = malloc(timer_get_size());
 
                     if (!timer) {
@@ -83,14 +123,14 @@ struct game *game_new(void) {
                     }
                     fread(timer, timer_get_size(), 1, file);
                     timer_set_start_time(timer, SDL_GetTicks() - (timer_get_duration(timer) - timer_get_remaining(timer)));
-                    bomb_set_timer(bombs_list[j], timer);
+                    bomb_set_timer(list_bombs[j], timer);
                 }
             }
-            struct monster **monsters_list = map_get_monsters_list(game->maps_list[i]);
+            struct monster **list_monsters = map_get_list_monsters(game->list_maps[i]);
             for (int j = 0; j < NUM_MONSTERS_MAX; j++) {
-                if (monsters_list[j] != NULL) {
-                    monsters_list[j] = malloc(monster_get_size());
-                    fread(monsters_list[j], monster_get_size(), 1, file);
+                if (list_monsters[j] != NULL) {
+                    list_monsters[j] = malloc(monster_get_size());
+                    fread(list_monsters[j], monster_get_size(), 1, file);
                     struct timer *timer = malloc(timer_get_size());
 
                     if (!timer) {
@@ -98,7 +138,7 @@ struct game *game_new(void) {
                     }
                     fread(timer, timer_get_size(), 1, file);
                     timer_set_start_time(timer, SDL_GetTicks() - (timer_get_duration(timer) - timer_get_remaining(timer)));
-                    monster_set_timer(monsters_list[j], timer);
+                    monster_set_timer(list_monsters[j], timer);
                 }
             }
         }
@@ -109,8 +149,8 @@ struct game *game_new(void) {
         game->num_levels = NUM_LEVELS;
         game->current_level = 0;
         game->player = player_init(NUM_BOMBS_MAX);
-        game->maps_list = malloc(game->num_levels * sizeof(struct map *));
-        if (!game->maps_list) {
+        game->list_maps = malloc(game->num_levels * sizeof(struct map *));
+        if (!game->list_maps) {
             perror("malloc");
         }
 
@@ -126,39 +166,39 @@ struct game *game_new(void) {
         };
         /* loading maps */
         for (int i = 0; i < game->num_levels; i++) {
-            game->maps_list[i] = map_read_new_map(maps_name[i]);
+            game->list_maps[i] = read_new_map(maps_name[i]);
             /* initializing maps' bomb list  */
-            struct bomb **bombs_list = map_get_bombs_list(game->maps_list[i]);
+            struct bomb **list_bombs = map_get_list_bombs(game->list_maps[i]);
             for (int j = 0; j < NUM_BOMBS_MAX; j++) {
-                bombs_list[j] = NULL;
+                list_bombs[j] = NULL;
             }
 
-            struct monster **monsters_list = map_get_monsters_list(game->maps_list[i]);
+            struct monster **list_monsters = map_get_list_monsters(game->list_maps[i]);
             for (int j = 0; j < NUM_MONSTERS_MAX; j++) {
-                monsters_list[j] = NULL;
+                list_monsters[j] = NULL;
             }
         }
     }
     /* setting monsters on current map */
-    map_init_monsters_list(game->maps_list[game->current_level]);
+    map_init_list_monsters(game->list_maps[game->current_level]);
     return game;
 }
 
 /* freeing game */
 void game_free(struct game *game) {
     assert(game);
-    assert(game->maps_list);
+    assert(game->list_maps);
     for (int i = 0; i < game->num_levels; i++) {
-        assert(game->maps_list[i]);
+        assert(game->list_maps[i]);
     }
     assert(game->player);
 
     player_free(game->player);
     for (int i = 0; i < game->num_levels; i++) {
-        map_free(game->maps_list[i]);
+        map_free(game->list_maps[i]);
     }
 
-    free(game->maps_list);
+    free(game->list_maps);
     free(game);
 
     sprite_free();
@@ -166,9 +206,9 @@ void game_free(struct game *game) {
 
 struct map *game_get_current_map(struct game *game) {
     assert(game);
-    assert(game->maps_list);
-    assert(game->maps_list[game->current_level]);
-    return game->maps_list[game->current_level];
+    assert(game->list_maps);
+    assert(game->list_maps[game->current_level]);
+    return game->list_maps[game->current_level];
 }
 
 struct player *game_get_player(struct game *game) {
@@ -264,22 +304,22 @@ static void backup_game(struct game *game) {
     fwrite(player_get_timer_invincibility(player), timer_get_size(), 1, file);
 
     for (int i = 0; i < game->num_levels; i++) {
-        fwrite(game->maps_list[i], map_get_size(), 1, file);
-        fwrite(map_get_grid(game->maps_list[i]), map_get_width(game->maps_list[i]) * map_get_height(game->maps_list[i]), 1, file);
+        fwrite(game->list_maps[i], map_get_size(), 1, file);
+        fwrite(map_get_grid(game->list_maps[i]), map_get_width(game->list_maps[i]) * map_get_height(game->list_maps[i]), 1, file);
 
-        struct bomb **bombs_list = map_get_bombs_list(game->maps_list[i]);
+        struct bomb **list_bombs = map_get_list_bombs(game->list_maps[i]);
         for (int j = 0; j < NUM_BOMBS_MAX; j++) {
-            if (bombs_list[j] != NULL) {
-                fwrite(bombs_list[j], bomb_get_size(), 1, file);
-                fwrite(bomb_get_timer(bombs_list[j]), timer_get_size(), 1, file);
+            if (list_bombs[j] != NULL) {
+                fwrite(list_bombs[j], bomb_get_size(), 1, file);
+                fwrite(bomb_get_timer(list_bombs[j]), timer_get_size(), 1, file);
             }
         }
 
-        struct monster **monsters_list = map_get_monsters_list(game->maps_list[i]);
+        struct monster **list_monsters = map_get_list_monsters(game->list_maps[i]);
         for (int j = 0; j < NUM_MONSTERS_MAX; j++) {
-            if (monsters_list[j] != NULL) {
-                fwrite(monsters_list[j], monster_get_size(), 1, file);
-                fwrite(monster_get_timer(monsters_list[j]), timer_get_size(), 1, file);
+            if (list_monsters[j] != NULL) {
+                fwrite(list_monsters[j], monster_get_size(), 1, file);
+                fwrite(monster_get_timer(list_monsters[j]), timer_get_size(), 1, file);
             }
         }
     }
@@ -307,8 +347,8 @@ static void change_current_level(struct game *game, int level) {
     struct map *map = game_get_current_map(game);
     struct player *player = game_get_player(game);
     player_set_num_bombs(player, 9);
-    /* loading monsters in monsters_list */
-    map_init_monsters_list(map);
+    /* loading monsters in list_monsters */
+    map_init_list_monsters(map);
     window_create(SIZE_BLOC * map_get_width(map), SIZE_BLOC * map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
 }
 

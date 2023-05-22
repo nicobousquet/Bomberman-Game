@@ -7,14 +7,18 @@
 #include <assert.h>
 #include <stdlib.h>
 
+/**
+ * @brief Structure representing the player.
+ */
 struct player {
-    int x, y; /* player's position */
-    enum direction direction;
-    int num_bombs; /* number of bombs */
-    int bombs_range; /* range of bombs */
-    int num_lives; /* number of lives */
-    int num_keys; /* number of keys */
-    struct timer *timer_invincibility; /* timer */
+    int x; /**< X position of the player */
+    int y; /**< Y position of the player */
+    enum direction direction; /**< Direction of the player */
+    int num_bombs; /**< Number of bombs of the player */
+    int bombs_range; /**< Range of the player's bombs */
+    int num_lives; /**< Number of lives of the player */
+    int num_keys; /**< Number of keys of the player */
+    struct timer *timer_invincibility; /**< Invincibility timer of the player */
 };
 
 struct player *player_init(int bombs) {

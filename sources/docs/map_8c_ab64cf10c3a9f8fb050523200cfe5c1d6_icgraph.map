@@ -1,0 +1,7 @@
+<map id="map_set_grid" name="map_set_grid">
+<area shape="rect" id="Node000001" title="Set the grid data of the map." alt="" coords="249,5,360,31"/>
+<area shape="rect" id="Node000002" href="$game_8c.html#a07349658cd9e4bd4b41e7a6182acf9a5" title="Create a new game." alt="" coords="108,5,201,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,21,202,21,202,15,236,15"/>
+<area shape="rect" id="Node000003" href="$main_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,60,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,21,60,21,60,15,94,15"/>
+</map>

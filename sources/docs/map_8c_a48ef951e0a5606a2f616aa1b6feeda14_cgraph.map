@@ -1,0 +1,15 @@
+<map id="map_update_monsters" name="map_update_monsters">
+<area shape="rect" id="Node000001" title="Update the state of monsters on the map." alt="" coords="5,129,176,155"/>
+<area shape="rect" id="Node000002" href="$map_8c.html#a15422efeaeb3184bc930d2fecb2e7036" title="Get the list of monsters on the map." alt="" coords="224,5,399,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,127,153,85,187,61,223,40,239,33,241,38,225,44,190,65,157,89,107,131"/>
+<area shape="rect" id="Node000003" href="$monster_8c.html#a6f226151e8ff5b99b61afe1f40e0253e" title="Get the timer of the monster." alt="" coords="238,55,385,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="122,127,223,89,247,81,249,87,225,94,124,132"/>
+<area shape="rect" id="Node000004" href="$monster_8c.html#ab01dc2b6cdeacd8a774ab573fffd7d28" title="Set the direction of the monster." alt="" coords="228,104,395,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="176,130,214,125,214,130,177,135"/>
+<area shape="rect" id="Node000005" href="$timer_8c.html#a3bd18d960881cb78f50d6b38d4dc9f2d" title="Get the state of the timer." alt="" coords="249,153,374,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="177,149,235,155,235,160,176,154"/>
+<area shape="rect" id="Node000006" href="$timer_8c.html#a201306d85a2cc6eb75104a8c72f0741d" title="Start the timer with a specified duration." alt="" coords="264,203,359,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="126,152,225,187,252,196,251,201,223,193,125,157"/>
+<area shape="rect" id="Node000007" href="$timer_8c.html#a97c47d61d40501e92daf9867e20bba43" title="Update the timer." alt="" coords="257,252,366,277"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="108,153,158,194,190,217,225,237,245,245,243,250,223,242,187,221,154,198,104,157"/>
+</map>

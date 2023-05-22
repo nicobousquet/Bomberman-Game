@@ -1,0 +1,14 @@
+<map id="monster_get_timer" name="monster_get_timer">
+<area shape="rect" id="Node000001" title="Get the timer of the monster." alt="" coords="489,31,636,56"/>
+<area shape="rect" id="Node000002" href="$map_8c.html#a3510ed0f84d0ca7247138ff262bbaef5" title="Initialize the list of monsters on the map." alt="" coords="267,5,441,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="475,35,441,31,442,26,476,30"/>
+<area shape="rect" id="Node000005" href="$map_8c.html#a48ef951e0a5606a2f616aa1b6feeda14" title="Update the state of monsters on the map." alt="" coords="269,55,439,80"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="476,56,440,60,439,55,476,51"/>
+<area shape="rect" id="Node000003" href="$game_8c.html#a07349658cd9e4bd4b41e7a6182acf9a5" title="Create a new game." alt="" coords="117,5,210,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="253,21,210,21,210,15,253,15"/>
+<area shape="rect" id="Node000004" href="$main_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,31,60,56"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,32,61,41,60,36,102,27"/>
+<area shape="rect" id="Node000006" href="$game_8c.html#a041df8193a211487cb6d4b611c01ff64" title="Update the game state." alt="" coords="108,55,219,80"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="255,70,219,70,219,65,255,65"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="94,57,60,51,61,46,95,52"/>
+</map>

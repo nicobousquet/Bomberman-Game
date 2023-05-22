@@ -1,0 +1,25 @@
+<map id="map_set_bomb" name="map_set_bomb">
+<area shape="rect" id="Node000001" title="Set a bomb on the map at the player&#39;s current position." alt="" coords="5,203,128,228"/>
+<area shape="rect" id="Node000002" href="$bomb_8c.html#aa22ee7ad8db490d2e68bbb7d5beb7c8c" title="Get the size of the bomb." alt="" coords="209,5,329,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,202,82,169,104,125,135,79,174,40,195,29,197,33,178,44,139,82,109,128,87,171,75,204"/>
+<area shape="rect" id="Node000003" href="$bomb_8c.html#ad3475e89b86f422642f10cfaf03f6a0e" title="Initialize a bomb with the specified coordinates and range." alt="" coords="226,55,313,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,201,112,147,141,116,175,89,212,74,214,79,177,94,144,119,116,150,78,204"/>
+<area shape="rect" id="Node000005" href="$map_8c.html#add03333232b0c883829c8c4a18b626d6" title="Get the value of the cell at the specified coordinates (x, y)." alt="" coords="193,104,345,129"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="81,201,122,169,175,138,193,131,195,136,177,143,125,174,84,205"/>
+<area shape="rect" id="Node000007" href="$map_8c.html#ad7c6ae9088f9f92412612b7abb5d0be4" title="Get the list of bombs on the map." alt="" coords="191,153,348,179"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="119,200,203,179,204,185,120,205"/>
+<area shape="rect" id="Node000008" href="$player_8c.html#a96ed81b9785266f6630531b419a0a63e" title="Decrease the number of bombs the player can put." alt="" coords="183,203,356,228"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="128,213,169,213,169,218,128,218"/>
+<area shape="rect" id="Node000009" href="$player_8c.html#ab21990ab7a2d9eef517894090b0e754d" title="Get the range of bombs for the player." alt="" coords="176,252,363,277"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="120,225,204,246,203,251,119,231"/>
+<area shape="rect" id="Node000010" href="$player_8c.html#a066f2c35ee248611570c912ed6da700f" title="Get the number of bombs the player can put." alt="" coords="184,301,355,327"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="85,226,125,256,177,286,198,295,196,300,175,291,122,261,82,230"/>
+<area shape="rect" id="Node000011" href="$player_8c.html#a96cf6794e68f4855df28f7955271d49e" title="Get the current x&#45;coordinate of the player&#39;s position." alt="" coords="216,351,323,376"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="78,227,116,280,145,310,177,336,204,348,202,353,175,340,141,314,112,283,74,230"/>
+<area shape="rect" id="Node000012" href="$player_8c.html#ab51e706dc2803b17dfcdc601952cb51a" title="Get the current y&#45;coordinate of the player&#39;s position." alt="" coords="216,400,323,425"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="75,227,88,260,109,303,139,347,178,385,204,399,201,404,174,389,135,351,105,305,83,262,70,229"/>
+<area shape="rect" id="Node000004" href="$timer_8c.html#af56453b20018ba7b585a7cb5c81e8ad3" title="Initialize a timer." alt="" coords="425,55,511,80"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="313,65,412,65,412,70,313,70"/>
+<area shape="rect" id="Node000006" href="$map_8c.html#a28f7d80a8ed56a6bb626ea0c638dfa41" title="Test if the specified coordinates (x, y) are within the map boundaries." alt="" coords="411,104,525,129"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="346,114,397,114,397,119,346,119"/>
+</map>

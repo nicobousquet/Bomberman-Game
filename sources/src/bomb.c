@@ -4,18 +4,19 @@
 #include <assert.h>
 #include <stdlib.h>
 
+/**
+ * @brief Structure representing a bomb.
+ */
 struct bomb {
-    int x; /* position x */
-    int y; /* position y */
-    enum bomb_type ttl; /* time to live for the bomb */
-    struct timer *timer; /* timer of 1 sec */
-    int range; /* range of explosion */
-
-    /* range of explosion in each direction */
-    int north_range;
-    int south_range;
-    int east_range;
-    int west_range;
+    int x; /**< X-coordinate of the bomb */
+    int y; /**< Y-coordinate of the bomb */
+    enum bomb_type ttl; /**< Time to live for the bomb */
+    struct timer *timer; /**< Timer of 1 second */
+    int range; /**< Range of explosion */
+    int north_range; /**< Range of explosion in the north direction */
+    int south_range; /**< Range of explosion in the south direction */
+    int east_range; /**< Range of explosion in the east direction */
+    int west_range; /**< Range of explosion in the west direction */
 };
 
 void bomb_init(struct bomb *bomb, int x, int y, int range) {

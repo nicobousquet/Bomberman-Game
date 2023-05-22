@@ -1,0 +1,5 @@
+<map id="player_get_bombs_range" name="player_get_bombs_range">
+<area shape="rect" id="Node000001" title="Get the range of bombs for the player." alt="" coords="176,5,363,31"/>
+<area shape="rect" id="Node000002" href="$map_8c.html#a102187d2d9be199d2d4a62970ec2bdf2" title="Set a bomb on the map at the player&#39;s current position." alt="" coords="5,5,128,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,21,128,21,128,15,162,15"/>
+</map>

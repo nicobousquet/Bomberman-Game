@@ -1,0 +1,30 @@
+<map id="include/direction.h" name="include/direction.h">
+<area shape="rect" id="Node000001" title="This file contains the declaration of the direction enumeration and related functions." alt="" coords="321,5,463,31"/>
+<area shape="rect" id="Node000002" href="$monster_8h.html" title="This file contains the declarations of functions and data types for monsters." alt="" coords="32,152,171,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="348,38,245,81,175,120,120,154,117,149,172,115,243,76,346,33"/>
+<area shape="rect" id="Node000006" href="$player_8h.html" title="This file contains the declaration of the player structure and related functions." alt="" coords="256,79,381,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="372,42,332,80,329,77,368,38"/>
+<area shape="rect" id="Node000010" href="$sprite_8h.html" title=" " alt="" coords="405,79,528,104"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="416,38,456,77,453,80,412,42"/>
+<area shape="rect" id="Node000012" href="$direction_8c.html" title=" " alt="" coords="553,79,666,104"/>
+<area shape="poly" id="edge16_Node000001_Node000012" title=" " alt="" coords="441,32,575,76,573,81,439,37"/>
+<area shape="rect" id="Node000003" href="$game_8c.html" title=" " alt="" coords="248,225,341,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="146,179,264,223,262,228,144,184"/>
+<area shape="rect" id="Node000004" href="$map_8c.html" title=" " alt="" coords="139,225,224,251"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="126,184,170,223,166,227,122,188"/>
+<area shape="rect" id="Node000005" href="$monster_8c.html" title=" " alt="" coords="5,225,115,251"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="90,191,69,227,64,224,85,188"/>
+<area shape="rect" id="Node000007" href="$map_8h.html" title="This file contains the declarations of functions and data types for the game map." alt="" coords="195,152,309,177"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="300,116,265,154,261,150,296,113"/>
+<area shape="rect" id="Node000009" href="$player_8c.html" title=" " alt="" coords="333,152,429,177"/>
+<area shape="poly" id="edge10_Node000006_Node000009" title=" " alt="" coords="340,113,373,150,369,154,336,116"/>
+<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="268,188,290,224,285,227,264,191"/>
+<area shape="poly" id="edge9_Node000007_Node000004" title=" " alt="" coords="233,189,195,227,191,223,229,185"/>
+<area shape="rect" id="Node000008" href="$main_8c.html" title=" " alt="" coords="366,225,455,251"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="291,180,386,223,384,228,289,185"/>
+<area shape="poly" id="edge12_Node000010_Node000003" title=" " alt="" coords="484,115,494,147,494,163,487,179,468,190,431,203,342,228,341,223,429,198,466,185,483,176,489,162,489,147,479,117"/>
+<area shape="poly" id="edge13_Node000010_Node000004" title=" " alt="" coords="468,119,461,150,454,166,443,180,359,201,225,230,223,225,358,195,440,175,449,163,456,148,463,117"/>
+<area shape="poly" id="edge14_Node000010_Node000009" title=" " alt="" coords="444,115,397,154,394,150,441,110"/>
+<area shape="rect" id="Node000011" href="$sprite_8c.html" title=" " alt="" coords="555,152,648,177"/>
+<area shape="poly" id="edge15_Node000010_Node000011" title=" " alt="" coords="502,108,581,149,578,154,499,113"/>
+</map>
