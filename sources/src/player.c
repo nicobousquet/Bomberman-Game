@@ -83,7 +83,7 @@ void player_set_y(struct player *player, int y) {
     player->y = y;
 }
 
-void player_set_current_way(struct player *player, enum direction way) {
+void player_set_direction(struct player *player, enum direction way) {
     assert(player);
     player->direction = way;
 }
@@ -175,7 +175,6 @@ void player_dec_num_keys(struct player *player) {
     }
 }
 
-/* displaying player */
 void player_display(struct player *player) {
     assert(player);
     window_display_image(sprite_get_player(player->direction), player->x * SIZE_BLOC, player->y * SIZE_BLOC);

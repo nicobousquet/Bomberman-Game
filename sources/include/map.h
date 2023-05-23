@@ -43,16 +43,16 @@ int map_get_width(struct map *map);
 int map_get_height(struct map *map);
 
 /**
- * @brief Get the grid data of the map.
+ * @brief Get the grid of the map.
  * @param map A pointer to the map.
- * @return A pointer to the grid data.
+ * @return A pointer to the grid.
  */
 unsigned char *map_get_grid(struct map *map);
 
 /**
  * @brief Set the grid data of the map.
  * @param map A pointer to the map.
- * @param grid A pointer to the grid data.
+ * @param grid A pointer to the grid.
  */
 void map_set_grid(struct map *map, unsigned char *grid);
 
@@ -71,8 +71,8 @@ struct bomb **map_get_list_bombs(struct map *map);
 struct monster **map_get_list_monsters(struct map *map);
 
 /**
- * @brief Get the size of the map.
- * @return The size of the map.
+ * @brief Get the size of the map structure.
+ * @return The size of the map structure.
  */
 int map_get_size();
 
@@ -116,7 +116,6 @@ void map_display(struct map *map);
 void map_init_list_monsters(struct map *map);
 
 /**
-
 @brief Set a bomb on the map at the player's current position.
 @param map A pointer to the map.
 @param player A pointer to the player.
@@ -124,7 +123,6 @@ void map_init_list_monsters(struct map *map);
 void map_set_bomb(struct map *map, struct player *player);
 
 /**
-
 @brief Update the state of bombs on the map.
 @param map A pointer to the map.
 @param player A pointer to the player.
@@ -132,14 +130,12 @@ void map_set_bomb(struct map *map, struct player *player);
 void map_update_bombs(struct map *map, struct player *player);
 
 /**
-
 @brief Display the monsters on the map.
 @param map A pointer to the map.
 */
 void map_display_monsters(struct map *map);
 
 /**
-
 @brief Move the player on the map.
 @param map A pointer to the map.
 @param player A pointer to the player.
@@ -148,7 +144,6 @@ void map_display_monsters(struct map *map);
 int map_move_player(struct map *map, struct player *player);
 
 /**
-
 @brief Update the state of monsters on the map.
 @param map A pointer to the map.
 @param player A pointer to the player.

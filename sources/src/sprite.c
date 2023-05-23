@@ -2,17 +2,14 @@
 #include "../include/misc.h"
 #include <assert.h>
 
-// Sprites general
 #define MAP_CASE           "sprite/wood_box.png"
 #define MAP_KEY            "sprite/key.png"
-#define MAP_DOOR_OPENED    "sprite/door_opened.png"
-#define MAP_DOOR_CLOSED    "sprite/door_closed.png"
+#define MAP_DOOR_OPEN    "sprite/door_open.png"
+#define MAP_DOOR_CLOSE    "sprite/door_close.png"
 
-// Scenery elements
 #define MAP_STONE          "sprite/stone.png"
 #define MAP_TREE           "sprite/tree.png"
 
-// Sprites of Banner
 #define BANNER_LINE        "sprite/banner_line.png"
 #define BANNER_LINE_VERT   "sprite/banner_line_vert.png"
 #define BANNER_LIFE        "sprite/banner_life.png"
@@ -29,39 +26,32 @@
 #define DIGIT_8            "sprite/banner_8.jpg"
 #define DIGIT_9            "sprite/banner_9.jpg"
 
-// Sprites of Bombs
 #define BOMB_TTL1           "sprite/bomb1.png"
 #define BOMB_TTL2           "sprite/bomb2.png"
 #define BOMB_TTL3           "sprite/bomb3.png"
 #define BOMB_TTL4           "sprite/bomb4.png"
 #define BOMB_EXPLOSION      "sprite/explosion.png"
 
-// Sprites of Bonus
 #define IMG_BONUS_BOMB_RANGE_INC  "sprite/bonus_bomb_range_inc.png"
 #define IMG_BONUS_BOMB_RANGE_DEC  "sprite/bonus_bomb_range_dec.png"
 #define IMG_BONUS_BOMB_NB_INC     "sprite/bonus_bomb_num_inc.png"
 #define IMG_BONUS_BOMB_NB_DEC     "sprite/bonus_bomb_num_dec.png"
 #define IMG_BONUS_LIFE            "sprite/banner_life.png"
 
-// Sprites of Players
 #define PLAYER_LEFT     "sprite/player_left.png"
 #define PLAYER_UP       "sprite/player_up.png"
 #define PLAYER_RIGHT    "sprite/player_right.png"
 #define PLAYER_DOWN     "sprite/player_down.png"
 
-// Sprites of Princess
 #define PRINCESS        "sprite/bomberwoman.png"
 
-//Sprites of Monsters
 #define MONSTER_LEFT    "sprite/monster_left.png"
 #define MONSTER_UP      "sprite/monster_up.png"
 #define MONSTER_RIGHT   "sprite/monster_right.png"
 #define MONSTER_DOWN    "sprite/monster_down.png"
 
-// bomb
 SDL_Surface *bomb_img[5];
 
-// banner
 SDL_Surface *numbers[10];
 SDL_Surface *banner_life;
 SDL_Surface *banner_bomb;
@@ -69,26 +59,21 @@ SDL_Surface *banner_range;
 SDL_Surface *banner_line;
 SDL_Surface *banner_line_vert;
 
-// map
 SDL_Surface *box;
 SDL_Surface *goal;
 SDL_Surface *key;
-SDL_Surface *door_opened;
-SDL_Surface *door_closed;
+SDL_Surface *door_open;
+SDL_Surface *door_close;
 SDL_Surface *stone;
 SDL_Surface *tree;
 
-// bonus
 #define NB_BONUS 5
 SDL_Surface *bonus[NB_BONUS + 1];
 
-// player
 SDL_Surface *player_img[4];
 
-//Princess
 SDL_Surface *princess;
 
-//monster
 SDL_Surface *monster_img[4];
 
 static void bomb_load() {
@@ -106,7 +91,6 @@ static void bomb_unload() {
 }
 
 static void banner_load() {
-    // numbers imgs
     numbers[0] = image_load(DIGIT_0);
     numbers[1] = image_load(DIGIT_1);
     numbers[2] = image_load(DIGIT_2);
@@ -118,7 +102,6 @@ static void banner_load() {
     numbers[8] = image_load(DIGIT_8);
     numbers[9] = image_load(DIGIT_9);
 
-    // other banner sprites
     banner_life = image_load(BANNER_LIFE);
     banner_bomb = image_load(BANNER_BOMB);
     banner_range = image_load(BANNER_RANGE);
@@ -127,12 +110,10 @@ static void banner_load() {
 }
 
 static void banner_unload() {
-    // numbers imgs
     for (int i = 0; i < 10; i++) {
         SDL_FreeSurface(numbers[i]);
     }
 
-    // other banner sprites
     SDL_FreeSurface(banner_line);
     SDL_FreeSurface(banner_line_vert);
     SDL_FreeSurface(banner_bomb);
@@ -141,13 +122,12 @@ static void banner_unload() {
 }
 
 static void map_load() {
-    // Sprite loading
     tree = image_load(MAP_TREE);
     box = image_load(MAP_CASE);
     key = image_load(MAP_KEY);
     stone = image_load(MAP_STONE);
-    door_opened = image_load(MAP_DOOR_OPENED);
-    door_closed = image_load(MAP_DOOR_CLOSED);
+    door_open = image_load(MAP_DOOR_OPEN);
+    door_close = image_load(MAP_DOOR_CLOSE);
     princess = image_load(PRINCESS);
 }
 
@@ -157,8 +137,8 @@ static void map_unload() {
     SDL_FreeSurface(goal);
     SDL_FreeSurface(key);
     SDL_FreeSurface(stone);
-    SDL_FreeSurface(door_opened);
-    SDL_FreeSurface(door_closed);
+    SDL_FreeSurface(door_open);
+    SDL_FreeSurface(door_close);
     SDL_FreeSurface(princess);
 }
 
@@ -294,12 +274,12 @@ SDL_Surface *sprite_get_scenery(enum scenery_type type) {
 }
 
 SDL_Surface *sprite_get_door(enum door_status status) {
-    if (status == OPENED) {
-        assert(door_opened);
-        return door_opened;
-    } else if (status == CLOSED) {
-        assert(door_closed);
-        return door_closed;
+    if (status == OPEN) {
+        assert(door_open);
+        return door_open;
+    } else if (status == CLOSE) {
+        assert(door_close);
+        return door_close;
     }
     return NULL;
 }

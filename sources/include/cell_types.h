@@ -38,8 +38,8 @@ enum scenery_type {
  * @brief Enumeration of door statuses.
  */
 enum door_status {
-    OPENED = 0, /**< Opened door status. */
-    CLOSED /**< Closed door status. */
+    OPEN = 0, /**< Opened door status. */
+    CLOSE /**< Closed door status. */
 };
 
 /**

@@ -74,8 +74,3 @@ void monster_set_timer(struct monster *monster, struct timer *timer) {
 struct timer *monster_get_timer(struct monster *monster) {
     return monster->timer;
 }
-
-void monster_set_current_way(struct monster *monster, enum direction way) {
-    assert(monster);
-    monster->direction = way;
-}

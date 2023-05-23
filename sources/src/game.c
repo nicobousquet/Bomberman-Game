@@ -23,14 +23,12 @@ struct game {
 
 static struct map *read_new_map(char *filename) {
     assert(filename);
-    /* opening map file */
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
 
-    /* getting size of file */
     fseek(fp, 0, SEEK_END);
     long int size = ftell(fp);
     fseek(fp, 0, SEEK_SET);
@@ -40,7 +38,6 @@ static struct map *read_new_map(char *filename) {
         exit(EXIT_FAILURE);
     }
 
-    /* reading file and setting map->grid */
     size_t numread = fread(grid, sizeof(char), size, fp);
     if ((long int) numread != size) {
         perror("fread");
@@ -59,9 +56,7 @@ static struct map *read_new_map(char *filename) {
     return map;
 }
 
-/* launching backup or new game */
 struct game *game_new(void) {
-    /* load sprites into process memory */
     sprite_load();
     struct game *game = malloc(sizeof(struct game));
     if (!game) {
@@ -71,9 +66,7 @@ struct game *game_new(void) {
     const char *filename = "backup/data.bin";
     FILE *file = fopen(filename, "rb");
     if (file != NULL) {
-        /* loading game structure */
         fread(game, sizeof(struct game), 1, file);
-        /* loading player */
         game->player = malloc(player_get_size());
         if (!game->player) {
             perror("malloc");
@@ -89,7 +82,6 @@ struct game *game_new(void) {
         fread(timer_invincibility, timer_get_size(), 1, file);
         player_set_timer_invincibility(game->player, timer_invincibility);
 
-        /* loading maps */
         game->list_maps = malloc(game->num_levels * sizeof(struct map *));
         if (!game->list_maps) {
             perror("malloc");
@@ -102,7 +94,6 @@ struct game *game_new(void) {
             }
 
             fread(game->list_maps[i], map_get_size(), 1, file);
-            /* loading maps' grid */
             unsigned char *grid = malloc(map_get_width(game->list_maps[i]) * map_get_height(game->list_maps[i]));
             if (!grid) {
                 perror("malloc");
@@ -110,7 +101,6 @@ struct game *game_new(void) {
 
             fread(grid, map_get_width(game->list_maps[i]) * map_get_height(game->list_maps[i]), 1, file);
             map_set_grid(game->list_maps[i], grid);
-            /* loading maps' bomb */
             struct bomb **list_bombs = map_get_list_bombs(game->list_maps[i]);
             for (int j = 0; j < NUM_BOMBS_MAX; j++) {
                 if (list_bombs[j] != NULL) {
@@ -142,10 +132,9 @@ struct game *game_new(void) {
                 }
             }
         }
-        /* once backup loaded, delete backup file */
         fclose(file);
         remove(filename);
-    } else { /* loading new game */
+    } else {
         game->num_levels = NUM_LEVELS;
         game->current_level = 0;
         game->player = player_init(NUM_BOMBS_MAX);
@@ -164,10 +153,8 @@ struct game *game_new(void) {
                 "map/map_6",
                 "map/map_7"
         };
-        /* loading maps */
         for (int i = 0; i < game->num_levels; i++) {
             game->list_maps[i] = read_new_map(maps_name[i]);
-            /* initializing maps' bomb list  */
             struct bomb **list_bombs = map_get_list_bombs(game->list_maps[i]);
             for (int j = 0; j < NUM_BOMBS_MAX; j++) {
                 list_bombs[j] = NULL;
@@ -179,12 +166,10 @@ struct game *game_new(void) {
             }
         }
     }
-    /* setting monsters on current map */
     map_init_list_monsters(game->list_maps[game->current_level]);
     return game;
 }
 
-/* freeing game */
 void game_free(struct game *game) {
     assert(game);
     assert(game->list_maps);
@@ -200,7 +185,6 @@ void game_free(struct game *game) {
 
     free(game->list_maps);
     free(game);
-
     sprite_free();
 }
 
@@ -229,7 +213,6 @@ int game_get_current_level(struct game *game) {
     return game->current_level;
 }
 
-/* displaying banner at the bottom of the window */
 static void display_banner(struct game *game) {
     assert(game);
 
@@ -243,7 +226,7 @@ static void display_banner(struct game *game) {
 
     int white_bloc = 0.5 * SIZE_BLOC;
     int x = 0;
-    /* displaying number of lives */
+
     y = (map_get_height(map) * SIZE_BLOC) + LINE_HEIGHT;
     window_display_image(sprite_get_number(game_get_current_level(game) + 1), x, y);
 
@@ -251,21 +234,18 @@ static void display_banner(struct game *game) {
     y = (map_get_height(map)) * SIZE_BLOC + LINE_HEIGHT;
     window_display_image(sprite_get_banner_vertical_line(), x, y);
 
-    /* displaying number of bombs */
     x = white_bloc + SIZE_BLOC + LINE_HEIGHT;
     window_display_image(sprite_get_banner_life(), x, y);
 
     x = white_bloc + 2 * SIZE_BLOC + LINE_HEIGHT;
     window_display_image(sprite_get_number(player_get_num_lives(player)), x, y);
 
-    /* displaying bomb range */
     x = 2 * white_bloc + 3 * SIZE_BLOC + LINE_HEIGHT;
     window_display_image(sprite_get_banner_bomb(), x, y);
 
     x = 2 * white_bloc + 4 * SIZE_BLOC + LINE_HEIGHT;
     window_display_image(sprite_get_number(player_get_num_bomb(game_get_player(game))), x, y);
 
-    /* displaying number of keys */
     x = 3 * white_bloc + 5 * SIZE_BLOC + LINE_HEIGHT;
     window_display_image(sprite_get_banner_range(), x, y);
 
@@ -335,19 +315,16 @@ static void pause_game(SDL_Event *event) {
     assert(event);
     SDL_WaitEvent(event);
     do {
-        /* game paused until next time we type P */
         SDL_WaitEvent(event);
     } while (event->key.keysym.sym != SDLK_p);
 }
 
 static void change_current_level(struct game *game, int level) {
     assert(game);
-    /* changing level */
     game_set_current_level(game, level);
     struct map *map = game_get_current_map(game);
     struct player *player = game_get_player(game);
     player_set_num_bombs(player, 9);
-    /* loading monsters in list_monsters */
     map_init_list_monsters(map);
     window_create(SIZE_BLOC * map_get_width(map), SIZE_BLOC * map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
 }
@@ -360,62 +337,53 @@ static short input_keyboard(struct game *game) {
     struct map *map = game_get_current_map(game);
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-            /* quit game with no backup */
             case SDL_QUIT:
                 return 1;
             case SDL_KEYDOWN: {
                 switch (event.key.keysym.sym) {
-                    /* Ctrl + S ==> quit game with backup */
                     case SDLK_s:
                         if (event.key.keysym.mod & KMOD_CTRL) {
                             backup_game(game);
                             return 1;
                         }
                         break;
-                        /* going north */
                     case SDLK_UP:
-                        player_set_current_way(player, NORTH);
+                        player_set_direction(player, NORTH);
                         if (map_move_player(map, player)) {
                             move = 1;
                         }
                         break;
-                        /* going south */
                     case SDLK_DOWN:
-                        player_set_current_way(player, SOUTH);
+                        player_set_direction(player, SOUTH);
                         if (map_move_player(map, player)) {
                             move = 1;
                         }
                         break;
-                        /* going east */
                     case SDLK_RIGHT:
-                        player_set_current_way(player, EAST);
+                        player_set_direction(player, EAST);
                         if (map_move_player(map, player)) {
                             move = 1;
                         }
                         break;
-                        /* going west */
                     case SDLK_LEFT:
-                        player_set_current_way(player, WEST);
+                        player_set_direction(player, WEST);
                         if (map_move_player(map, player)) {
                             move = 1;
                         }
                         break;
-                        /* set a bomb */
                     case SDLK_SPACE:
                         map_set_bomb(map, player);
                         break;
-                        /* pause game */
                     case SDLK_p:
                         pause_game(&event);
                         break;
                     case SDLK_RETURN: {
-                        /* open door */
                         int x_next_player = direction_get_x(player_get_x(player), player_get_direction(player), 1);
                         int y_next_player = direction_get_y(player_get_y(player), player_get_direction(player), 1);
 
                         if (map_is_inside(map, x_next_player, y_next_player)) {
                             uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);
-                            if ((type & 0xf1) == (CELL_DOOR | CLOSED)) {
+                            if ((type & 0xf1) == (CELL_DOOR | CLOSE)) {
                                 map_set_cell_value(map, x_next_player, y_next_player, type & 0xfe);
                                 player_dec_num_keys(player);
                             }
@@ -429,7 +397,6 @@ static short input_keyboard(struct game *game) {
                 if (move) {
                     uint8_t cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
                     if ((cell & 0xf0) == CELL_DOOR) {
-                        /* level of next level */
                         int level = (cell & 0x0e) / 2;
                         change_current_level(game, level);
                     }
@@ -450,24 +417,21 @@ int game_update(struct game *game) {
     struct player *player = game_get_player(game);
     assert(player);
     if (input_keyboard(game)) {
-        /* exit game */
         return 1;
-    } /* if player is dead */
+    }
     else if (player_get_num_lives(player) == 0) {
         printf("===========================================\n");
         printf(" >>>>>>>>>>>>>  YOU LOST!!!  <<<<<<<<<<<<<\n");
         printf("===========================================\n");
         return 1;
-    } /* if player found the princess */
+    }
     else if (map_get_cell_value(map, player_get_x(player), player_get_y(player)) == (CELL_SCENERY | SCENERY_PRINCESS)) {
         printf("==========================================\n");
         printf(" >>>>>>>>>>>>>  YOU WON!!!  <<<<<<<<<<<<<\n");
         printf("==========================================\n");
         return 1;
     }
-    /* updating bombs */
     map_update_bombs(map, player);
-    /* updating monsters */
     map_update_monsters(map, player);
 
     return 0;

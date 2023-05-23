@@ -15,13 +15,13 @@ struct game;
 struct game *game_new(void);
 
 /**
- * @brief Free the memory occupied by a game.
+ * @brief Free the memory occupied by the game.
  * @param game A pointer to the game to be freed.
  */
 void game_free(struct game *game);
 
 /**
- * @brief Get the player of the current game.
+ * @brief Get the player of the game.
  * @param game A pointer to the game.
  * @return A pointer to the player of the game.
  */
@@ -50,7 +50,7 @@ void game_display(struct game *game);
 /**
  * @brief Update the game state.
  * @param game A pointer to the game.
- * @return An integer representing the updated game state.
+ * @return 1 if game is over, 0 otherwise.
  */
 int game_update(struct game *game);
 

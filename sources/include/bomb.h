@@ -24,8 +24,8 @@ void bomb_init(struct bomb *bomb, int x, int y, int range);
 void bomb_free(struct bomb *bomb);
 
 /**
- * @brief Get the size of the bomb.
- * @return The size of the bomb.
+ * @brief Get the size of the bomb structure.
+ * @return The size of the bomb structure.
  */
 int bomb_get_size();
 

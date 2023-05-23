@@ -12,9 +12,13 @@
 #define SIZE_BLOC 60
 
 /**
- * @brief Size (number of pixels) of the banner.
+ * @brief Size (number of pixels) of the banner line.
  */
 #define LINE_HEIGHT 6
+
+/**
+ * @brief Size (number of pixels) of the banner height.
+ */
 #define BANNER_HEIGHT 60
 
 /**
@@ -23,12 +27,12 @@
 #define DEFAULT_GAME_FPS 30
 
 /**
- * @brief Maximum number of monsters allowed.
+ * @brief Maximum number of monsters per map allowed.
  */
 #define NUM_MONSTERS_MAX 10
 
 /**
- * @brief Maximum number of bombs allowed.
+ * @brief Maximum number of bombs per map allowed.
  */
 #define NUM_BOMBS_MAX 9
 
@@ -43,7 +47,7 @@
 #define NUM_LIVES_MAX 9
 
 /**
- * @brief Duration (in milliseconds) of bomb's time-to-live.
+ * @brief Duration (in milliseconds) of a bomb state.
  */
 #define DURATION_BOMB_TTL 1000
 

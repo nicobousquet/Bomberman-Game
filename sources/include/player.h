@@ -19,13 +19,6 @@ struct player;
 struct player *player_init(int num_bombs);
 
 /**
- * @brief Get the direction of the player.
- * @param player A pointer to the player.
- * @return The direction of the player.
- */
-enum direction player_get_direction(struct player *player);
-
-/**
  * @brief Free the memory occupied by the player.
  * @param player A pointer to the player.
  */
@@ -60,55 +53,76 @@ void player_set_x(struct player *player, int x);
 void player_set_y(struct player *player, int y);
 
 /**
- * @brief Increase the range of bombs for the player.
+ * @brief Get the range of bombs for the player.
+ * @param player A pointer to the player.
+ * @return The range of bombs for the player.
+ */
+int player_get_bombs_range(struct player *player);
+
+/**
+ * @brief Increase the range of bombs explosion.
  * @param player A pointer to the player.
  */
 void player_inc_bombs_range(struct player *player);
 
 /**
- * @brief Decrease the range of bombs for the player.
+ * @brief Decrease the range of bombs explosion.
  * @param player A pointer to the player.
  */
 void player_dec_bombs_range(struct player *player);
 
 /**
- * @brief Increase the number of lives for the player.
+ * @brief Get the direction of the player.
  * @param player A pointer to the player.
+ * @return The direction of the player.
  */
-void player_inc_num_lives(struct player *player);
+enum direction player_get_direction(struct player *player);
 
 /**
  * @brief Set the direction of the next move for the player.
  * @param player A pointer to the player.
  * @param direction The direction to set.
  */
-void player_set_current_way(struct player *player, enum direction direction);
+void player_set_direction(struct player *player, enum direction direction);
 
 /**
- * @brief Get the number of bombs the player can put.
+ * @brief Get the number of bombs the player has.
  * @param player A pointer to the player.
- * @return The number of bombs the player can put.
+ * @return The number of bombs the player has.
  */
 int player_get_num_bomb(struct player *player);
 
 /**
- * @brief Increase the number of bombs the player can put.
+ * @brief Set the number of bombs the player has.
+ * @param player A pointer to the player.
+ * @param num_bombs The number of bombs to set.
+ */
+void player_set_num_bombs(struct player *player, int num_bombs);
+
+/**
+ * @brief Increase the number of bombs the player has.
  * @param player A pointer to the player.
  */
 void player_inc_num_bomb(struct player *player);
 
 /**
- * @brief Decrease the number of bombs the player can put.
+ * @brief Decrease the number of bombs the player has.
  * @param player A pointer to the player.
  */
 void player_dec_num_bomb(struct player *player);
 
 /**
- * @brief Set the number of bombs the player can put.
+ * @brief Get the number of keys the player has.
  * @param player A pointer to the player.
- * @param num_bombs The number of bombs to set.
+ * @return The number of keys the player has.
  */
-void player_set_num_bombs(struct player *player, int num_bombs);
+int player_get_num_keys(struct player *player);
+
+/**
+ * @brief Increase the number of keys the player has.
+ * @param player A pointer to the player.
+ */
+void player_inc_num_keys(struct player *player);
 
 /**
  * @brief Decrease the number of keys the player has.
@@ -130,43 +144,22 @@ void player_display(struct player *player);
 int player_get_num_lives(struct player *player);
 
 /**
+ * @brief Increase the number of lives for the player.
+ * @param player A pointer to the player.
+ */
+void player_inc_num_lives(struct player *player);
+
+/**
  * @brief Decrease the number of lives for the player.
  * @param player A pointer to the player.
  */
 void player_dec_num_lives(struct player *player);
 
 /**
- * @brief Increase the number of keys the player has.
- * @param player A pointer to the player.
- */
-void player_inc_num_keys(struct player *player);
-
-/**
  * @brief Get the size of the player structure.
  * @return The size of the player structure in bytes.
  */
 int player_get_size();
-
-/**
- * @brief Get the direction of the player.
- * @param player A pointer to the player.
- * @return The direction of the player.
- */
-enum direction player_get_direction(struct player *player);
-
-/**
- * @brief Get the range of bombs for the player.
- * @param player A pointer to the player.
- * @return The range of bombs for the player.
- */
-int player_get_bombs_range(struct player *player);
-
-/**
- * @brief Get the number of keys the player has.
- * @param player A pointer to the player.
- * @return The number of keys the player has.
- */
-int player_get_num_keys(struct player *player);
 
 /**
  * @brief Get the timer for invincibility of the player.

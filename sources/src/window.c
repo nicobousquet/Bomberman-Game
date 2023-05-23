@@ -10,9 +10,7 @@ void window_create(int width, int height) {
     assert(width > 0 && height > 0);
 
     SDL_WM_SetCaption(WINDOW_NAME, NULL);
-    window = SDL_SetVideoMode(width, height,
-                              0, // If bits-per-pixel is 0, it is treated as the current display bits per pixel.
-                              SDL_HWSURFACE);
+    window = SDL_SetVideoMode(width, height, 0, SDL_HWSURFACE);
 
     if (window == NULL) {
         error("Can't set video mode: %s\n", SDL_GetError());
