@@ -57,19 +57,19 @@ void player_set_y(struct player *player, int y);
  * @param player A pointer to the player.
  * @return The range of bombs for the player.
  */
-int player_get_bombs_range(struct player *player);
+int player_get_range_bombs(struct player *player);
 
 /**
  * @brief Increase the range of bombs explosion.
  * @param player A pointer to the player.
  */
-void player_inc_bombs_range(struct player *player);
+void player_inc_range_bombs(struct player *player);
 
 /**
  * @brief Decrease the range of bombs explosion.
  * @param player A pointer to the player.
  */
-void player_dec_bombs_range(struct player *player);
+void player_dec_range_bombs(struct player *player);
 
 /**
  * @brief Get the direction of the player.

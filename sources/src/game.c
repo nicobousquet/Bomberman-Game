@@ -250,7 +250,7 @@ static void display_banner(struct game *game) {
     window_display_image(sprite_get_banner_range(), x, y);
 
     x = 3 * white_bloc + 6 * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_number(player_get_bombs_range(player)), x, y);
+    window_display_image(sprite_get_number(player_get_range_bombs(player)), x, y);
 
     x = 4 * white_bloc + 7 * SIZE_BLOC + LINE_HEIGHT;
     window_display_image(sprite_get_key(), x, y);

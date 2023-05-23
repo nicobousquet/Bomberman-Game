@@ -193,7 +193,7 @@ void map_set_bomb(struct map *map, struct player *player) {
             perror("malloc");
         }
         memset(bomb, 0, bomb_get_size());
-        bomb_init(bomb, player_get_x(player), player_get_y(player), player_get_bombs_range(player));
+        bomb_init(bomb, player_get_x(player), player_get_y(player), player_get_range_bombs(player));
         struct bomb **list_bombs = map_get_list_bombs(map);
         for (int i = 0; i < NUM_BOMBS_MAX; i++)
             if (list_bombs[i] == NULL) {

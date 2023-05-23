@@ -15,7 +15,7 @@ struct player {
     int y; /**< Y position of the player */
     enum direction direction; /**< Direction of the player */
     int num_bombs; /**< Number of bombs of the player */
-    int bombs_range; /**< Range of the player's bombs */
+    int range_bombs; /**< Range of the player's bombs */
     int num_lives; /**< Number of lives of the player */
     int num_keys; /**< Number of keys of the player */
     struct timer *timer_invincibility; /**< Invincibility timer of the player */
@@ -31,7 +31,7 @@ struct player *player_init(int bombs) {
     memset(player, 0, sizeof(struct player));
     player->direction = NORTH;
     player->num_bombs = bombs;
-    player->bombs_range = 1;
+    player->range_bombs = 1;
     player->num_lives = 3;
     player->num_keys = 0;
     player->timer_invincibility = timer_init(DURATION_PLAYER_INVINCIBILITY);
@@ -137,22 +137,22 @@ int player_get_size() {
     return sizeof(struct player);
 }
 
-int player_get_bombs_range(struct player *player) {
+int player_get_range_bombs(struct player *player) {
     assert(player);
-    return player->bombs_range;
+    return player->range_bombs;
 }
 
-void player_inc_bombs_range(struct player *player) {
+void player_inc_range_bombs(struct player *player) {
     assert(player);
-    if (player->bombs_range < NUM_BOMBS_MAX) {
-        player->bombs_range++;
+    if (player->range_bombs < NUM_BOMBS_MAX) {
+        player->range_bombs++;
     }
 }
 
-void player_dec_bombs_range(struct player *player) {
+void player_dec_range_bombs(struct player *player) {
     assert(player);
-    if (player->bombs_range > 1) {
-        player->bombs_range--;
+    if (player->range_bombs > 1) {
+        player->range_bombs--;
     }
 }
 
@@ -184,9 +184,9 @@ void player_get_bonus(struct player *player, enum bonus_type bonus_type) {
     assert(player);
 
     if (bonus_type == BONUS_BOMB_RANGE_INC) {
-        player_inc_bombs_range(player);
+        player_inc_range_bombs(player);
     } else if (bonus_type == BONUS_BOMB_RANGE_DEC) {
-        player_dec_bombs_range(player);
+        player_dec_range_bombs(player);
     } else if (bonus_type == BONUS_BOMB_NB_DEC) {
         player_dec_num_bomb(player);
     } else if (bonus_type == BONUS_BOMB_NB_INC) {
