@@ -311,13 +311,11 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
                 } else {
                     map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSION);
                 }
-            }
-            else {
+            } else {
                 *range_ptr = range - 1;
                 return;
             }
-        }
-        else {
+        } else {
             *range_ptr = range - 1;
             return;
         }
@@ -354,9 +352,9 @@ void map_update_bombs(struct map *map, struct player *player) {
             struct bomb *bomb = list_bombs[i];
             timer_update(bomb_get_timer(bomb));
             if (timer_get_state(bomb_get_timer(bomb)) == IS_OVER) {
-                if (bomb_get_ttl(bomb) <= TTL4 && bomb_get_ttl(bomb) > TTL1) {
+                if (bomb_get_ttl(bomb) <= TTL4 && bomb_get_ttl(bomb) >= TTL1) {
                     map_set_cell_value(map, bomb_get_x(bomb), bomb_get_y(bomb), CELL_BOMB | bomb_get_ttl(bomb));
-                } else if (bomb_get_ttl(bomb) == TTL1) {
+                } else if (bomb_get_ttl(bomb) == EXPLOSION) {
                     if (is_explosion_colliding_player(bomb_get_x(bomb), bomb_get_y(bomb), player)) {
                         player_dec_num_lives(player);
                     }
@@ -365,7 +363,7 @@ void map_update_bombs(struct map *map, struct player *player) {
                     propagate_bomb_explosion(map, player, bomb, SOUTH);
                     propagate_bomb_explosion(map, player, bomb, EAST);
                     propagate_bomb_explosion(map, player, bomb, WEST);
-                } else if (bomb_get_ttl(bomb) == EXPLOSION) {
+                } else {
                     clean_explosion_cells(map, bomb);
                     free(bomb_get_timer(bomb));
                     free(bomb);

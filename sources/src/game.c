@@ -19,6 +19,7 @@ struct game {
     short num_levels; /**< Number of game maps */
     short current_level; /**< Current level */
     struct player *player; /**< Player of the game */
+    short is_paused;
 };
 
 static struct map *read_new_map(char *filename) {
@@ -137,6 +138,7 @@ struct game *game_new(void) {
     } else {
         game->num_levels = NUM_LEVELS;
         game->current_level = 0;
+        game->is_paused = 0;
         game->player = player_init(NUM_BOMBS_MAX);
         game->list_maps = malloc(game->num_levels * sizeof(struct map *));
         if (!game->list_maps) {
@@ -311,14 +313,6 @@ static void backup_game(struct game *game) {
     printf("#########################################\n");
 }
 
-static void pause_game(SDL_Event *event) {
-    assert(event);
-    SDL_WaitEvent(event);
-    do {
-        SDL_WaitEvent(event);
-    } while (event->key.keysym.sym != SDLK_p);
-}
-
 static void change_current_level(struct game *game, int level) {
     assert(game);
     game_set_current_level(game, level);
@@ -336,75 +330,99 @@ static short input_keyboard(struct game *game) {
     struct player *player = game_get_player(game);
     struct map *map = game_get_current_map(game);
     while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-            case SDL_QUIT:
-                return 1;
-            case SDL_KEYDOWN: {
-                switch (event.key.keysym.sym) {
-                    case SDLK_s:
-                        if (event.key.keysym.mod & KMOD_CTRL) {
-                            backup_game(game);
-                            return 1;
-                        }
-                        break;
-                    case SDLK_UP:
-                        player_set_direction(player, NORTH);
-                        if (map_move_player(map, player)) {
-                            move = 1;
-                        }
-                        break;
-                    case SDLK_DOWN:
-                        player_set_direction(player, SOUTH);
-                        if (map_move_player(map, player)) {
-                            move = 1;
-                        }
-                        break;
-                    case SDLK_RIGHT:
-                        player_set_direction(player, EAST);
-                        if (map_move_player(map, player)) {
-                            move = 1;
-                        }
-                        break;
-                    case SDLK_LEFT:
-                        player_set_direction(player, WEST);
-                        if (map_move_player(map, player)) {
-                            move = 1;
-                        }
-                        break;
-                    case SDLK_SPACE:
-                        map_set_bomb(map, player);
-                        break;
-                    case SDLK_p:
-                        pause_game(&event);
-                        break;
-                    case SDLK_RETURN: {
-                        int x_next_player = direction_get_x(player_get_x(player), player_get_direction(player), 1);
-                        int y_next_player = direction_get_y(player_get_y(player), player_get_direction(player), 1);
-
-                        if (map_is_inside(map, x_next_player, y_next_player)) {
-                            uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);
-                            if ((type & 0xf1) == (CELL_DOOR | CLOSE)) {
-                                map_set_cell_value(map, x_next_player, y_next_player, type & 0xfe);
-                                player_dec_num_keys(player);
+        if (!game->is_paused) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    return 1;
+                case SDL_KEYDOWN: {
+                    switch (event.key.keysym.sym) {
+                        case SDLK_s:
+                            if (event.key.keysym.mod & KMOD_CTRL) {
+                                backup_game(game);
+                                return 1;
                             }
-                        }
-                        break;
-                    }
-                    default:
-                        break;
-                }
-
-                if (move) {
-                    uint8_t cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
-                    if ((cell & 0xf0) == CELL_DOOR) {
-                        int level = (cell & 0x0e) / 2;
-                        change_current_level(game, level);
+                            break;
+                        case SDLK_p:
+                            game->is_paused = !game->is_paused;
+                            break;
+                        default:
+                            break;
                     }
                 }
-                break;
+                default:
+                    break;
             }
-            default:
-                break;
+        } else {
+            switch (event.type) {
+                case SDL_QUIT:
+                    return 1;
+                case SDL_KEYDOWN: {
+                    switch (event.key.keysym.sym) {
+                        case SDLK_s:
+                            if (event.key.keysym.mod & KMOD_CTRL) {
+                                backup_game(game);
+                                return 1;
+                            }
+                            break;
+                        case SDLK_UP:
+                            player_set_direction(player, NORTH);
+                            if (map_move_player(map, player)) {
+                                move = 1;
+                            }
+                            break;
+                        case SDLK_DOWN:
+                            player_set_direction(player, SOUTH);
+                            if (map_move_player(map, player)) {
+                                move = 1;
+                            }
+                            break;
+                        case SDLK_RIGHT:
+                            player_set_direction(player, EAST);
+                            if (map_move_player(map, player)) {
+                                move = 1;
+                            }
+                            break;
+                        case SDLK_LEFT:
+                            player_set_direction(player, WEST);
+                            if (map_move_player(map, player)) {
+                                move = 1;
+                            }
+                            break;
+                        case SDLK_SPACE:
+                            map_set_bomb(map, player);
+                            break;
+                        case SDLK_p:
+                            game->is_paused = !game->is_paused;
+                            break;
+                        case SDLK_RETURN: {
+                            int x_next_player = direction_get_x(player_get_x(player), player_get_direction(player), 1);
+                            int y_next_player = direction_get_y(player_get_y(player), player_get_direction(player), 1);
+
+                            if (map_is_inside(map, x_next_player, y_next_player)) {
+                                uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);
+                                if ((type & 0xf1) == (CELL_DOOR | CLOSE)) {
+                                    map_set_cell_value(map, x_next_player, y_next_player, type & 0xfe);
+                                    player_dec_num_keys(player);
+                                }
+                            }
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+
+                    if (move) {
+                        uint8_t cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
+                        if ((cell & 0xf0) == CELL_DOOR) {
+                            int level = (cell & 0x0e) / 2;
+                            change_current_level(game, level);
+                        }
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
         }
     }
     return 0;
@@ -416,23 +434,27 @@ int game_update(struct game *game) {
     assert(map);
     struct player *player = game_get_player(game);
     assert(player);
+
     if (input_keyboard(game)) {
         return 1;
     }
-    else if (player_get_num_lives(player) == 0) {
+
+    if (player_get_num_lives(player) == 0) {
         printf("===========================================\n");
         printf(" >>>>>>>>>>>>>  YOU LOST!!!  <<<<<<<<<<<<<\n");
         printf("===========================================\n");
         return 1;
-    }
-    else if (map_get_cell_value(map, player_get_x(player), player_get_y(player)) == (CELL_SCENERY | SCENERY_PRINCESS)) {
+    } else if (map_get_cell_value(map, player_get_x(player), player_get_y(player)) == (CELL_SCENERY | SCENERY_PRINCESS)) {
         printf("==========================================\n");
         printf(" >>>>>>>>>>>>>  YOU WON!!!  <<<<<<<<<<<<<\n");
         printf("==========================================\n");
         return 1;
     }
-    map_update_bombs(map, player);
-    map_update_monsters(map, player);
+
+    if (!game->is_paused) {
+        map_update_bombs(map, player);
+        map_update_monsters(map, player);
+    }
 
     return 0;
 }
