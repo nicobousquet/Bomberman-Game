@@ -330,7 +330,7 @@ static short input_keyboard(struct game *game) {
     struct player *player = game_get_player(game);
     struct map *map = game_get_current_map(game);
     while (SDL_PollEvent(&event)) {
-        if (!game->is_paused) {
+        if (game->is_paused) {
             switch (event.type) {
                 case SDL_QUIT:
                     return 1;
