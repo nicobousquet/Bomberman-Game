@@ -3,7 +3,6 @@
 #include "../include/bomb.h"
 #include "../include/map.h"
 #include "../include/monster.h"
-#include "../include/window.h"
 #include "../include/constant.h"
 #include <assert.h>
 #include <stdio.h>
@@ -15,6 +14,7 @@
  * @brief Structure representing the game.
  */
 struct game {
+    SDL_Surface *window;
     struct map **list_maps; /**< List of game maps */
     short num_levels; /**< Number of game maps */
     short current_level; /**< Current level */
@@ -34,6 +34,7 @@ static struct map *read_new_map(char *filename) {
     long int size = ftell(fp);
     fseek(fp, 0, SEEK_SET);
     char *grid = malloc(size);
+    char *grid_copy = grid;
     if (!grid) {
         perror("malloc");
         exit(EXIT_FAILURE);
@@ -54,6 +55,7 @@ static struct map *read_new_map(char *filename) {
         map_get_grid(map)[i] = (unsigned char) ret;
     }
 
+    free(grid_copy);
     return map;
 }
 
@@ -168,7 +170,9 @@ struct game *game_new(void) {
             }
         }
     }
+
     map_init_list_monsters(game->list_maps[game->current_level]);
+    game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
     return game;
 }
 
@@ -186,7 +190,9 @@ void game_free(struct game *game) {
     }
 
     free(game->list_maps);
+    SDL_FreeSurface(game->window);
     free(game);
+
     sprite_free();
 }
 
@@ -223,53 +229,54 @@ static void display_banner(struct game *game) {
 
     int y = (map_get_height(map)) * SIZE_BLOC;
     for (int i = 0; i < map_get_width(map); i++) {
-        window_display_image(sprite_get_banner_line(), i * SIZE_BLOC, y);
+        window_display_image(game->window, sprite_get_banner_line(), i * SIZE_BLOC, y);
     }
 
     int white_bloc = 0.5 * SIZE_BLOC;
     int x = 0;
 
     y = (map_get_height(map) * SIZE_BLOC) + LINE_HEIGHT;
-    window_display_image(sprite_get_number(game_get_current_level(game) + 1), x, y);
+    window_display_image(game->window, sprite_get_number(game_get_current_level(game) + 1), x, y);
 
     x = SIZE_BLOC;
     y = (map_get_height(map)) * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_banner_vertical_line(), x, y);
+    window_display_image(game->window, sprite_get_banner_vertical_line(), x, y);
 
     x = white_bloc + SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_banner_life(), x, y);
+    window_display_image(game->window, sprite_get_banner_life(), x, y);
 
     x = white_bloc + 2 * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_number(player_get_num_lives(player)), x, y);
+    window_display_image(game->window, sprite_get_number(player_get_num_lives(player)), x, y);
 
     x = 2 * white_bloc + 3 * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_banner_bomb(), x, y);
+    window_display_image(game->window, sprite_get_banner_bomb(), x, y);
 
     x = 2 * white_bloc + 4 * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_number(player_get_num_bomb(game_get_player(game))), x, y);
+    window_display_image(game->window, sprite_get_number(player_get_num_bomb(game_get_player(game))), x, y);
 
     x = 3 * white_bloc + 5 * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_banner_range(), x, y);
+    window_display_image(game->window, sprite_get_banner_range(), x, y);
 
     x = 3 * white_bloc + 6 * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_number(player_get_range_bombs(player)), x, y);
+    window_display_image(game->window, sprite_get_number(player_get_range_bombs(player)), x, y);
 
     x = 4 * white_bloc + 7 * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_key(), x, y);
+    window_display_image(game->window, sprite_get_key(), x, y);
 
     x = 4 * white_bloc + 8 * SIZE_BLOC + LINE_HEIGHT;
-    window_display_image(sprite_get_number(player_get_num_keys(player)), x, y);
+    window_display_image(game->window, sprite_get_number(player_get_num_keys(player)), x, y);
 }
 
 void game_display(struct game *game) {
     assert(game);
-    window_clear();
-    map_display(game_get_current_map(game));
-    display_banner(game);
-    player_display(game_get_player(game));
-    map_display_monsters((game_get_current_map(game)));
 
-    window_refresh();
+    window_clear(game->window);
+
+    map_display(game_get_current_map(game), game->window);
+    display_banner(game);
+    player_display(game_get_player(game), game->window);
+
+    window_refresh(game->window);
 }
 
 static void backup_game(struct game *game) {

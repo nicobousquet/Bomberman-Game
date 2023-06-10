@@ -3,6 +3,7 @@
 
 #include "direction.h"
 #include "cell_types.h"
+#include <SDL/SDL.h>
 
 struct player;
 
@@ -134,7 +135,7 @@ void player_dec_num_keys(struct player *player);
  * @brief Display the player on the screen.
  * @param player A pointer to the player.
  */
-void player_display(struct player *player);
+void player_display(struct player *player, struct SDL_Surface *window);
 
 /**
  * @brief Get the number of lives the player has.

@@ -1,8 +1,9 @@
 #ifndef MAP_H_
 #define MAP_H_
 
-#include <stdint.h>
 #include "player.h"
+#include "window.h"
+#include <stdint.h>
 
 struct map;
 
@@ -107,7 +108,7 @@ void map_set_cell_value(struct map *map, int x, int y, uint8_t value);
  * @brief Display the map on the screen.
  * @param map A pointer to the map.
  */
-void map_display(struct map *map);
+void map_display(struct map *map, struct SDL_Surface *window);
 
 /**
  * @brief Initialize the list of monsters on the map.
@@ -128,12 +129,6 @@ void map_set_bomb(struct map *map, struct player *player);
 @param player A pointer to the player.
 */
 void map_update_bombs(struct map *map, struct player *player);
-
-/**
-@brief Display the monsters on the map.
-@param map A pointer to the map.
-*/
-void map_display_monsters(struct map *map);
 
 /**
 @brief Move the player on the map.

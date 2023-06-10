@@ -1,7 +1,6 @@
 #include "../include/map.h"
 #include "../include/monster.h"
 #include "../include/bomb.h"
-#include "../include/window.h"
 #include "../include/sprite.h"
 #include "../include/constant.h"
 #include <unistd.h>
@@ -117,8 +116,9 @@ void map_set_cell_value(struct map *map, int x, int y, uint8_t value) {
     map->grid[CELL(x, y)] = value;
 }
 
-void map_display(struct map *map) {
+void map_display(struct map *map, struct SDL_Surface *window) {
     assert(map);
+    assert(window);
 
     for (int i = 0; i < map_get_width(map); i++) {
         for (int j = 0; j < map_get_height(map); j++) {
@@ -129,32 +129,39 @@ void map_display(struct map *map) {
 
             switch ((enum cell_type) (type & 0xf0)) {
                 case CELL_SCENERY:
-                    window_display_image(sprite_get_scenery((enum scenery_type) (type & 0x0f)), x, y);
+                    window_display_image(window, sprite_get_scenery((enum scenery_type) (type & 0x0f)), x, y);
                     break;
 
                 case CELL_BOX:
-                    window_display_image(sprite_get_box(), x, y);
+                    window_display_image(window, sprite_get_box(), x, y);
                     break;
 
                 case CELL_BONUS:
-                    window_display_image(sprite_get_bonus((enum bonus_type) (type & 0x0f)), x, y);
+                    window_display_image(window, sprite_get_bonus((enum bonus_type) (type & 0x0f)), x, y);
                     break;
 
                 case CELL_KEY:
-                    window_display_image(sprite_get_key(), x, y);
+                    window_display_image(window, sprite_get_key(), x, y);
                     break;
 
                 case CELL_DOOR:
-                    window_display_image(sprite_get_door((enum door_status) (type & 0x01)), x, y);
+                    window_display_image(window, sprite_get_door((enum door_status) (type & 0x01)), x, y);
                     break;
 
                 case CELL_BOMB:
-                    window_display_image(sprite_get_bomb((type & 0x0f)), x, y);
+                    window_display_image(window, sprite_get_bomb((type & 0x0f)), x, y);
                     break;
 
                 default:
                     break;
             }
+        }
+    }
+
+    struct monster **list_monsters = map_get_list_monsters(map);
+    for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
+        if (list_monsters[i] != NULL) {
+            monster_display(list_monsters[i], window);
         }
     }
 }
@@ -491,16 +498,6 @@ int map_move_player(struct map *map, struct player *player) {
         return 1;
     }
     return 0;
-}
-
-void map_display_monsters(struct map *map) {
-    assert(map);
-    struct monster **list_monsters = map_get_list_monsters(map);
-    for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
-        if (list_monsters[i] != NULL) {
-            window_display_image(sprite_get_monster(monster_get_direction(list_monsters[i])), monster_get_x(list_monsters[i]) * SIZE_BLOC, monster_get_y(list_monsters[i]) * SIZE_BLOC);
-        }
-    }
 }
 
 static int is_monster_colliding_player(struct monster *monster, struct player *player) {

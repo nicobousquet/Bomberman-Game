@@ -8,17 +8,17 @@
  * @param width The width of the window.
  * @param height The height of the window.
  */
-void window_create(int width, int height);
+struct SDL_Surface *window_create(int width, int height);
 
 /**
  * @brief Free the game window.
  */
-void window_free();
+void window_free(SDL_Surface *window);
 
 /**
  * @brief Refresh the game window.
  */
-void window_refresh();
+void window_refresh(SDL_Surface *window);
 
 /**
  * @brief Display an SDL surface at the specified location.
@@ -26,11 +26,11 @@ void window_refresh();
  * @param x The x-coordinate of the location.
  * @param y The y-coordinate of the location.
  */
-void window_display_image(SDL_Surface *surface, int x, int y);
+void window_display_image(SDL_Surface *window, SDL_Surface *surface, int x, int y);
 
 /**
  * @brief Set every pixel of the window to white.
  */
-void window_clear();
+void window_clear(SDL_Surface *window);
 
 #endif /* WINDOW_H_ */

@@ -1,7 +1,9 @@
 #include "../include/monster.h"
+#include "../include/sprite.h"
+#include "../include/window.h"
+#include "../include/constant.h"
 #include <assert.h>
 #include <stdlib.h>
-#include <SDL/SDL.h>
 
 /**
  * @brief Structure representing a monster.
@@ -73,4 +75,10 @@ void monster_set_timer(struct monster *monster, struct timer *timer) {
 
 struct timer *monster_get_timer(struct monster *monster) {
     return monster->timer;
+}
+
+void monster_display(struct monster *monster, struct SDL_Surface *window) {
+    assert(monster);
+    assert(window);
+    window_display_image(window, sprite_get_monster(monster->direction), monster->x * SIZE_BLOC, monster->y * SIZE_BLOC);
 }

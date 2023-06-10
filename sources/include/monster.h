@@ -3,6 +3,7 @@
 
 #include "direction.h"
 #include "timer.h"
+#include <SDL/SDL.h>
 
 struct monster;
 
@@ -89,5 +90,7 @@ struct timer *monster_get_timer(struct monster *monster);
  * @param timer A pointer to the timer to set.
  */
 void monster_set_timer(struct monster *monster, struct timer *timer);
+
+void monster_display(struct monster *monster, struct SDL_Surface *window);
 
 #endif // MONSTER_H_

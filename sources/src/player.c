@@ -175,9 +175,10 @@ void player_dec_num_keys(struct player *player) {
     }
 }
 
-void player_display(struct player *player) {
+void player_display(struct player *player, SDL_Surface *window) {
     assert(player);
-    window_display_image(sprite_get_player(player->direction), player->x * SIZE_BLOC, player->y * SIZE_BLOC);
+    assert(window);
+    window_display_image(window, sprite_get_player(player->direction), player->x * SIZE_BLOC, player->y * SIZE_BLOC);
 }
 
 void player_get_bonus(struct player *player, enum bonus_type bonus_type) {
