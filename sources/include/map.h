@@ -3,6 +3,7 @@
 
 #include "player.h"
 #include "window.h"
+#include "sprites.h"
 #include <stdint.h>
 
 struct map;
@@ -108,7 +109,7 @@ void map_set_cell_value(struct map *map, int x, int y, uint8_t value);
  * @brief Display the map on the screen.
  * @param map A pointer to the map.
  */
-void map_display(struct map *map, struct SDL_Surface *window);
+void map_display(struct map *map, struct SDL_Surface *window, struct sprites *sprites);
 
 /**
  * @brief Initialize the list of monsters on the map.

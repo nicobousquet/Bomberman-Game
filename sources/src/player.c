@@ -1,5 +1,4 @@
 #include "../include/player.h"
-#include "../include/sprite.h"
 #include "../include/misc.h"
 #include "../include/window.h"
 #include "../include/constant.h"
@@ -175,10 +174,10 @@ void player_dec_num_keys(struct player *player) {
     }
 }
 
-void player_display(struct player *player, SDL_Surface *window) {
+void player_display(struct player *player, SDL_Surface *window, struct sprites *sprites) {
     assert(player);
     assert(window);
-    window_display_image(window, sprite_get_player(player->direction), player->x * SIZE_BLOC, player->y * SIZE_BLOC);
+    window_display_image(window, sprites_get_player(sprites, player->direction), player->x * SIZE_BLOC, player->y * SIZE_BLOC);
 }
 
 void player_get_bonus(struct player *player, enum bonus_type bonus_type) {

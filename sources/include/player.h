@@ -2,6 +2,7 @@
 #define PLAYER_H_
 
 #include "direction.h"
+#include "sprites.h"
 #include "cell_types.h"
 #include <SDL/SDL.h>
 
@@ -135,7 +136,7 @@ void player_dec_num_keys(struct player *player);
  * @brief Display the player on the screen.
  * @param player A pointer to the player.
  */
-void player_display(struct player *player, struct SDL_Surface *window);
+void player_display(struct player *player, struct SDL_Surface *window, struct sprites *sprites);
 
 /**
  * @brief Get the number of lives the player has.

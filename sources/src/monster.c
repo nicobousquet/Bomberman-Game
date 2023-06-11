@@ -1,5 +1,4 @@
 #include "../include/monster.h"
-#include "../include/sprite.h"
 #include "../include/window.h"
 #include "../include/constant.h"
 #include <assert.h>
@@ -77,8 +76,9 @@ struct timer *monster_get_timer(struct monster *monster) {
     return monster->timer;
 }
 
-void monster_display(struct monster *monster, struct SDL_Surface *window) {
+void monster_display(struct monster *monster, struct SDL_Surface *window, struct sprites *sprites) {
     assert(monster);
     assert(window);
-    window_display_image(window, sprite_get_monster(monster->direction), monster->x * SIZE_BLOC, monster->y * SIZE_BLOC);
+    assert(sprites);
+    window_display_image(window, sprites_get_monster(sprites, monster->direction), monster->x * SIZE_BLOC, monster->y * SIZE_BLOC);
 }
