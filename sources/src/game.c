@@ -31,8 +31,10 @@ struct game *game_new(void) {
     game->current_level = 0;
     game->is_paused = 0;
     game->player = player_new(NUM_BOMBS_MAX);
-    game->list_maps = malloc(game->num_levels * sizeof(struct map *));
+    game->sprites = sprites_new();
     strcpy(game->filename_backup, "backup/data.bin");
+
+    game->list_maps = malloc(game->num_levels * sizeof(struct map *));
 
     char *maps_filenames[] = {
             "map/map_0",
@@ -58,8 +60,6 @@ struct game *game_new(void) {
         }
     }
 
-    game->sprites = malloc(sprites_get_size());
-    sprites_load(game->sprites);
     game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
 
     FILE *backup_file = fopen(game->filename_backup, "rb");
@@ -67,8 +67,8 @@ struct game *game_new(void) {
         map_init_list_monsters(game->list_maps[game->current_level]);
         return game;
     }
-
     fclose(backup_file);
+
     return game;
 }
 

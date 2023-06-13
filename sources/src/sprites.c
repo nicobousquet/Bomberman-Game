@@ -70,10 +70,6 @@ struct sprites {
     SDL_Surface *monster_img[4];
 };
 
-int sprites_get_size() {
-    return sizeof(struct sprites);
-}
-
 static void bomb_load(struct sprites *sprites) {
     sprites->bomb_img[EXPLOSION - 1] = image_load(BOMB_EXPLOSION);
     sprites->bomb_img[TTL1 - 1] = image_load(BOMB_TTL1);
@@ -183,13 +179,19 @@ static void monster_unload(struct sprites *sprites) {
     }
 }
 
-void sprites_load(struct sprites *sprites) {
+static void sprites_load(struct sprites *sprites) {
     map_load(sprites);
     bonus_load(sprites);
     banner_load(sprites);
     player_load(sprites);
     bomb_load(sprites);
     monster_load(sprites);
+}
+
+struct sprites *sprites_new() {
+    struct sprites *sprites = malloc(sizeof(struct sprites));
+    sprites_load(sprites);
+    return sprites;
 }
 
 void sprites_free(struct sprites *sprites) {

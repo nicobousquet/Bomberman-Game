@@ -7,12 +7,7 @@
 
 struct sprites;
 
-int sprites_get_size();
-
-/**
- * @brief Load the game's sprites.
- */
-void sprites_load(struct sprites *sprites);
+struct sprites *sprites_new();
 
 /**
  * @brief Free the loaded sprites.
