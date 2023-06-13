@@ -5,6 +5,7 @@
 #include "timer.h"
 #include "sprites.h"
 #include <SDL/SDL.h>
+#include <stdio.h>
 
 struct monster;
 
@@ -22,13 +23,17 @@ struct monster;
  * @param timer_duration The duration of the monster's timer.
  * @return A pointer to the initialized monster.
  */
-struct monster *monster_init(int x, int y, int timer_duration);
+struct monster *monster_new(int x, int y, int timer_duration);
 
 /**
  * @brief Free the memory occupied by a monster.
  * @param monster A pointer to the monster to be freed.
  */
 void monster_free(struct monster *monster);
+
+void monster_write(struct monster *monster, FILE *file);
+
+void monster_read(struct monster *monster, FILE *file);
 
 /**
  * @brief Get the size of the monster structure.

@@ -30,6 +30,12 @@ struct map *map_new(int width, int height);
  */
 void map_free(struct map *map);
 
+void map_write(struct map *map, FILE *file);
+
+void map_read(struct map *map, FILE *file);
+
+struct map *map_read_file(char *filename);
+
 /**
  * @brief Get the width of the map.
  * @param map A pointer to the map.

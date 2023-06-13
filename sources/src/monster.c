@@ -14,8 +14,8 @@ struct monster {
     struct timer *timer; /**< Timer for the monster */
 };
 
-struct monster *monster_init(int x, int y, int timer_duration) {
-    struct monster *monster = malloc(monster_get_size());
+struct monster *monster_new(int x, int y, int timer_duration) {
+    struct monster *monster = malloc(sizeof(struct monster));
     if (!monster) {
         perror("malloc");
     }
@@ -23,7 +23,7 @@ struct monster *monster_init(int x, int y, int timer_duration) {
     monster_set_x(monster, x);
     monster_set_y(monster, y);
     monster_set_direction(monster, WEST);
-    monster->timer = timer_init(timer_duration);
+    monster->timer = timer_new(timer_duration);
     return monster;
 }
 
@@ -32,6 +32,22 @@ void monster_free(struct monster *monster) {
     assert(monster->timer);
     free(monster->timer);
     free(monster);
+}
+
+void monster_write(struct monster *monster, FILE *file) {
+    assert(monster);
+    assert(file);
+    fwrite(monster, sizeof(struct monster), 1, file);
+    timer_write(monster->timer, file);
+}
+
+void monster_read(struct monster *monster, FILE *file) {
+    assert(monster);
+    assert(file);
+    struct timer *timer = monster->timer;
+    fread(monster, sizeof(struct monster), 1, file);
+    monster->timer = timer;
+    timer_read(monster->timer, file);
 }
 
 int monster_get_size() {

@@ -20,7 +20,7 @@ struct player {
     struct timer *timer_invincibility; /**< Invincibility timer of the player */
 };
 
-struct player *player_init(int bombs) {
+struct player *player_new(int bombs) {
     assert(bombs >= 0 && bombs <= NUM_BOMBS_MAX);
     struct player *player = malloc(sizeof(struct player));
     if (!player) {
@@ -33,7 +33,7 @@ struct player *player_init(int bombs) {
     player->range_bombs = 1;
     player->num_lives = 3;
     player->num_keys = 0;
-    player->timer_invincibility = timer_init(DURATION_PLAYER_INVINCIBILITY);
+    player->timer_invincibility = timer_new(DURATION_PLAYER_INVINCIBILITY);
     player->x = 1;
     player->y = 0;
     return player;
@@ -44,6 +44,22 @@ void player_free(struct player *player) {
     assert(player->timer_invincibility);
     free(player->timer_invincibility);
     free(player);
+}
+
+void player_write(struct player *player, FILE *file) {
+    assert(player);
+    assert(file);
+    fwrite(player, sizeof(struct player), 1, file);
+    timer_write(player->timer_invincibility, file);
+}
+
+void player_read(struct player *player, FILE *file) {
+    assert(player);
+    assert(file);
+    struct timer *timer_invicibility = player->timer_invincibility;
+    fread(player, sizeof(struct player), 1, file);
+    player->timer_invincibility = timer_invicibility;
+    timer_read(player->timer_invincibility, file);
 }
 
 enum direction player_get_direction(struct player *player) {

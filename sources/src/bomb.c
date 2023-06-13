@@ -3,6 +3,7 @@
 #include "../include/cell_types.h"
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief Structure representing a bomb.
@@ -19,18 +20,23 @@ struct bomb {
     int west_range; /**< Range of explosion in the west direction */
 };
 
-void bomb_init(struct bomb *bomb, int x, int y, int range) {
-    assert(bomb);
+struct bomb *bomb_new(int x, int y, int range) {
     assert(range > 0);
+    struct bomb *bomb = malloc(bomb_get_size());
+    if (!bomb) {
+        perror("malloc");
+    }
+    memset(bomb, 0, bomb_get_size());
     bomb->x = x;
     bomb->y = y;
     bomb->ttl = TTL4;
-    bomb->timer = timer_init();
+    bomb->timer = timer_new();
     bomb->range = range;
     bomb->north_range = 0;
     bomb->south_range = 0;
     bomb->east_range = 0;
     bomb->west_range = 0;
+    return bomb;
 }
 
 void bomb_free(struct bomb *bomb) {
@@ -38,6 +44,21 @@ void bomb_free(struct bomb *bomb) {
     assert(bomb->timer);
     free(bomb->timer);
     free(bomb);
+}
+
+void bomb_write(struct bomb *bomb, FILE *file) {
+    assert(bomb);
+    assert(file);
+    fwrite(bomb, sizeof(struct bomb), 1, file);
+    timer_write(bomb->timer, file);
+}
+
+void bomb_read(struct bomb *bomb, FILE *file) {
+    assert(bomb);
+    struct timer *timer = bomb->timer;
+    fread(bomb, sizeof(struct bomb), 1, file);
+    bomb->timer = timer;
+    timer_read(bomb->timer, file);
 }
 
 int bomb_get_x(struct bomb *bomb) {

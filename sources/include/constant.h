@@ -76,4 +76,6 @@
  */
 #define NUM_BONUS_TYPES 6
 
+#define LEN_FILENAME 100
+
 #endif /* CONSTANT_H_ */

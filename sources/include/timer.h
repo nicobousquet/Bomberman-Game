@@ -1,6 +1,8 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
+#include <stdio.h>
+
 /**
  * @brief Enumeration of timer states.
  */
@@ -24,7 +26,11 @@ int timer_get_size();
  * @brief Initialize a timer.
  * @return A pointer to the initialized timer.
  */
-struct timer *timer_init();
+struct timer *timer_new();
+
+void timer_write(struct timer *timer, FILE *file);
+
+void timer_read(struct timer *timer, FILE *file);
 
 /**
  * @brief Get the duration of the timer.

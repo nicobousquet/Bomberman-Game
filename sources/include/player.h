@@ -18,13 +18,17 @@ struct player;
  * @param num_bombs The number of bombs the player can initially have.
  * @return A pointer to the created player.
  */
-struct player *player_init(int num_bombs);
+struct player *player_new(int num_bombs);
 
 /**
  * @brief Free the memory occupied by the player.
  * @param player A pointer to the player.
  */
 void player_free(struct player *player);
+
+void player_write(struct player *player, FILE *file);
+
+void player_read(struct player *player, FILE *file);
 
 /**
  * @brief Get the current x-coordinate of the player's position.

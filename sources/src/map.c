@@ -59,6 +59,87 @@ void map_free(struct map *map) {
     free(map);
 }
 
+void map_write(struct map *map, FILE *file) {
+    assert(map);
+    assert(file);
+
+    fwrite(map, sizeof(struct map), 1, file);
+    fwrite(map->grid, map->width * map->height, 1, file);
+
+
+    for (int j = 0; j < NUM_BOMBS_MAX; j++) {
+        if (map->list_bombs[j] != NULL) {
+            bomb_write(map->list_bombs[j], file);
+        }
+    }
+
+    for (int j = 0; j < NUM_MONSTERS_MAX; j++) {
+        if (map->list_monsters[j] != NULL) {
+            monster_write(map->list_monsters[j], file);
+        }
+    }
+}
+
+void map_read(struct map *map, FILE *file) {
+    assert(map);
+
+    unsigned char *grid = map->grid;
+    fread(map, sizeof(struct map), 1, file);
+    map->grid = grid;
+    fread(map->grid, map->width * map->height, 1, file);
+
+    for (int i = 0; i < NUM_BOMBS_MAX; i++) {
+        if (map->list_bombs[i] != NULL) {
+            map->list_bombs[i] = bomb_new(0, 0, 1);
+            bomb_read(map->list_bombs[i], file);
+        }
+    }
+
+    for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
+        if (map->list_monsters[i] != NULL) {
+            map->list_monsters[i] = monster_new(0, 0, 1000);
+            monster_read(map->list_monsters[i], file);
+        }
+    }
+}
+
+struct map *map_read_file(char *filename) {
+    assert(filename);
+    FILE *fp = fopen(filename, "rb");
+    if (!fp) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
+
+    fseek(fp, 0, SEEK_END);
+    long int size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+    char *grid = malloc(size);
+    char *grid_copy = grid;
+    if (!grid) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
+    size_t numread = fread(grid, sizeof(char), size, fp);
+    if ((long int) numread != size) {
+        perror("fread");
+        exit(EXIT_FAILURE);
+    }
+    fclose(fp);
+
+    int width = strtol(grid, &grid, 10);
+    int height = strtol(grid + 1, &grid, 10);
+    struct map *map = map_new(width, height);
+    for (int i = 0; i < width * height; i++) {
+        int ret = strtol(grid, &grid, 10);
+        map_get_grid(map)[i] = (unsigned char) ret;
+    }
+
+    free(grid_copy);
+    return map;
+}
+
 int map_get_width(struct map *map) {
     assert(map);
     return map->width;
@@ -170,7 +251,7 @@ void map_init_list_monsters(struct map *map) {
     for (int i = 0; i < map_get_width(map); i++) {
         for (int j = 0; j < map_get_height(map); j++) {
             if ((map_get_cell_value(map, i, j) & 0xf0) == CELL_MONSTER) {
-                struct monster *monster = monster_init(i, j, DURATION_MONSTER_MOVE);
+                struct monster *monster = monster_new(i, j, DURATION_MONSTER_MOVE);
                 timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
                 struct monster **list_monsters = map_get_list_monsters(map);
                 for (int k = 0; k < NUM_MONSTERS_MAX; k++) {
@@ -194,12 +275,7 @@ void map_set_bomb(struct map *map, struct player *player) {
     }
 
     if (player_get_num_bomb(player) > 0) {
-        struct bomb *bomb = malloc(bomb_get_size());
-        if (!bomb) {
-            perror("malloc");
-        }
-        memset(bomb, 0, bomb_get_size());
-        bomb_init(bomb, player_get_x(player), player_get_y(player), player_get_range_bombs(player));
+        struct bomb *bomb = bomb_new(player_get_x(player), player_get_y(player), player_get_range_bombs(player));
         struct bomb **list_bombs = map_get_list_bombs(map);
         for (int i = 0; i < NUM_BOMBS_MAX; i++)
             if (list_bombs[i] == NULL) {
@@ -213,7 +289,7 @@ void map_set_bomb(struct map *map, struct player *player) {
 static void set_monster(struct map *map, int x, int y) {
     assert(map);
     assert(map_is_inside(map, x, y));
-    struct monster *monster = monster_init(x, y, DURATION_MONSTER_MOVE);
+    struct monster *monster = monster_new(x, y, DURATION_MONSTER_MOVE);
     timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
     struct monster **list_monsters = map_get_list_monsters(map);
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {

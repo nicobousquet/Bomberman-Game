@@ -1,6 +1,8 @@
 #ifndef SOURCES_BOMB_H_
 #define SOURCES_BOMB_H_
 
+#include <stdio.h>
+
 /**
  * @file bomb.h
  * @brief This file contains the declarations of functions and data types for bombs.
@@ -15,13 +17,17 @@ struct bomb;
  * @param y The y-coordinate of the bomb.
  * @param range The range of the bomb's explosion.
  */
-void bomb_init(struct bomb *bomb, int x, int y, int range);
+struct bomb *bomb_new(int x, int y, int range);
 
 /**
  * @brief Free the memory occupied by a bomb.
  * @param bomb A pointer to the bomb to be freed.
  */
 void bomb_free(struct bomb *bomb);
+
+void bomb_write(struct bomb *bomb, FILE *file);
+
+void bomb_read(struct bomb *bomb, FILE *file);
 
 /**
  * @brief Get the size of the bomb structure.

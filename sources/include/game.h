@@ -1,6 +1,8 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include <stdio.h>
+
 /**
  * @file game.h
  * @brief This file contains the declarations of functions and data types for the game.
@@ -20,12 +22,18 @@ struct game *game_new(void);
  */
 void game_free(struct game *game);
 
+void game_write(struct game *game, FILE *file);
+
+void game_read(struct game *game, FILE *file);
+
 /**
  * @brief Get the player of the game.
  * @param game A pointer to the game.
  * @return A pointer to the player of the game.
  */
 struct player *game_get_player(struct game *game);
+
+char *game_get_filename_backup(struct game *game);
 
 /**
  * @brief Get the current map of the game.

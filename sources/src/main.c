@@ -12,12 +12,19 @@ int main(int argc, char *argv[]) {
 
     struct game *game = game_new();
 
+    FILE *backup_file = fopen(game_get_filename_backup(game), "rb");
+    if (backup_file) {
+        game_read(game, backup_file);
+        fclose(backup_file);
+        remove(game_get_filename_backup(game));
+    }
+
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
     int ideal_duration = 1000 / DEFAULT_GAME_FPS;
 
-    struct timer *timer = timer_init();
-    int done = 0;
+    struct timer *timer = timer_new();
+    short done = 0;
     while (!done) {
         timer_start(timer, ideal_duration);
 
