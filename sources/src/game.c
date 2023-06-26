@@ -20,7 +20,6 @@ struct game {
     short current_level; /**< Current level */
     struct player *player; /**< Player of the game */
     short is_paused;
-    char filename_backup[LEN_FILENAME];
 };
 
 struct game *game_new(void) {
@@ -32,8 +31,6 @@ struct game *game_new(void) {
     game->is_paused = 0;
     game->player = player_new(NUM_BOMBS_MAX);
     game->sprites = sprites_new();
-    strcpy(game->filename_backup, "backup/data.bin");
-
     game->list_maps = malloc(game->num_levels * sizeof(struct map *));
 
     char *maps_filenames[] = {
@@ -62,7 +59,7 @@ struct game *game_new(void) {
 
     game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
 
-    FILE *backup_file = fopen(game->filename_backup, "rb");
+    FILE *backup_file = fopen(FILENAME_BACKUP, "rb");
     if (!backup_file) {
         map_init_list_monsters(game->list_maps[game->current_level]);
         return game;
@@ -117,10 +114,6 @@ void game_read(struct game *game, FILE *file) {
     for (int i = 0; i < game->num_levels; i++) {
         map_read(game->list_maps[i], file);
     }
-}
-
-char *game_get_filename_backup(struct game *game) {
-    return game->filename_backup;
 }
 
 struct map *game_get_current_map(struct game *game) {
@@ -217,7 +210,7 @@ static void change_current_level(struct game *game, int level) {
 }
 
 static void save_game(struct game *game) {
-    FILE *file = fopen(game->filename_backup, "wb");
+    FILE *file = fopen(FILENAME_BACKUP, "wb");
     if (file) {
         game_write(game, file);
 

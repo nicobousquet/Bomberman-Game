@@ -33,8 +33,6 @@ void game_read(struct game *game, FILE *file);
  */
 struct player *game_get_player(struct game *game);
 
-char *game_get_filename_backup(struct game *game);
-
 /**
  * @brief Get the current map of the game.
  * @param game A pointer to the game.

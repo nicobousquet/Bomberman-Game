@@ -76,6 +76,6 @@
  */
 #define NUM_BONUS_TYPES 6
 
-#define LEN_FILENAME 100
+#define FILENAME_BACKUP "backup/data.bin"
 
 #endif /* CONSTANT_H_ */
