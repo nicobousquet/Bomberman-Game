@@ -99,4 +99,6 @@ void monster_set_timer(struct monster *monster, struct timer *timer);
 
 void monster_display(struct monster *monster, struct SDL_Surface *window, struct sprites *sprites);
 
+void monster_move(struct monster *monster);
+
 #endif // MONSTER_H_

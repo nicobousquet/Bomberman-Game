@@ -188,4 +188,6 @@ void player_set_timer_invincibility(struct player *player, struct timer *timer_i
  */
 void player_get_bonus(struct player *player, enum bonus_type bonus_type);
 
+void player_move(struct player *player);
+
 #endif /* PLAYER_H_ */

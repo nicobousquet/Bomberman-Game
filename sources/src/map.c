@@ -568,8 +568,7 @@ int map_move_player(struct map *map, struct player *player) {
     assert(map);
 
     if (can_player_move(map, player)) {
-        player_set_x(player, direction_get_x(player_get_x(player), player_get_direction(player), 1));
-        player_set_y(player, direction_get_y(player_get_y(player), player_get_direction(player), 1));
+        player_move(player);
         return 1;
     }
     return 0;
@@ -654,8 +653,7 @@ static void map_move_monster(struct map *map, struct monster *monster, struct pl
     assert(player);
 
     if (can_monster_move(map, player, monster)) {
-        monster_set_x(monster, direction_get_x(monster_get_x(monster), monster_get_direction(monster), 1));
-        monster_set_y(monster, direction_get_y(monster_get_y(monster), monster_get_direction(monster), 1));
+        monster_move(monster);
     }
 }
 

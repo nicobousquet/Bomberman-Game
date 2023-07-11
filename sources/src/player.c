@@ -212,3 +212,8 @@ void player_get_bonus(struct player *player, enum bonus_type bonus_type) {
     }
 }
 
+void player_move(struct player *player) {
+    player_set_x(player, direction_get_x(player_get_x(player), player_get_direction(player), 1));
+    player_set_y(player, direction_get_y(player_get_y(player), player_get_direction(player), 1));
+}
+

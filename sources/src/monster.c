@@ -98,3 +98,8 @@ void monster_display(struct monster *monster, struct SDL_Surface *window, struct
     assert(sprites);
     window_display_image(window, sprites_get_monster(sprites, monster->direction), monster->x * SIZE_BLOC, monster->y * SIZE_BLOC);
 }
+
+void monster_move(struct monster *monster) {
+    monster_set_x(monster, direction_get_x(monster_get_x(monster), monster_get_direction(monster), 1));
+    monster_set_y(monster, direction_get_y(monster_get_y(monster), monster_get_direction(monster), 1));
+}
