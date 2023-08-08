@@ -10,7 +10,6 @@
  * @file player.h
  * @brief This file contains the declaration of the player structure and related functions.
  */
-
 struct player;
 
 /**
