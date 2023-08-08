@@ -7,7 +7,6 @@
  * @file game.h
  * @brief This file contains the declarations of functions and data types for the game.
  */
-
 struct game;
 
 /**

@@ -6,14 +6,10 @@
 #include "sprites.h"
 #include <stdint.h>
 
-struct map;
-
 /**
  * @file map.h
  * @brief This file contains the declarations of functions and data types for the game map.
  */
-
-
 struct map;
 
 /**

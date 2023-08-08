@@ -6,12 +6,12 @@
 #include "cell_types.h"
 #include <SDL/SDL.h>
 
-struct player;
-
 /**
  * @file player.h
  * @brief This file contains the declaration of the player structure and related functions.
  */
+
+struct player;
 
 /**
  * @brief Creates a new player with a given number of available bombs.
