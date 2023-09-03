@@ -42,7 +42,7 @@ struct bomb *bomb_new(int x, int y, int range) {
 void bomb_free(struct bomb *bomb) {
     assert(bomb);
     assert(bomb->timer);
-    free(bomb->timer);
+    timer_free(bomb->timer);
     free(bomb);
 }
 

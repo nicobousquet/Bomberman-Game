@@ -447,7 +447,7 @@ void map_update_bombs(struct map *map, struct player *player) {
                     propagate_bomb_explosion(map, player, bomb, WEST);
                 } else {
                     clean_explosion_cells(map, bomb);
-                    free(bomb_get_timer(bomb));
+                    timer_free(bomb_get_timer(bomb));
                     free(bomb);
                     list_bombs[i] = NULL;
                     continue;
@@ -647,16 +647,6 @@ static int can_monster_move(struct map *map, struct player *player, struct monst
     }
 }
 
-static void map_move_monster(struct map *map, struct monster *monster, struct player *player) {
-    assert(monster);
-    assert(map);
-    assert(player);
-
-    if (can_monster_move(map, player, monster)) {
-        monster_move(monster);
-    }
-}
-
 void map_update_monsters(struct map *map, struct player *player) {
     assert(map);
     assert(player);
@@ -666,9 +656,12 @@ void map_update_monsters(struct map *map, struct player *player) {
             struct monster *monster = list_monsters[i];
             timer_update(monster_get_timer(monster));
             if (timer_get_state(monster_get_timer(monster)) == IS_OVER) {
-                int random_dir = rand() % 4;
-                monster_set_direction(monster, (enum direction) random_dir);
-                map_move_monster(map, monster, player);
+                monster_set_direction(monster, direction_get_random());
+
+                if (can_monster_move(map, player, monster)) {
+                    monster_move(monster);
+                }
+
                 timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
             }
         }

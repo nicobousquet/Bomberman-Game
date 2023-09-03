@@ -30,7 +30,7 @@ struct monster *monster_new(int x, int y, int timer_duration) {
 void monster_free(struct monster *monster) {
     assert(monster);
     assert(monster->timer);
-    free(monster->timer);
+    timer_free(monster->timer);
     free(monster);
 }
 

@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    free(timer);
+    timer_free(timer);
     game_free(game);
 
     SDL_Quit();

@@ -1,4 +1,5 @@
 #include "../include/direction.h"
+#include <stdlib.h>
 
 int direction_get_x(int x_src, enum direction direction, int delta) {
     int x_dest = x_src;
@@ -22,4 +23,10 @@ int direction_get_y(int y_src, enum direction direction, int delta) {
     }
 
     return y_dest;
+}
+
+enum direction direction_get_random() {
+    enum direction directions[4] = {NORTH, SOUTH, EAST, WEST};
+
+    return directions[rand() % 4];
 }

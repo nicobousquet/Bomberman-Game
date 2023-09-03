@@ -28,8 +28,24 @@ int timer_get_size();
  */
 struct timer *timer_new();
 
+/**
+ * @brief Free the memory occupied by a timer.
+ * @param timer A pointer to the timer to be freed.
+ */
+void timer_free(struct timer *timer);
+
+/**
+ * @brief Write a timer to a file.
+ * @param timer The timer to write.
+ * @param file The file to write the timer to.
+ */
 void timer_write(struct timer *timer, FILE *file);
 
+/**
+ * @brief Read a timer from a file.
+ * @param timer The timer to read.
+ * @param file The file to read the timer from.
+ */
 void timer_read(struct timer *timer, FILE *file);
 
 /**

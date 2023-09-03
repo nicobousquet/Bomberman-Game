@@ -42,7 +42,7 @@ struct player *player_new(int bombs) {
 void player_free(struct player *player) {
     assert(player);
     assert(player->timer_invincibility);
-    free(player->timer_invincibility);
+    timer_free(player->timer_invincibility);
     free(player);
 }
 

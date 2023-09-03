@@ -43,4 +43,10 @@ int direction_get_x(int x_src, enum direction, int delta);
  */
 int direction_get_y(int y_src, enum direction, int delta);
 
+/**
+ * @brief Get a random direction.
+ * @return A random direction.
+ */
+enum direction direction_get_random();
+
 #endif // DIRECTION_H_

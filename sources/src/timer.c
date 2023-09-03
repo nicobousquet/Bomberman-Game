@@ -27,6 +27,11 @@ struct timer *timer_new() {
     return timer;
 }
 
+void timer_free(struct timer *timer) {
+    assert(timer);
+    free(timer);
+}
+
 void timer_write(struct timer *timer, FILE *file) {
     assert(timer);
     assert(file);
