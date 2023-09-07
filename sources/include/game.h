@@ -21,8 +21,18 @@ struct game *game_new(void);
  */
 void game_free(struct game *game);
 
+/**
+ * @brief Write the game to a file.
+ * @param game The game to write.
+ * @param file The file to write the game to.
+ */
 void game_write(struct game *game, FILE *file);
 
+/**
+ * @brief Read the game from a file.
+ * @param game The game to read.
+ * @param file The file to read the game from.
+ */
 void game_read(struct game *game, FILE *file);
 
 /**

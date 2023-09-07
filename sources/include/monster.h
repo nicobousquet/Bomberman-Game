@@ -28,8 +28,18 @@ struct monster *monster_new(int x, int y, int timer_duration);
  */
 void monster_free(struct monster *monster);
 
+/**
+ * @brief Write a monster to a file.
+ * @param monster The monster to write.
+ * @param file The file to write the monster to.
+ */
 void monster_write(struct monster *monster, FILE *file);
 
+/**
+ * @brief Read a monster from a file.
+ * @param monster The monster to read.
+ * @param file The file to read the monster from.
+ */
 void monster_read(struct monster *monster, FILE *file);
 
 /**
@@ -94,8 +104,16 @@ struct timer *monster_get_timer(struct monster *monster);
  */
 void monster_set_timer(struct monster *monster, struct timer *timer);
 
+/**
+ * @brief Display the sprite of the monster.
+ * @param monster A pointer to the monster.
+ */
 void monster_display(struct monster *monster, struct SDL_Surface *window, struct sprites *sprites);
 
+/**
+ * @brief Move the monster.
+ * @param monster A pointer to the monster.
+ */
 void monster_move(struct monster *monster);
 
 #endif // MONSTER_H_

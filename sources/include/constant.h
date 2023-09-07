@@ -76,6 +76,9 @@
  */
 #define NUM_BONUS_TYPES 6
 
+/**
+ * @brief File where game is saved.
+ */
 #define FILENAME_BACKUP "backup/data.bin"
 
 #endif /* CONSTANT_H_ */

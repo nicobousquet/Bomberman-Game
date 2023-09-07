@@ -26,10 +26,25 @@ struct map *map_new(int width, int height);
  */
 void map_free(struct map *map);
 
+/**
+ * @brief Write a map to a file.
+ * @param map The map to write.
+ * @param file The file to write the map to.
+ */
 void map_write(struct map *map, FILE *file);
 
+/**
+ * @brief Read a map from a file.
+ * @param map The map to read.
+ * @param file The file to read the map from.
+ */
 void map_read(struct map *map, FILE *file);
 
+/**
+ * @brief Read a map from a file.
+ * @param filename The name of the file to read the map from.
+ * @return A pointer to the map.
+ */
 struct map *map_read_file(char *filename);
 
 /**

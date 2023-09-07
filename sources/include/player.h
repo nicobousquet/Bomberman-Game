@@ -25,8 +25,18 @@ struct player *player_new(int num_bombs);
  */
 void player_free(struct player *player);
 
+/**
+ * @brief Write the player to a file.
+ * @param player The player to write.
+ * @param file The file to write the player to.
+ */
 void player_write(struct player *player, FILE *file);
 
+/**
+ * @brief Read the player from a file.
+ * @param player The player to read.
+ * @param file The file to read the player from.
+ */
 void player_read(struct player *player, FILE *file);
 
 /**
@@ -187,6 +197,11 @@ void player_set_timer_invincibility(struct player *player, struct timer *timer_i
  */
 void player_get_bonus(struct player *player, enum bonus_type bonus_type);
 
+/**
+ * @brief Set the bonus of the specified type for the player.
+ * @param player A pointer to the player.
+ * @param bonus_type The type of bonus to set.
+ */
 void player_move(struct player *player);
 
 #endif /* PLAYER_H_ */

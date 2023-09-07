@@ -13,13 +13,13 @@
  * @brief Structure representing the game.
  */
 struct game {
-    struct sprites *sprites;
-    SDL_Surface *window;
+    struct sprites *sprites; /**< Sprites of the game */
+    SDL_Surface *window; /**< The window containing the game */
     struct map **list_maps; /**< List of game maps */
     short num_levels; /**< Number of game maps */
     short current_level; /**< Current level */
     struct player *player; /**< Player of the game */
-    short is_paused;
+    short is_paused; /**< Is the game paused? */
 };
 
 struct game *game_new(void) {

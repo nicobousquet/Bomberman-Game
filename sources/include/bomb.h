@@ -24,8 +24,18 @@ struct bomb *bomb_new(int x, int y, int range);
  */
 void bomb_free(struct bomb *bomb);
 
+/**
+ * @brief Write a bomb to a file.
+ * @param bomb The bomb to write.
+ * @param file The file to write the bomb to.
+ */
 void bomb_write(struct bomb *bomb, FILE *file);
 
+/**
+ * @brief Read a bomb from a file.
+ * @param bomb The bomb to read.
+ * @param file The file to read the bomb from.
+ */
 void bomb_read(struct bomb *bomb, FILE *file);
 
 /**
