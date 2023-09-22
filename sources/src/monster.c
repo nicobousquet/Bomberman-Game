@@ -15,21 +15,27 @@ struct monster {
 };
 
 struct monster *monster_new(int x, int y, int timer_duration) {
+
     struct monster *monster = malloc(sizeof(struct monster));
+
     if (!monster) {
         perror("malloc");
     }
+
     memset(monster, 0, sizeof(struct monster));
+
     monster_set_x(monster, x);
     monster_set_y(monster, y);
     monster_set_direction(monster, WEST);
     monster->timer = timer_new(timer_duration);
+
     return monster;
 }
 
 void monster_free(struct monster *monster) {
     assert(monster);
     assert(monster->timer);
+
     timer_free(monster->timer);
     free(monster);
 }
@@ -37,6 +43,7 @@ void monster_free(struct monster *monster) {
 void monster_write(struct monster *monster, FILE *file) {
     assert(monster);
     assert(file);
+
     fwrite(monster, sizeof(struct monster), 1, file);
     timer_write(monster->timer, file);
 }
@@ -44,7 +51,9 @@ void monster_write(struct monster *monster, FILE *file) {
 void monster_read(struct monster *monster, FILE *file) {
     assert(monster);
     assert(file);
+
     struct timer *timer = monster->timer;
+
     fread(monster, sizeof(struct monster), 1, file);
     monster->timer = timer;
     timer_read(monster->timer, file);
@@ -96,6 +105,7 @@ void monster_display(struct monster *monster, struct SDL_Surface *window, struct
     assert(monster);
     assert(window);
     assert(sprites);
+    
     window_display_image(window, sprites_get_monster(sprites, monster->direction), monster->x * SIZE_BLOC, monster->y * SIZE_BLOC);
 }
 

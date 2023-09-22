@@ -22,12 +22,15 @@ struct player {
 
 struct player *player_new(int bombs) {
     assert(bombs >= 0 && bombs <= NUM_BOMBS_MAX);
+
     struct player *player = malloc(sizeof(struct player));
+
     if (!player) {
         error("Memory error");
     }
 
     memset(player, 0, sizeof(struct player));
+
     player->direction = NORTH;
     player->num_bombs = bombs;
     player->range_bombs = 1;
@@ -36,12 +39,14 @@ struct player *player_new(int bombs) {
     player->timer_invincibility = timer_new(DURATION_PLAYER_INVINCIBILITY);
     player->x = 1;
     player->y = 0;
+
     return player;
 }
 
 void player_free(struct player *player) {
     assert(player);
     assert(player->timer_invincibility);
+
     timer_free(player->timer_invincibility);
     free(player);
 }
@@ -49,6 +54,7 @@ void player_free(struct player *player) {
 void player_write(struct player *player, FILE *file) {
     assert(player);
     assert(file);
+
     fwrite(player, sizeof(struct player), 1, file);
     timer_write(player->timer_invincibility, file);
 }
@@ -56,7 +62,9 @@ void player_write(struct player *player, FILE *file) {
 void player_read(struct player *player, FILE *file) {
     assert(player);
     assert(file);
+
     struct timer *timer_invicibility = player->timer_invincibility;
+
     fread(player, sizeof(struct player), 1, file);
     player->timer_invincibility = timer_invicibility;
     timer_read(player->timer_invincibility, file);
@@ -110,6 +118,7 @@ int player_get_num_bomb(struct player *player) {
 
 void player_inc_num_bomb(struct player *player) {
     assert(player);
+
     if (player->num_bombs < NUM_BOMBS_MAX) {
         player->num_bombs++;
     }
@@ -117,6 +126,7 @@ void player_inc_num_bomb(struct player *player) {
 
 void player_dec_num_bomb(struct player *player) {
     assert(player);
+
     if (player->num_bombs > 0) {
         player->num_bombs--;
     }
@@ -124,6 +134,7 @@ void player_dec_num_bomb(struct player *player) {
 
 void player_set_num_bombs(struct player *player, int num_bombs) {
     assert(player);
+
     if (num_bombs <= NUM_BOMBS_MAX && num_bombs >= 0) {
         player->num_bombs = num_bombs;
     }
@@ -136,6 +147,7 @@ int player_get_num_lives(struct player *player) {
 
 void player_dec_num_lives(struct player *player) {
     assert(player);
+
     if (player->num_lives > 0) {
         player->num_lives--;
     }
@@ -143,6 +155,7 @@ void player_dec_num_lives(struct player *player) {
 
 void player_inc_num_lives(struct player *player) {
     assert(player);
+
     if (player->num_lives < NUM_LIVES_MAX) {
         player->num_lives++;
     }
@@ -159,6 +172,7 @@ int player_get_range_bombs(struct player *player) {
 
 void player_inc_range_bombs(struct player *player) {
     assert(player);
+
     if (player->range_bombs < NUM_BOMBS_MAX) {
         player->range_bombs++;
     }
@@ -166,6 +180,7 @@ void player_inc_range_bombs(struct player *player) {
 
 void player_dec_range_bombs(struct player *player) {
     assert(player);
+
     if (player->range_bombs > 1) {
         player->range_bombs--;
     }
@@ -178,6 +193,7 @@ int player_get_num_keys(struct player *player) {
 
 void player_inc_num_keys(struct player *player) {
     assert(player);
+
     if (player->num_keys < NUM_KEYS_MAX) {
         player->num_keys++;
     }
@@ -185,6 +201,7 @@ void player_inc_num_keys(struct player *player) {
 
 void player_dec_num_keys(struct player *player) {
     assert(player);
+
     if (player->num_keys > 0) {
         player->num_keys--;
     }
@@ -193,6 +210,7 @@ void player_dec_num_keys(struct player *player) {
 void player_display(struct player *player, SDL_Surface *window, struct sprites *sprites) {
     assert(player);
     assert(window);
+
     window_display_image(window, sprites_get_player(sprites, player->direction), player->x * SIZE_BLOC, player->y * SIZE_BLOC);
 }
 
@@ -201,12 +219,16 @@ void player_get_bonus(struct player *player, enum bonus_type bonus_type) {
 
     if (bonus_type == BONUS_BOMB_RANGE_INC) {
         player_inc_range_bombs(player);
+
     } else if (bonus_type == BONUS_BOMB_RANGE_DEC) {
         player_dec_range_bombs(player);
+
     } else if (bonus_type == BONUS_BOMB_NB_DEC) {
         player_dec_num_bomb(player);
+
     } else if (bonus_type == BONUS_BOMB_NB_INC) {
         player_inc_num_bomb(player);
+
     } else if (bonus_type == BONUS_LIFE) {
         player_inc_num_lives(player);
     }

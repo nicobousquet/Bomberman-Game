@@ -23,7 +23,9 @@ struct game {
 };
 
 struct game *game_new(void) {
+
     struct game *game = malloc(sizeof(struct game));
+
     memset(game, 0, sizeof(struct game));
 
     game->num_levels = NUM_LEVELS;
@@ -46,12 +48,15 @@ struct game *game_new(void) {
 
     for (int i = 0; i < game->num_levels; i++) {
         game->list_maps[i] = map_read_file(maps_filenames[i]);
+
         struct bomb **list_bombs = map_get_list_bombs(game->list_maps[i]);
+
         for (int j = 0; j < NUM_BOMBS_MAX; j++) {
             list_bombs[j] = NULL;
         }
 
         struct monster **list_monsters = map_get_list_monsters(game->list_maps[i]);
+
         for (int j = 0; j < NUM_MONSTERS_MAX; j++) {
             list_monsters[j] = NULL;
         }
@@ -60,10 +65,12 @@ struct game *game_new(void) {
     game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
 
     FILE *backup_file = fopen(FILENAME_BACKUP, "rb");
+
     if (!backup_file) {
         map_init_list_monsters(game->list_maps[game->current_level]);
         return game;
     }
+
     fclose(backup_file);
 
     return game;
@@ -75,6 +82,7 @@ void game_free(struct game *game) {
     assert(game->player);
 
     player_free(game->player);
+
     for (int i = 0; i < game->num_levels; i++) {
         map_free(game->list_maps[i]);
     }
@@ -97,6 +105,7 @@ void game_write(struct game *game, FILE *file) {
 }
 
 void game_read(struct game *game, FILE *file) {
+
     struct player *player = game->player;
     struct map **list_maps = game->list_maps;
     struct sprites *sprites = game->sprites;
@@ -120,24 +129,28 @@ struct map *game_get_current_map(struct game *game) {
     assert(game);
     assert(game->list_maps);
     assert(game->list_maps[game->current_level]);
+
     return game->list_maps[game->current_level];
 }
 
 struct player *game_get_player(struct game *game) {
     assert(game);
     assert(game->player);
+
     return game->player;
 }
 
 void game_set_current_level(struct game *game, int level) {
     assert(game);
     assert(level >= 0 && level < game->num_levels);
+
     game->current_level = level;
 }
 
 int game_get_current_level(struct game *game) {
     assert(game);
     assert(game->current_level >= 0 && game->current_level <= game->num_levels - 1);
+
     return game->current_level;
 }
 
@@ -148,6 +161,7 @@ static void display_banner(struct game *game) {
     struct player *player = game_get_player(game);
 
     int y = (map_get_height(map)) * SIZE_BLOC;
+
     for (int i = 0; i < map_get_width(map); i++) {
         window_display_image(game->window, sprites_get_banner_line(game->sprites), i * SIZE_BLOC, y);
     }
@@ -201,16 +215,21 @@ void game_display(struct game *game) {
 
 static void change_current_level(struct game *game, int level) {
     assert(game);
+
     game_set_current_level(game, level);
+
     struct map *map = game_get_current_map(game);
     struct player *player = game_get_player(game);
+
     player_set_num_bombs(player, 9);
     map_init_list_monsters(map);
     window_create(SIZE_BLOC * map_get_width(map), SIZE_BLOC * map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
 }
 
 static void save_game(struct game *game) {
+
     FILE *file = fopen(FILENAME_BACKUP, "wb");
+
     if (file) {
         game_write(game, file);
 
@@ -224,114 +243,158 @@ static void save_game(struct game *game) {
 
 static short input_keyboard(struct game *game) {
     assert(game);
+
     SDL_Event event = {0};
     int move = 0;
     struct player *player = game_get_player(game);
     struct map *map = game_get_current_map(game);
+
     while (SDL_PollEvent(&event)) {
+
         if (game->is_paused) {
+
             switch (event.type) {
+
                 case SDL_QUIT:
                     return 1;
+
                 case SDL_KEYDOWN: {
                     switch (event.key.keysym.sym) {
+
                         case SDLK_s:
                             if (event.key.keysym.mod & KMOD_CTRL) {
                                 save_game(game);
                                 return 1;
                             }
+
                             break;
+
                         case SDLK_p:
                             game->is_paused = !game->is_paused;
                             break;
+
                         default:
                             break;
                     }
                 }
+
                 default:
                     break;
             }
         } else {
+
             switch (event.type) {
+
                 case SDL_QUIT:
                     return 1;
+
                 case SDL_KEYDOWN: {
                     switch (event.key.keysym.sym) {
+
                         case SDLK_s:
                             if (event.key.keysym.mod & KMOD_CTRL) {
                                 save_game(game);
                                 return 1;
                             }
+
                             break;
+
                         case SDLK_UP:
                             player_set_direction(player, NORTH);
+
                             if (map_move_player(map, player)) {
                                 move = 1;
                             }
+
                             break;
+
                         case SDLK_DOWN:
                             player_set_direction(player, SOUTH);
+
                             if (map_move_player(map, player)) {
                                 move = 1;
                             }
+
                             break;
+
                         case SDLK_RIGHT:
                             player_set_direction(player, EAST);
+
                             if (map_move_player(map, player)) {
                                 move = 1;
                             }
+
                             break;
+
                         case SDLK_LEFT:
                             player_set_direction(player, WEST);
+
                             if (map_move_player(map, player)) {
                                 move = 1;
                             }
+
                             break;
+
                         case SDLK_SPACE:
                             map_set_bomb(map, player);
                             break;
+
                         case SDLK_p:
                             game->is_paused = !game->is_paused;
                             break;
+
                         case SDLK_RETURN: {
+
                             int x_next_player = direction_get_x(player_get_x(player), player_get_direction(player), 1);
                             int y_next_player = direction_get_y(player_get_y(player), player_get_direction(player), 1);
 
                             if (map_is_inside(map, x_next_player, y_next_player)) {
                                 uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);
+
                                 if ((type & 0xf1) == (CELL_DOOR | CLOSE)) {
                                     map_set_cell_value(map, x_next_player, y_next_player, type & 0xfe);
                                     player_dec_num_keys(player);
                                 }
                             }
+
                             break;
                         }
+
                         default:
                             break;
                     }
 
                     if (move) {
+
                         uint8_t cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
+
                         if ((cell & 0xf0) == CELL_DOOR) {
                             int level = (cell & 0x0e) / 2;
                             change_current_level(game, level);
                         }
                     }
+
                     break;
                 }
+
                 default:
                     break;
             }
         }
     }
+
     return 0;
 }
 
 int game_update(struct game *game) {
     assert(game);
+
     struct map *map = game_get_current_map(game);
+
     assert(map);
+
     struct player *player = game_get_player(game);
+
     assert(player);
 
     if (input_keyboard(game)) {
@@ -343,6 +406,7 @@ int game_update(struct game *game) {
         printf(" >>>>>>>>>>>>>  YOU LOST!!!  <<<<<<<<<<<<<\n");
         printf("===========================================\n");
         return 1;
+
     } else if (map_get_cell_value(map, player_get_x(player), player_get_y(player)) == (CELL_SCENERY | SCENERY_PRINCESS)) {
         printf("==========================================\n");
         printf(" >>>>>>>>>>>>>  YOU WON!!!  <<<<<<<<<<<<<\n");

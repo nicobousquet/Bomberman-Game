@@ -104,6 +104,7 @@ static void banner_load(struct sprites *sprites) {
 }
 
 static void banner_unload(struct sprites *sprites) {
+
     for (int i = 0; i < 10; i++) {
         SDL_FreeSurface(sprites->numbers[i]);
     }
@@ -190,7 +191,9 @@ static void sprites_load(struct sprites *sprites) {
 
 struct sprites *sprites_new() {
     struct sprites *sprites = malloc(sizeof(struct sprites));
+
     sprites_load(sprites);
+
     return sprites;
 }
 
@@ -259,20 +262,25 @@ SDL_Surface *sprites_get_key(struct sprites *sprites) {
 }
 
 SDL_Surface *sprites_get_scenery(struct sprites *sprites, enum scenery_type type) {
+
     if (type == SCENERY_STONE) {
         assert(sprites->stone);
         return sprites->stone;
+
     } else if (type == SCENERY_TREE) {
         assert(sprites->tree);
         return sprites->tree;
+
     } else if (type == SCENERY_PRINCESS) {
         assert(sprites->princess);
         return sprites->princess;
     }
+
     return NULL;
 }
 
 SDL_Surface *sprites_get_door(struct sprites *sprites, enum door_status status) {
+
     if (status == OPEN) {
         assert(sprites->door_open);
         return sprites->door_open;
@@ -280,6 +288,7 @@ SDL_Surface *sprites_get_door(struct sprites *sprites, enum door_status status) 
         assert(sprites->door_close);
         return sprites->door_close;
     }
+
     return NULL;
 }
 

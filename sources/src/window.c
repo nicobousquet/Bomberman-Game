@@ -23,6 +23,7 @@ void window_display_image(SDL_Surface *window, SDL_Surface *sprite, int x, int y
     assert(sprite);
 
     SDL_Rect place;
+
     place.x = x;
     place.y = y;
 

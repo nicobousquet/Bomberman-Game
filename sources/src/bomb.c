@@ -22,11 +22,15 @@ struct bomb {
 
 struct bomb *bomb_new(int x, int y, int range) {
     assert(range > 0);
+
     struct bomb *bomb = malloc(bomb_get_size());
+
     if (!bomb) {
         perror("malloc");
     }
+
     memset(bomb, 0, bomb_get_size());
+
     bomb->x = x;
     bomb->y = y;
     bomb->ttl = TTL4;
@@ -36,12 +40,14 @@ struct bomb *bomb_new(int x, int y, int range) {
     bomb->south_range = 0;
     bomb->east_range = 0;
     bomb->west_range = 0;
+
     return bomb;
 }
 
 void bomb_free(struct bomb *bomb) {
     assert(bomb);
     assert(bomb->timer);
+
     timer_free(bomb->timer);
     free(bomb);
 }
@@ -49,13 +55,16 @@ void bomb_free(struct bomb *bomb) {
 void bomb_write(struct bomb *bomb, FILE *file) {
     assert(bomb);
     assert(file);
+
     fwrite(bomb, sizeof(struct bomb), 1, file);
     timer_write(bomb->timer, file);
 }
 
 void bomb_read(struct bomb *bomb, FILE *file) {
     assert(bomb);
+
     struct timer *timer = bomb->timer;
+
     fread(bomb, sizeof(struct bomb), 1, file);
     bomb->timer = timer;
     timer_read(bomb->timer, file);
@@ -168,5 +177,6 @@ struct timer *bomb_get_timer(struct bomb *bomb) {
 void bomb_set_timer(struct bomb *bomb, struct timer *timer) {
     assert(bomb);
     assert(timer);
+
     bomb->timer = timer;
 }

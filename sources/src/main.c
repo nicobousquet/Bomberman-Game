@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
+
     if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
         error("Can't init SDL:  %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
@@ -13,6 +14,7 @@ int main(int argc, char *argv[]) {
     struct game *game = game_new();
 
     FILE *backup_file = fopen(FILENAME_BACKUP, "rb");
+
     if (backup_file) {
         game_read(game, backup_file);
         fclose(backup_file);
@@ -25,6 +27,7 @@ int main(int argc, char *argv[]) {
 
     struct timer *timer = timer_new();
     short done = 0;
+
     while (!done) {
         timer_start(timer, ideal_duration);
 
