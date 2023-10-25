@@ -351,7 +351,7 @@ static short input_keyboard(struct game *game) {
                             if (map_is_inside(map, x_next_player, y_next_player)) {
                                 uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);
 
-                                if ((type & 0xf1) == (CELL_DOOR | CLOSE)) {
+                                if (((type & 0xf1) == (CELL_DOOR | CLOSE)) && player_get_num_keys(player) ) {
                                     map_set_cell_value(map, x_next_player, y_next_player, type & 0xfe);
                                     player_dec_num_keys(player);
                                 }
