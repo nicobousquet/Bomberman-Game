@@ -20,7 +20,7 @@ struct monster;
  * @param timer_duration The duration of the monster's timer.
  * @return A pointer to the initialized monster.
  */
-struct monster *monster_new(int x, int y, int timer_duration);
+struct monster *monster_new(int x, int y);
 
 /**
  * @brief Free the memory occupied by a monster.

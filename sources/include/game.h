@@ -67,6 +67,6 @@ void game_display(struct game *game);
  * @param game A pointer to the game.
  * @return 1 if game is over, 0 otherwise.
  */
-int game_update(struct game *game);
+short game_update(struct game *game);
 
 #endif /* GAME_H_ */

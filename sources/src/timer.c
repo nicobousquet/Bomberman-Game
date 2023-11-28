@@ -7,10 +7,10 @@
  * @brief Structure representing a timer.
  */
 struct timer {
-    int duration;          /**< The duration of the timer. */
+    long duration;          /**< The duration of the timer. */
     enum state_timer state;/**< The state of the timer. */
     long start_time;       /**< The start time of the timer. */
-    int remaining;         /**< The remaining time of the timer. */
+    long remaining;         /**< The remaining time of the timer. */
 };
 
 int timer_get_size() {
@@ -68,12 +68,12 @@ void timer_update(struct timer *timer) {
     }
 }
 
-int timer_get_remaining(struct timer *timer) {
+long timer_get_remaining(struct timer *timer) {
     assert(timer);
     return timer->remaining;
 }
 
-int timer_get_duration(struct timer *timer) {
+long timer_get_duration(struct timer *timer) {
     assert(timer);
     return timer->duration;
 }

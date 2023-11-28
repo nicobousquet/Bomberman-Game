@@ -14,7 +14,7 @@ struct monster {
     struct timer *timer; /**< Timer for the monster */
 };
 
-struct monster *monster_new(int x, int y, int timer_duration) {
+struct monster *monster_new(int x, int y) {
 
     struct monster *monster = malloc(sizeof(struct monster));
 
@@ -27,7 +27,7 @@ struct monster *monster_new(int x, int y, int timer_duration) {
     monster_set_x(monster, x);
     monster_set_y(monster, y);
     monster_set_direction(monster, WEST);
-    monster->timer = timer_new(timer_duration);
+    monster->timer = timer_new();
 
     return monster;
 }

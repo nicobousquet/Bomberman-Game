@@ -36,7 +36,7 @@ struct player *player_new(int bombs) {
     player->range_bombs = 1;
     player->num_lives = 3;
     player->num_keys = 0;
-    player->timer_invincibility = timer_new(DURATION_PLAYER_INVINCIBILITY);
+    player->timer_invincibility = timer_new();
     player->x = 1;
     player->y = 0;
 

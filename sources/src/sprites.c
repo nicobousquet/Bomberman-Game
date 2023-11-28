@@ -206,7 +206,7 @@ void sprites_free(struct sprites *sprites) {
     monster_unload(sprites);
 }
 
-SDL_Surface *sprites_get_number(struct sprites *sprites, short number) {
+SDL_Surface *sprites_get_number(struct sprites *sprites, int number) {
     assert(number >= 0 && number <= 9);
     return sprites->numbers[number];
 }

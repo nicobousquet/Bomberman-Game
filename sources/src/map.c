@@ -102,7 +102,7 @@ void map_read(struct map *map, FILE *file) {
 
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
         if (map->list_monsters[i] != NULL) {
-            map->list_monsters[i] = monster_new(0, 0, 1000);
+            map->list_monsters[i] = monster_new(0, 0);
             monster_read(map->list_monsters[i], file);
         }
     }
@@ -274,7 +274,7 @@ void map_init_list_monsters(struct map *map) {
 
             if ((map_get_cell_value(map, i, j) & 0xf0) == CELL_MONSTER) {
 
-                struct monster *monster = monster_new(i, j, DURATION_MONSTER_MOVE);
+                struct monster *monster = monster_new(i, j);
 
                 timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
 
@@ -320,7 +320,7 @@ static void set_monster(struct map *map, int x, int y) {
     assert(map);
     assert(map_is_inside(map, x, y));
 
-    struct monster *monster = monster_new(x, y, DURATION_MONSTER_MOVE);
+    struct monster *monster = monster_new(x, y);
 
     timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
 
@@ -731,22 +731,10 @@ static int can_monster_move(struct map *map, struct player *player, struct monst
     switch (map_get_cell_value(map, next_x, next_y) & 0xf0) {
 
         case CELL_SCENERY:
-            return 0;
-
+        case CELL_BOMB:
+        case CELL_DOOR:
         case CELL_BOX:
             return 0;
-
-        case CELL_BONUS:
-            return 1;
-
-        case CELL_BOMB:
-            return 0;
-
-        case CELL_DOOR:
-            return 0;
-
-        case CELL_KEY:
-            return 1;
 
         default:
             return 1;

@@ -16,10 +16,10 @@ struct game {
     struct sprites *sprites; /**< Sprites of the game */
     SDL_Surface *window; /**< The window containing the game */
     struct map **list_maps; /**< List of game maps */
-    short num_levels; /**< Number of game maps */
-    short current_level; /**< Current level */
+    int num_levels; /**< Number of game maps */
+    int current_level; /**< Current level */
     struct player *player; /**< Player of the game */
-    short is_paused; /**< Is the game paused? */
+    int is_paused; /**< Is the game paused? */
 };
 
 struct game *game_new(void) {
@@ -386,7 +386,7 @@ static short input_keyboard(struct game *game) {
     return 0;
 }
 
-int game_update(struct game *game) {
+short game_update(struct game *game) {
     assert(game);
 
     struct map *map = game_get_current_map(game);

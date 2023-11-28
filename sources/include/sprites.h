@@ -70,7 +70,7 @@ SDL_Surface *sprites_get_door(struct sprites *sprites, enum door_status status);
  * @param number The number to display.
  * @return The SDL surface for the number sprite.
  */
-SDL_Surface *sprites_get_number(struct sprites *sprites, short number);
+SDL_Surface *sprites_get_number(struct sprites *sprites, int number);
 
 /**
  * @brief Get the sprite for the life banner.
