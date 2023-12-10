@@ -223,7 +223,7 @@ static void change_current_level(struct game *game, int level) {
 
     player_set_num_bombs(player, 9);
     map_init_list_monsters(map);
-    window_create(SIZE_BLOC * map_get_width(map), SIZE_BLOC * map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
+    game->window = window_create(SIZE_BLOC * map_get_width(map), SIZE_BLOC * map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
 }
 
 static void save_game(struct game *game) {
