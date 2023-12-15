@@ -190,7 +190,7 @@ static void sprites_load(struct sprites *sprites) {
 }
 
 struct sprites *sprites_new() {
-    struct sprites *sprites = malloc(sizeof(struct sprites));
+    struct sprites *sprites = malloc(sizeof(*sprites));
 
     sprites_load(sprites);
 

@@ -43,12 +43,6 @@ void monster_write(struct monster *monster, FILE *file);
 void monster_read(struct monster *monster, FILE *file);
 
 /**
- * @brief Get the size of the monster structure.
- * @return The size of the monster structure.
- */
-int monster_get_size();
-
-/**
  * @brief Set the x-coordinate of the monster.
  * @param monster A pointer to the monster.
  * @param x The x-coordinate to set.

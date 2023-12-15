@@ -23,13 +23,13 @@ struct player {
 struct player *player_new(int bombs) {
     assert(bombs >= 0 && bombs <= NUM_BOMBS_MAX);
 
-    struct player *player = malloc(sizeof(struct player));
+    struct player *player = malloc(sizeof(*player));
 
     if (!player) {
         error("Memory error");
     }
 
-    memset(player, 0, sizeof(struct player));
+    memset(player, 0, sizeof(*player));
 
     player->direction = NORTH;
     player->num_bombs = bombs;
@@ -55,7 +55,7 @@ void player_write(struct player *player, FILE *file) {
     assert(player);
     assert(file);
 
-    fwrite(player, sizeof(struct player), 1, file);
+    fwrite(player, sizeof(*player), 1, file);
     timer_write(player->timer_invincibility, file);
 }
 
@@ -65,7 +65,7 @@ void player_read(struct player *player, FILE *file) {
 
     struct timer *timer_invicibility = player->timer_invincibility;
 
-    fread(player, sizeof(struct player), 1, file);
+    fread(player, sizeof(*player), 1, file);
     player->timer_invincibility = timer_invicibility;
     timer_read(player->timer_invincibility, file);
 }
@@ -159,10 +159,6 @@ void player_inc_num_lives(struct player *player) {
     if (player->num_lives < NUM_LIVES_MAX) {
         player->num_lives++;
     }
-}
-
-int player_get_size() {
-    return sizeof(struct player);
 }
 
 int player_get_range_bombs(struct player *player) {

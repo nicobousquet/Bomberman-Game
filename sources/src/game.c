@@ -24,9 +24,9 @@ struct game {
 
 struct game *game_new(void) {
 
-    struct game *game = malloc(sizeof(struct game));
+    struct game *game = malloc(sizeof(*game));
 
-    memset(game, 0, sizeof(struct game));
+    memset(game, 0, sizeof(*game));
 
     game->num_levels = NUM_LEVELS;
     game->current_level = 0;
@@ -95,7 +95,7 @@ void game_free(struct game *game) {
 }
 
 void game_write(struct game *game, FILE *file) {
-    fwrite(game, sizeof(struct game), 1, file);
+    fwrite(game, sizeof(*game), 1, file);
 
     player_write(game->player, file);
 
@@ -111,7 +111,7 @@ void game_read(struct game *game, FILE *file) {
     struct sprites *sprites = game->sprites;
     SDL_Surface *window = game->window;
 
-    fread(game, sizeof(struct game), 1, file);
+    fread(game, sizeof(*game), 1, file);
 
     game->player = player;
     game->list_maps = list_maps;

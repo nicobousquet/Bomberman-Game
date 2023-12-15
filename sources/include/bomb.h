@@ -39,12 +39,6 @@ void bomb_write(struct bomb *bomb, FILE *file);
 void bomb_read(struct bomb *bomb, FILE *file);
 
 /**
- * @brief Get the size of the bomb structure.
- * @return The size of the bomb structure.
- */
-int bomb_get_size();
-
-/**
  * @brief Get the x-coordinate of the bomb.
  * @param bomb A pointer to the bomb.
  * @return The x-coordinate of the bomb.

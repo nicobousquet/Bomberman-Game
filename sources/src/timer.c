@@ -13,18 +13,14 @@ struct timer {
     long remaining;         /**< The remaining time of the timer. */
 };
 
-int timer_get_size() {
-    return sizeof(struct timer);
-}
-
 struct timer *timer_new() {
-    struct timer *timer = malloc(sizeof(struct timer));
+    struct timer *timer = malloc(sizeof(*timer));
 
     if (!timer) {
         perror("malloc");
     }
 
-    memset(timer, 0, sizeof(struct timer));
+    memset(timer, 0, sizeof(*timer));
 
     timer->state = IS_OVER;
 
@@ -40,14 +36,14 @@ void timer_write(struct timer *timer, FILE *file) {
     assert(timer);
     assert(file);
 
-    fwrite(timer, sizeof(struct timer), 1, file);
+    fwrite(timer, sizeof(*timer), 1, file);
 }
 
 void timer_read(struct timer *timer, FILE *file) {
     assert(timer);
     assert(file);
 
-    fread(timer, sizeof(struct timer), 1, file);
+    fread(timer, sizeof(*timer), 1, file);
     timer->start_time = SDL_GetTicks() - (timer->duration - timer->remaining);
 }
 

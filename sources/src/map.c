@@ -21,7 +21,7 @@ struct map {
 struct map *map_new(int width, int height) {
     assert(width > 0 && height > 0);
 
-    struct map *map = malloc(sizeof(struct map));
+    struct map *map = malloc(sizeof(*map));
 
     if (map == NULL) {
         perror("map_new : malloc map failed");
@@ -67,7 +67,7 @@ void map_write(struct map *map, FILE *file) {
     assert(map);
     assert(file);
 
-    fwrite(map, sizeof(struct map), 1, file);
+    fwrite(map, sizeof(*map), 1, file);
     fwrite(map->grid, map->width * map->height, 1, file);
 
 
@@ -89,7 +89,7 @@ void map_read(struct map *map, FILE *file) {
 
     unsigned char *grid = map->grid;
 
-    fread(map, sizeof(struct map), 1, file);
+    fread(map, sizeof(*map), 1, file);
     map->grid = grid;
     fread(map->grid, map->width * map->height, 1, file);
 
@@ -132,7 +132,7 @@ struct map *map_read_file(char *filename) {
         exit(EXIT_FAILURE);
     }
 
-    size_t numread = fread(grid, sizeof(char), size, fp);
+    size_t numread = fread(grid, sizeof(*grid), size, fp);
 
     if ((long int) numread != size) {
         perror("fread");
@@ -184,10 +184,6 @@ struct bomb **map_get_list_bombs(struct map *map) {
 struct monster **map_get_list_monsters(struct map *map) {
     assert(map);
     return map->list_monsters;
-}
-
-int map_get_size() {
-    return sizeof(struct map);
 }
 
 int map_is_inside(struct map *map, int x, int y) {

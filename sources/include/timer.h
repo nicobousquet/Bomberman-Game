@@ -17,12 +17,6 @@ enum state_timer {
 struct timer;
 
 /**
- * @brief Get the size of the timer structure.
- * @return The size of the timer structure.
- */
-int timer_get_size();
-
-/**
  * @brief Initialize a timer.
  * @return A pointer to the initialized timer.
  */

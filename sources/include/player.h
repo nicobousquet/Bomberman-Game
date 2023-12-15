@@ -171,12 +171,6 @@ void player_inc_num_lives(struct player *player);
 void player_dec_num_lives(struct player *player);
 
 /**
- * @brief Get the size of the player structure.
- * @return The size of the player structure in bytes.
- */
-int player_get_size();
-
-/**
  * @brief Get the timer for invincibility of the player.
  * @param player A pointer to the player.
  * @return A pointer to the timer for invincibility of the player.

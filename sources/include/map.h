@@ -90,12 +90,6 @@ struct bomb **map_get_list_bombs(struct map *map);
 struct monster **map_get_list_monsters(struct map *map);
 
 /**
- * @brief Get the size of the map structure.
- * @return The size of the map structure.
- */
-int map_get_size();
-
-/**
  * @brief Test if the specified coordinates (x, y) are within the map boundaries.
  * @param map A pointer to the map.
  * @param x The x-coordinate.

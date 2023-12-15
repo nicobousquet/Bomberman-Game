@@ -16,13 +16,13 @@ struct monster {
 
 struct monster *monster_new(int x, int y) {
 
-    struct monster *monster = malloc(sizeof(struct monster));
+    struct monster *monster = malloc(sizeof(*monster));
 
     if (!monster) {
         perror("malloc");
     }
 
-    memset(monster, 0, sizeof(struct monster));
+    memset(monster, 0, sizeof(*monster));
 
     monster_set_x(monster, x);
     monster_set_y(monster, y);
@@ -44,7 +44,7 @@ void monster_write(struct monster *monster, FILE *file) {
     assert(monster);
     assert(file);
 
-    fwrite(monster, sizeof(struct monster), 1, file);
+    fwrite(monster, sizeof(*monster), 1, file);
     timer_write(monster->timer, file);
 }
 
@@ -54,13 +54,9 @@ void monster_read(struct monster *monster, FILE *file) {
 
     struct timer *timer = monster->timer;
 
-    fread(monster, sizeof(struct monster), 1, file);
+    fread(monster, sizeof(*monster), 1, file);
     monster->timer = timer;
     timer_read(monster->timer, file);
-}
-
-int monster_get_size() {
-    return sizeof(struct monster);
 }
 
 int monster_get_x(struct monster *monster) {

@@ -23,13 +23,13 @@ struct bomb {
 struct bomb *bomb_new(int x, int y, int range) {
     assert(range > 0);
 
-    struct bomb *bomb = malloc(bomb_get_size());
+    struct bomb *bomb = malloc(sizeof(*bomb));
 
     if (!bomb) {
         perror("malloc");
     }
 
-    memset(bomb, 0, bomb_get_size());
+    memset(bomb, 0, sizeof(*bomb));
 
     bomb->x = x;
     bomb->y = y;
@@ -56,7 +56,7 @@ void bomb_write(struct bomb *bomb, FILE *file) {
     assert(bomb);
     assert(file);
 
-    fwrite(bomb, sizeof(struct bomb), 1, file);
+    fwrite(bomb, sizeof(*bomb), 1, file);
     timer_write(bomb->timer, file);
 }
 
@@ -65,7 +65,7 @@ void bomb_read(struct bomb *bomb, FILE *file) {
 
     struct timer *timer = bomb->timer;
 
-    fread(bomb, sizeof(struct bomb), 1, file);
+    fread(bomb, sizeof(*bomb), 1, file);
     bomb->timer = timer;
     timer_read(bomb->timer, file);
 }
@@ -163,10 +163,6 @@ enum bomb_type bomb_get_ttl(struct bomb *bomb) {
 void bomb_dec_ttl(struct bomb *bomb) {
     assert(bomb);
     bomb->ttl--;
-}
-
-int bomb_get_size() {
-    return sizeof(struct bomb);
 }
 
 struct timer *bomb_get_timer(struct bomb *bomb) {
