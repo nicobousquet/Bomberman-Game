@@ -66,14 +66,14 @@ int map_get_height(struct map *map);
  * @param map A pointer to the map.
  * @return A pointer to the grid.
  */
-unsigned char *map_get_grid(struct map *map);
+uint8_t *map_get_grid(struct map *map);
 
 /**
  * @brief Set the grid data of the map.
  * @param map A pointer to the map.
  * @param grid A pointer to the grid.
  */
-void map_set_grid(struct map *map, unsigned char *grid);
+void map_set_grid(struct map *map, uint8_t *grid);
 
 /**
  * @brief Get the list of bombs on the map.

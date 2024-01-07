@@ -13,7 +13,7 @@
 struct map {
     int width; /**< Width of the map */
     int height; /**< Height of the map */
-    unsigned char *grid; /**< Grid of the map */
+    uint8_t *grid; /**< Grid of the map */
     struct bomb *list_bombs[NUM_BOMBS_MAX]; /**< List of bombs on the map */
     struct monster *list_monsters[NUM_MONSTERS_MAX]; /**< List of monsters on the map */
 };
@@ -87,7 +87,7 @@ void map_write(struct map *map, FILE *file) {
 void map_read(struct map *map, FILE *file) {
     assert(map);
 
-    unsigned char *grid = map->grid;
+    uint8_t *grid = map->grid;
 
     fread(map, sizeof(*map), 1, file);
     map->grid = grid;
@@ -147,7 +147,7 @@ struct map *map_read_file(char *filename) {
 
     for (int i = 0; i < width * height; i++) {
         int ret = strtol(grid, &grid, 10);
-        map_get_grid(map)[i] = (unsigned char) ret;
+        map_get_grid(map)[i] = (uint8_t) ret;
     }
 
     free(grid_copy);
@@ -164,12 +164,12 @@ int map_get_height(struct map *map) {
     return map->height;
 }
 
-unsigned char *map_get_grid(struct map *map) {
+uint8_t *map_get_grid(struct map *map) {
     assert(map);
     return map->grid;
 }
 
-void map_set_grid(struct map *map, unsigned char *grid) {
+void map_set_grid(struct map *map, uint8_t *grid) {
     assert(map);
     assert(grid);
 
