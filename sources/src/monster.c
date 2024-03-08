@@ -19,7 +19,8 @@ struct monster *monster_new(int x, int y) {
     struct monster *monster = malloc(sizeof(*monster));
 
     if (!monster) {
-        perror("malloc");
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
     }
 
     memset(monster, 0, sizeof(*monster));
@@ -28,6 +29,7 @@ struct monster *monster_new(int x, int y) {
     monster_set_y(monster, y);
     monster_set_direction(monster, WEST);
     monster->timer = timer_new();
+    timer_start(monster->timer, DURATION_MONSTER_MOVE);
 
     return monster;
 }
@@ -105,7 +107,13 @@ void monster_display(struct monster *monster, struct SDL_Surface *window, struct
     window_display_image(window, sprites_get_monster(sprites, monster->direction), monster->x * SIZE_BLOC, monster->y * SIZE_BLOC);
 }
 
-void monster_move(struct monster *monster) {
-    monster_set_x(monster, direction_get_x(monster_get_x(monster), monster_get_direction(monster), 1));
-    monster_set_y(monster, direction_get_y(monster_get_y(monster), monster_get_direction(monster), 1));
+void monster_move(struct monster *monster, enum direction direction) {
+    assert(monster);
+
+    monster_set_direction(monster, direction);
+
+    monster_set_x(monster, direction_get_x(monster_get_x(monster), direction, 1));
+    monster_set_y(monster, direction_get_y(monster_get_y(monster), direction, 1));
+
+    timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
 }

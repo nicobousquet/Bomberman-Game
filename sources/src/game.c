@@ -26,6 +26,11 @@ struct game *game_new(void) {
 
     struct game *game = malloc(sizeof(*game));
 
+    if (!game) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
     memset(game, 0, sizeof(*game));
 
     game->num_levels = NUM_LEVELS;
@@ -34,6 +39,11 @@ struct game *game_new(void) {
     game->player = player_new(NUM_BOMBS_MAX);
     game->sprites = sprites_new();
     game->list_maps = malloc(game->num_levels * sizeof(struct map *));
+
+    if (!game->list_maps) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
 
     char *maps_filenames[] = {
             "map/map_0",
@@ -221,7 +231,7 @@ static void change_current_level(struct game *game, int level) {
     struct map *map = game_get_current_map(game);
     struct player *player = game_get_player(game);
 
-    player_set_num_bombs(player, 9);
+    player_set_num_bombs(player, NUM_BOMBS_MAX);
     map_init_list_monsters(map);
     game->window = window_create(SIZE_BLOC * map_get_width(map), SIZE_BLOC * map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
 }
@@ -300,36 +310,32 @@ static short input_keyboard(struct game *game) {
                             break;
 
                         case SDLK_UP:
-                            player_set_direction(player, NORTH);
 
-                            if (map_move_player(map, player)) {
+                            if (map_move_player(map, player, NORTH)) {
                                 move = 1;
                             }
 
                             break;
 
                         case SDLK_DOWN:
-                            player_set_direction(player, SOUTH);
 
-                            if (map_move_player(map, player)) {
+                            if (map_move_player(map, player, SOUTH)) {
                                 move = 1;
                             }
 
                             break;
 
                         case SDLK_RIGHT:
-                            player_set_direction(player, EAST);
 
-                            if (map_move_player(map, player)) {
+                            if (map_move_player(map, player, EAST)) {
                                 move = 1;
                             }
 
                             break;
 
                         case SDLK_LEFT:
-                            player_set_direction(player, WEST);
 
-                            if (map_move_player(map, player)) {
+                            if (map_move_player(map, player, WEST)) {
                                 move = 1;
                             }
 

@@ -107,7 +107,8 @@ void monster_display(struct monster *monster, struct SDL_Surface *window, struct
 /**
  * @brief Move the monster.
  * @param monster A pointer to the monster.
+ * @param direction The direction where the monster is moving.
  */
-void monster_move(struct monster *monster);
+void monster_move(struct monster *monster, enum direction direction);
 
 #endif // MONSTER_H_

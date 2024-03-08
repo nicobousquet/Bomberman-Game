@@ -192,6 +192,11 @@ static void sprites_load(struct sprites *sprites) {
 struct sprites *sprites_new() {
     struct sprites *sprites = malloc(sizeof(*sprites));
 
+    if (!sprites) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
     sprites_load(sprites);
 
     return sprites;

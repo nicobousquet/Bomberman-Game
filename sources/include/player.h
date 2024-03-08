@@ -192,10 +192,10 @@ void player_set_timer_invincibility(struct player *player, struct timer *timer_i
 void player_get_bonus(struct player *player, enum bonus_type bonus_type);
 
 /**
- * @brief Set the bonus of the specified type for the player.
+ * @brief Move the player.
  * @param player A pointer to the player.
- * @param bonus_type The type of bonus to set.
+ * @param direction The direction where the player is moving.
  */
-void player_move(struct player *player);
+void player_move(struct player *player, enum direction direction);
 
 #endif /* PLAYER_H_ */

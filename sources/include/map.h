@@ -146,12 +146,13 @@ void map_update_bombs(struct map *map, struct player *player);
 @brief Move the player on the map.
 @param map A pointer to the map.
 @param player A pointer to the player.
+@param direction The direction where the player is moving.
 @return An integer representing the result of the player's movement.
 */
-int map_move_player(struct map *map, struct player *player);
+int map_move_player(struct map *map, struct player *player, enum direction direction);
 
 /**
-@brief Update the state of monsters on the map.
+@brief Update the state of monsters and their position on the map.
 @param map A pointer to the map.
 @param player A pointer to the player.
 */

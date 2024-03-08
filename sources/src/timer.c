@@ -7,17 +7,18 @@
  * @brief Structure representing a timer.
  */
 struct timer {
-    long duration;          /**< The duration of the timer. */
+    int duration;          /**< The duration of the timer. */
     enum state_timer state;/**< The state of the timer. */
     long start_time;       /**< The start time of the timer. */
-    long remaining;         /**< The remaining time of the timer. */
+    int remaining;         /**< The remaining time of the timer. */
 };
 
 struct timer *timer_new() {
     struct timer *timer = malloc(sizeof(*timer));
 
     if (!timer) {
-        perror("malloc");
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
     }
 
     memset(timer, 0, sizeof(*timer));
@@ -59,7 +60,7 @@ void timer_start(struct timer *timer, int duration) {
 void timer_update(struct timer *timer) {
     assert(timer);
 
-    if ((timer->remaining = timer->duration - (SDL_GetTicks() - timer->start_time)) < 0) {
+    if ((timer->remaining = timer->duration - (int)(SDL_GetTicks() - timer->start_time)) < 0) {
         timer->state = IS_OVER;
     }
 }

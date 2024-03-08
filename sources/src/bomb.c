@@ -26,7 +26,8 @@ struct bomb *bomb_new(int x, int y, int range) {
     struct bomb *bomb = malloc(sizeof(*bomb));
 
     if (!bomb) {
-        perror("malloc");
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
     }
 
     memset(bomb, 0, sizeof(*bomb));

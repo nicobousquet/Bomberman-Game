@@ -26,7 +26,8 @@ struct player *player_new(int bombs) {
     struct player *player = malloc(sizeof(*player));
 
     if (!player) {
-        error("Memory error");
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
     }
 
     memset(player, 0, sizeof(*player));
@@ -230,8 +231,12 @@ void player_get_bonus(struct player *player, enum bonus_type bonus_type) {
     }
 }
 
-void player_move(struct player *player) {
-    player_set_x(player, direction_get_x(player_get_x(player), player_get_direction(player), 1));
-    player_set_y(player, direction_get_y(player_get_y(player), player_get_direction(player), 1));
+void player_move(struct player *player, enum direction direction) {
+    assert(player);
+
+    player_set_direction(player, direction);
+
+    player_set_x(player, direction_get_x(player_get_x(player), direction, 1));
+    player_set_y(player, direction_get_y(player_get_y(player), direction, 1));
 }
 
