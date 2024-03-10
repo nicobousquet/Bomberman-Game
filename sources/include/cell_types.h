@@ -1,5 +1,5 @@
-#ifndef CELL_TYPES_H_
-#define CELL_TYPES_H_
+#ifndef CELL_TYPES_H
+#define CELL_TYPES_H
 
 /**
  * @brief Enumeration of bomb types.
@@ -70,4 +70,4 @@ enum cell_type {
     CELL_BOMB = 0x70 /**< Bomb cell type. */
 };
 
-#endif //CELL_TYPES_H_
+#endif //CELL_TYPES_H

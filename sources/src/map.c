@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 /**
  * @brief Structure representing a map.
@@ -16,9 +15,10 @@ struct map {
     uint8_t *grid; /**< Grid of the map */
     struct bomb *list_bombs[NUM_BOMBS_MAX]; /**< List of bombs on the map */
     struct monster *list_monsters[NUM_MONSTERS_MAX]; /**< List of monsters on the map */
+    enum strategy monsters_strategy; /**< The strategy of the monsters (RANDOM, DIJKSTRA) */
 };
 
-struct map *map_new(int width, int height) {
+struct map *map_new(int width, int height, enum strategy monsters_strategy) {
     assert(width > 0 && height > 0);
 
     struct map *map = malloc(sizeof(*map));
@@ -31,6 +31,7 @@ struct map *map_new(int width, int height) {
     map->width = width;
     map->height = height;
     map->grid = malloc(height * width);
+    map->monsters_strategy = monsters_strategy;
 
     if (!map->grid) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
@@ -145,7 +146,9 @@ struct map *map_read_file(char *filename) {
 
     int width = strtol(grid, &grid, 10);
     int height = strtol(grid + 1, &grid, 10);
-    struct map *map = map_new(width, height);
+    enum strategy monsters_strategy = strtol(grid, &grid, 10);
+
+    struct map *map = map_new(width, height, monsters_strategy);
 
     for (int i = 0; i < width * height; i++) {
         int ret = strtol(grid, &grid, 10);
@@ -349,7 +352,7 @@ static void kill_monster(struct map *map, struct monster **monster) {
     *monster = NULL;
 }
 
-static struct monster **is_explosion_colliding_monster(int x_explosion, int y_explosion, struct monster **list_monsters) {
+static struct monster **is_explosion_reaching_monster(int x_explosion, int y_explosion, struct monster **list_monsters) {
     assert(list_monsters);
 
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
@@ -361,7 +364,7 @@ static struct monster **is_explosion_colliding_monster(int x_explosion, int y_ex
     return NULL;
 }
 
-static int is_explosion_colliding_player(int explosion_x, int explosion_y, struct player *player) {
+static int is_explosion_reaching_player(int explosion_x, int explosion_y, struct player *player) {
     assert(player);
 
     if (explosion_x == player_get_x(player) && explosion_y == player_get_y(player)) {
@@ -419,12 +422,12 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
                     *range_ptr = range - 1;
                     return;
 
-                } else if (is_explosion_colliding_player(x, y, player)) {
+                } else if (is_explosion_reaching_player(x, y, player)) {
                     player_dec_num_lives(player);
                     *range_ptr = range - 1;
                     return;
 
-                } else if ((dead_monster = is_explosion_colliding_monster(x, y, map_get_list_monsters(map))) != NULL) {
+                } else if ((dead_monster = is_explosion_reaching_monster(x, y, map_get_list_monsters(map))) != NULL) {
                     kill_monster(map, dead_monster);
                     map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSION);
                     *range_ptr = range;
@@ -492,7 +495,7 @@ void map_update_bombs(struct map *map, struct player *player) {
 
                 } else if (bomb_get_ttl(bomb) == EXPLOSION) {
 
-                    if (is_explosion_colliding_player(bomb_get_x(bomb), bomb_get_y(bomb), player)) {
+                    if (is_explosion_reaching_player(bomb_get_x(bomb), bomb_get_y(bomb), player)) {
                         player_dec_num_lives(player);
                     }
 
@@ -517,7 +520,7 @@ void map_update_bombs(struct map *map, struct player *player) {
     }
 }
 
-static int is_box_colliding_monsters(struct monster **list_monsters, int x_dest, int y_dest) {
+static int will_box_be_blocked_by_monsters(struct monster **list_monsters, int x_dest, int y_dest) {
     assert(list_monsters);
 
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
@@ -538,15 +541,14 @@ static int is_box_pushable(struct map *map, int x_dest, int y_dest) {
         return 0;
     }
 
-    if ((map_get_cell_value(map, x_dest, y_dest) & 0xf0) == CELL_EMPTY &&
-        !is_box_colliding_monsters(map_get_list_monsters(map), x_dest, y_dest)) {
+    if ((map_get_cell_value(map, x_dest, y_dest) & 0xf0) == CELL_EMPTY && !will_box_be_blocked_by_monsters(map_get_list_monsters(map), x_dest, y_dest)) {
         return 1;
     }
 
     return 0;
 }
 
-static int is_player_colliding_monsters(int player_next_x, int player_next_y, struct monster **list_monsters) {
+static int will_player_meet_a_monster(int player_next_x, int player_next_y, struct monster **list_monsters) {
     assert(list_monsters);
 
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
@@ -572,7 +574,7 @@ static int can_player_move(struct map *map, struct player *player, enum directio
         return 0;
     }
 
-    if (is_player_colliding_monsters(next_x, next_y, map_get_list_monsters(map))) {
+    if (will_player_meet_a_monster(next_x, next_y, map_get_list_monsters(map))) {
         timer_update(player_get_timer_invincibility(player));
 
         if (timer_get_state(player_get_timer_invincibility(player)) == IS_OVER) {
@@ -603,6 +605,7 @@ static int can_player_move(struct map *map, struct player *player, enum directio
             if (is_box_pushable(map, x_dest, y_dest)) {
                 map_set_cell_value(map, x_dest, y_dest, CELL_BOX);
                 map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
+
                 return 1;
             }
 
@@ -612,6 +615,7 @@ static int can_player_move(struct map *map, struct player *player, enum directio
         case CELL_BONUS:
             player_get_bonus(player, cell & 0x0f);
             map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
+
             return 1;
 
         case CELL_BOMB:
@@ -657,7 +661,7 @@ int map_move_player(struct map *map, struct player *player, enum direction direc
     return 0;
 }
 
-static int is_monster_colliding_player(int monster_x, int monster_y, struct player *player) {
+static int will_monster_meet_player(int monster_x, int monster_y, struct player *player) {
     assert(player);
 
     if (monster_x == player_get_x(player) && monster_y == player_get_y(player)) {
@@ -667,7 +671,7 @@ static int is_monster_colliding_player(int monster_x, int monster_y, struct play
     return 0;
 }
 
-static int is_monster_colliding_monsters(int monster_x, int monster_y, struct monster **list_monsters) {
+static int will_monster_meet_other_monsters(int monster_x, int monster_y, struct monster **list_monsters) {
     assert(list_monsters);
 
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
@@ -693,22 +697,7 @@ static int can_monster_move(struct map *map, struct player *player, struct monst
         return 0;
     }
 
-    if (is_monster_colliding_player(next_x, next_y, player)) {
-        monster_set_direction(monster, direction);
-
-        struct timer *timer_invincibility = player_get_timer_invincibility(player);
-
-        timer_update(timer_invincibility);
-
-        if (timer_get_state(timer_invincibility) == IS_OVER) {
-            player_dec_num_lives(player);
-            timer_start(timer_invincibility, DURATION_PLAYER_INVINCIBILITY);
-        }
-
-        return 0;
-    }
-
-    if (is_monster_colliding_monsters(next_x, next_y, map_get_list_monsters(map))) {
+    if (will_monster_meet_other_monsters(next_x, next_y, map_get_list_monsters(map))) {
         return 0;
     }
 
@@ -723,6 +712,21 @@ static int can_monster_move(struct map *map, struct player *player, struct monst
         default:
             return 1;
     }
+}
+
+static void monster_meeting_player(struct monster *monster, struct player *player, enum direction monster_direction) {
+    monster_set_direction(monster, monster_direction);
+
+    struct timer *timer_invincibility = player_get_timer_invincibility(player);
+
+    timer_update(timer_invincibility);
+
+    if (timer_get_state(timer_invincibility) == IS_OVER) {
+        player_dec_num_lives(player);
+        timer_start(timer_invincibility, DURATION_PLAYER_INVINCIBILITY);
+    }
+
+    timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
 }
 
 void map_update_monsters(struct map *map, struct player *player) {
@@ -740,17 +744,37 @@ void map_update_monsters(struct map *map, struct player *player) {
 
             if (timer_get_state(monster_get_timer(monster)) == IS_OVER) {
 
-                short visited_directions[4] = {0, 0, 0, 0};
+                uint8_t grid[map_get_width(map) * map_get_height(map)];
 
-                while (visited_directions[NORTH] != 1 && visited_directions[EAST] != 1 && visited_directions[SOUTH] != 1 && visited_directions[WEST] != 1) {
-                    enum direction direction = direction_get_random();
+                for (int j = 0; j < map_get_width(map); j++) {
+                    for (int k = 0; k < map_get_height(map); k++) {
+                        switch (map_get_cell_value(map, j, k) & 0xf0) {
+                            case CELL_SCENERY:
+                            case CELL_BOMB:
+                            case CELL_DOOR:
+                            case CELL_BOX:
+                                grid[CELL(j, k)] = 1;
+                                break;
 
-                    if (can_monster_move(map, player, monster, direction)) {
-                        monster_move(monster, direction);
-                        break;
+                            default:
+                                grid[CELL(j, k)] = 0;
+                                break;
+                        }
                     }
+                }
 
-                    visited_directions[direction] = 1;
+                enum direction monster_direction;
+
+                if (map->monsters_strategy == RANDOM_STRATEGY) {
+                    monster_direction = direction_get_random(monster_get_x(monster), monster_get_y(monster), grid, map_get_width(map), map_get_height(map));
+                }
+
+                if (can_monster_move(map, player, monster, monster_direction)) {
+                    if (will_monster_meet_player(direction_get_x(monster_get_x(monster), monster_direction, 1), direction_get_y(monster_get_y(monster), monster_direction, 1), player)) {
+                        monster_meeting_player(monster, player, monster_direction);
+                    } else {
+                        monster_move(monster, monster_direction);
+                    }
                 }
             }
         }

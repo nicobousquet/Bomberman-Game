@@ -1,10 +1,8 @@
 #include "../include/game.h"
-#include "../include/sprites.h"
 #include "../include/bomb.h"
 #include "../include/map.h"
 #include "../include/constant.h"
 #include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 

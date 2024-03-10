@@ -1,5 +1,5 @@
-#ifndef CONSTANT_H_
-#define CONSTANT_H_
+#ifndef CONSTANT_H
+#define CONSTANT_H
 
 /**
  * @brief Name of the game window.
@@ -81,4 +81,4 @@
  */
 #define FILENAME_BACKUP "backup/data.bin"
 
-#endif /* CONSTANT_H_ */
+#endif /* CONSTANT_H */

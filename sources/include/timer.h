@@ -1,5 +1,5 @@
-#ifndef TIMER_H_
-#define TIMER_H_
+#ifndef TIMER_H
+#define TIMER_H
 
 #include <stdio.h>
 
@@ -83,4 +83,4 @@ enum state_timer timer_get_state(struct timer *timer);
  */
 void timer_start(struct timer *timer, int duration);
 
-#endif //TIMER_H_
+#endif //TIMER_H

@@ -1,5 +1,5 @@
-#ifndef GAME_H_
-#define GAME_H_
+#ifndef GAME_H
+#define GAME_H
 
 #include <stdio.h>
 
@@ -69,4 +69,4 @@ void game_display(struct game *game);
  */
 short game_update(struct game *game);
 
-#endif /* GAME_H_ */
+#endif /* GAME_H */

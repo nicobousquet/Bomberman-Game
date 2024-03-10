@@ -1,10 +1,7 @@
-#ifndef PLAYER_H_
-#define PLAYER_H_
+#ifndef PLAYER_H
+#define PLAYER_H
 
-#include "direction.h"
 #include "sprites.h"
-#include "cell_types.h"
-#include <SDL/SDL.h>
 
 /**
  * @file player.h
@@ -198,4 +195,4 @@ void player_get_bonus(struct player *player, enum bonus_type bonus_type);
  */
 void player_move(struct player *player, enum direction direction);
 
-#endif /* PLAYER_H_ */
+#endif /* PLAYER_H */

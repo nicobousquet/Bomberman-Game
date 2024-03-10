@@ -1,5 +1,7 @@
-#ifndef DIRECTION_H_
-#define DIRECTION_H_
+#ifndef DIRECTION_H
+#define DIRECTION_H
+
+#include <stdint.h>
 
 /**
  * @file direction.h
@@ -44,9 +46,14 @@ int direction_get_x(int x_src, enum direction, int delta);
 int direction_get_y(int y_src, enum direction, int delta);
 
 /**
- * @brief Get a random direction.
- * @return A random direction.
+ * @brief Get a random direction on the grid.
+ * @param x_src x_coordinate of the source position.
+ * @param y_src y_coordinate of the source position.
+ * @param grid The grid.
+ * @param grid_width The grid_width of the grid.
+ * @param grid_height The grid_height of the grid.
+ * @return A random direction on the grid.
  */
-enum direction direction_get_random();
+enum direction direction_get_random(int x_src, int y_src, uint8_t *grid, int grid_width, int grid_height);
 
-#endif // DIRECTION_H_
+#endif // DIRECTION_H

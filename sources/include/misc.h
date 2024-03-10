@@ -1,5 +1,5 @@
-#ifndef MISC_H_
-#define MISC_H_
+#ifndef MISC_H
+#define MISC_H
 
 #include <SDL/SDL.h>
 
@@ -18,4 +18,4 @@ void error(const char *s, ...);
  */
 SDL_Surface *image_load(const char *filename);
 
-#endif /* MISC_H_ */
+#endif /* MISC_H */

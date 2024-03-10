@@ -1,5 +1,5 @@
-#ifndef SOURCES_BOMB_H_
-#define SOURCES_BOMB_H_
+#ifndef SOURCES_BOMB_H
+#define SOURCES_BOMB_H
 
 #include <stdio.h>
 
@@ -184,4 +184,4 @@ struct timer *bomb_get_timer(struct bomb *bomb);
  */
 void bomb_set_timer(struct bomb *bomb, struct timer *timer);
 
-#endif // SOURCES_BOMB_H_
+#endif // SOURCES_BOMB_H

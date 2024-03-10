@@ -1,11 +1,8 @@
-#ifndef MONSTER_H_
-#define MONSTER_H_
+#ifndef MONSTER_H
+#define MONSTER_H
 
-#include "direction.h"
 #include "timer.h"
 #include "sprites.h"
-#include <SDL/SDL.h>
-#include <stdio.h>
 
 /**
  * @file monster.h
@@ -111,4 +108,4 @@ void monster_display(struct monster *monster, struct SDL_Surface *window, struct
  */
 void monster_move(struct monster *monster, enum direction direction);
 
-#endif // MONSTER_H_
+#endif // MONSTER_H

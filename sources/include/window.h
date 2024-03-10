@@ -1,5 +1,5 @@
-#ifndef WINDOW_H_
-#define WINDOW_H_
+#ifndef WINDOW_H
+#define WINDOW_H
 
 #include <SDL/SDL.h>
 
@@ -33,4 +33,4 @@ void window_display_image(SDL_Surface *window, SDL_Surface *surface, int x, int 
  */
 void window_clear(SDL_Surface *window);
 
-#endif /* WINDOW_H_ */
+#endif /* WINDOW_H */

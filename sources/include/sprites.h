@@ -1,5 +1,5 @@
-#ifndef SPRITES_H_
-#define SPRITES_H_
+#ifndef SPRITES_H
+#define SPRITES_H
 
 #include <SDL/SDL.h>
 #include "direction.h"
@@ -123,4 +123,4 @@ SDL_Surface *sprites_get_monster(struct sprites *sprites, enum direction directi
  */
 SDL_Surface *sprites_get_scenery(struct sprites *sprites, enum scenery_type type);
 
-#endif /* SPRITES_H_ */
+#endif /* SPRITES_H */

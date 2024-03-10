@@ -1,10 +1,17 @@
-#ifndef MAP_H_
-#define MAP_H_
+#ifndef MAP_H
+#define MAP_H
 
 #include "player.h"
 #include "window.h"
-#include "sprites.h"
-#include <stdint.h>
+
+/**
+ * @enum strategy
+ * @brief Represents the moving strategy of the monsters.
+ */
+enum strategy {
+    RANDOM_STRATEGY,
+    DIJKSTRA_STRATEGY
+};
 
 /**
  * @file map.h
@@ -16,9 +23,10 @@ struct map;
  * @brief Create a new empty map with the specified width and height.
  * @param width The width of the map.
  * @param height The height of the map.
+ * @param monsters_strategy The strategy of the monsters (RANDOM or DIJKSTRA)
  * @return A pointer to the newly created map.
  */
-struct map *map_new(int width, int height);
+struct map *map_new(int width, int height, enum strategy monsters_strategy);
 
 /**
  * @brief Free the memory occupied by a map.
@@ -158,4 +166,4 @@ int map_move_player(struct map *map, struct player *player, enum direction direc
 */
 void map_update_monsters(struct map *map, struct player *player);
 
-#endif /* MAP_H_ */
+#endif /* MAP_H */
