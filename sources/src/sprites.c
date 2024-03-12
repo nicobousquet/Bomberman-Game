@@ -4,8 +4,8 @@
 
 #define MAP_CASE           "sprite/wood_box.png"
 #define MAP_KEY            "sprite/key.png"
-#define MAP_DOOR_OPENED    "sprite/door_opened.png"
-#define MAP_DOOR_CLOSED    "sprite/door_closed.png"
+#define MAP_DOOR_OPENED    "sprite/door_open.png"
+#define MAP_DOOR_CLOSED    "sprite/door_close.png"
 
 #define MAP_STONE          "sprite/stone.png"
 #define MAP_TREE           "sprite/tree.png"
