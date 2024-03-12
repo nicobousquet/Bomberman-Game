@@ -43,14 +43,14 @@ struct game *game_new(void) {
     }
 
     char *maps_filenames[] = {
-            "map/map_0",
-            "map/map_1",
-            "map/map_2",
-            "map/map_3",
-            "map/map_4",
-            "map/map_5",
-            "map/map_6",
-            "map/map_7"
+            "maps/map_0",
+            "maps/map_1",
+            "maps/map_2",
+            "maps/map_3",
+            "maps/map_4",
+            "maps/map_5",
+            "maps/map_6",
+            "maps/map_7"
     };
 
     for (int i = 0; i < game->num_levels; i++) {
