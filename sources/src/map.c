@@ -269,7 +269,7 @@ static void add_monster(struct map *map, int x, int y) {
         struct monster **list_monsters = map_get_list_monsters(map);
 
         if (list_monsters[i] == NULL) {
-            list_monsters[i] = monster_new(x, y);;
+            list_monsters[i] = monster_new(x, y);
 
             break;
         }
