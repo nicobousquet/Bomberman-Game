@@ -49,7 +49,7 @@
 /**
  * @brief Duration (in milliseconds) of a bomb state.
  */
-#define DURATION_BOMB_TTL 1000
+#define DURATION_BOMB_PERIOD 1000
 
 /**
  * @brief Duration (in milliseconds) of a monster's movement.

@@ -80,95 +80,18 @@ enum bomb_type bomb_get_ttl(struct bomb *bomb);
 void bomb_dec_ttl(struct bomb *bomb);
 
 /**
+ * @brief Set the time to live (TTL) of the bomb.
+ * @param bomb A pointer to the bomb.
+ * @param ttl The time to live to set.
+ */
+void bomb_set_ttl(struct bomb *bomb, enum bomb_type ttl);
+
+/**
  * @brief Get the range of the bomb's explosion.
  * @param bomb A pointer to the bomb.
  * @return The range of the bomb's explosion.
  */
 int bomb_get_range(struct bomb *bomb);
-
-/**
- * @brief Get the north range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @return The north range of the bomb's explosion.
- */
-int bomb_get_north_range(struct bomb *bomb);
-
-/**
- * @brief Get the south range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @return The south range of the bomb's explosion.
- */
-int bomb_get_south_range(struct bomb *bomb);
-
-/**
- * @brief Get the east range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @return The east range of the bomb's explosion.
- */
-int bomb_get_east_range(struct bomb *bomb);
-
-/**
- * @brief Get the west range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @return The west range of the bomb's explosion.
- */
-int bomb_get_west_range(struct bomb *bomb);
-
-/**
- * @brief Set the north range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @param north_range The north range to set.
- */
-void bomb_set_north_range(struct bomb *bomb, int north_range);
-
-/**
- * @brief Set the south range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @param south_range The south range to set.
- */
-void bomb_set_south_range(struct bomb *bomb, int south_range);
-
-/**
- * @brief Set the east range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @param east_range The east range to set.
- */
-void bomb_set_east_range(struct bomb *bomb, int east_range);
-
-/**
- * @brief Set the west range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @param west_range The west range to set.
- */
-void bomb_set_west_range(struct bomb *bomb, int west_range);
-
-/**
- * @brief Get a pointer to the north range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @return A pointer to the north range of the bomb's explosion.
- */
-int *bomb_get_north_range_ptr(struct bomb *bomb);
-
-/**
- * @brief Get a pointer to the south range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @return A pointer to the south range of the bomb's explosion.
- */
-int *bomb_get_south_range_ptr(struct bomb *bomb);
-
-/**
- * @brief Get a pointer to the east range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @return A pointer to the east range of the bomb's explosion.
- */
-int *bomb_get_east_range_ptr(struct bomb *bomb);
-
-/**
- * @brief Get a pointer to the west range of the bomb's explosion.
- * @param bomb A pointer to the bomb.
- * @return A pointer to the west range of the bomb's explosion.
- */
-int *bomb_get_west_range_ptr(struct bomb *bomb);
 
 /**
  * @brief Get the timer of the bomb.

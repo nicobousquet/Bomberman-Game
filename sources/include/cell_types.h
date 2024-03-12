@@ -5,11 +5,13 @@
  * @brief Enumeration of bomb types.
  */
 enum bomb_type {
-    EXPLOSION = 1, /**< Explosion type. */
+    EXPLODED, /**< Exploded type. */
+    EXPLOSING, /**< Explosion type. */
     TTL1, /**< Time-to-live type 1. */
     TTL2, /**< Time-to-live type 2. */
     TTL3, /**< Time-to-live type 3. */
-    TTL4 /**< Time-to-live type 4. */
+    TTL4, /**< Time-to-live type 4. */
+    INIT  /**< Initial time-to-live. */
 };
 
 /**
@@ -38,8 +40,8 @@ enum scenery_type {
  * @brief Enumeration of door statuses.
  */
 enum door_status {
-    OPEN = 0, /**< Opened door status. */
-    CLOSE /**< Closed door status. */
+    OPENED = 0, /**< Opened door status. */
+    CLOSED /**< Closed door status. */
 };
 
 /**

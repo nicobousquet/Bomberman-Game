@@ -20,8 +20,8 @@ struct player {
     struct timer *timer_invincibility; /**< Invincibility timer of the player */
 };
 
-struct player *player_new(int bombs) {
-    assert(bombs >= 0 && bombs <= NUM_BOMBS_MAX);
+struct player *player_new(int num_bombs) {
+    assert(num_bombs >= 0 && num_bombs <= NUM_BOMBS_MAX);
 
     struct player *player = malloc(sizeof(*player));
 
@@ -33,7 +33,7 @@ struct player *player_new(int bombs) {
     memset(player, 0, sizeof(*player));
 
     player->direction = NORTH;
-    player->num_bombs = bombs;
+    player->num_bombs = num_bombs;
     player->range_bombs = 1;
     player->num_lives = 3;
     player->num_keys = 0;

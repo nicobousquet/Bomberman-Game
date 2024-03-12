@@ -4,8 +4,8 @@
 
 #define MAP_CASE           "sprite/wood_box.png"
 #define MAP_KEY            "sprite/key.png"
-#define MAP_DOOR_OPEN    "sprite/door_open.png"
-#define MAP_DOOR_CLOSE    "sprite/door_close.png"
+#define MAP_DOOR_OPENED    "sprite/door_opened.png"
+#define MAP_DOOR_CLOSED    "sprite/door_closed.png"
 
 #define MAP_STONE          "sprite/stone.png"
 #define MAP_TREE           "sprite/tree.png"
@@ -60,8 +60,8 @@ struct sprites {
     SDL_Surface *banner_line_vert;
     SDL_Surface *box;
     SDL_Surface *key;
-    SDL_Surface *door_open;
-    SDL_Surface *door_close;
+    SDL_Surface *door_opened;
+    SDL_Surface *door_closed;
     SDL_Surface *stone;
     SDL_Surface *tree;
     SDL_Surface *bonus[6];
@@ -71,7 +71,7 @@ struct sprites {
 };
 
 static void bomb_load(struct sprites *sprites) {
-    sprites->bomb_img[EXPLOSION - 1] = image_load(BOMB_EXPLOSION);
+    sprites->bomb_img[EXPLOSING - 1] = image_load(BOMB_EXPLOSION);
     sprites->bomb_img[TTL1 - 1] = image_load(BOMB_TTL1);
     sprites->bomb_img[TTL2 - 1] = image_load(BOMB_TTL2);
     sprites->bomb_img[TTL3 - 1] = image_load(BOMB_TTL3);
@@ -121,8 +121,8 @@ static void map_load(struct sprites *sprites) {
     sprites->box = image_load(MAP_CASE);
     sprites->key = image_load(MAP_KEY);
     sprites->stone = image_load(MAP_STONE);
-    sprites->door_open = image_load(MAP_DOOR_OPEN);
-    sprites->door_close = image_load(MAP_DOOR_CLOSE);
+    sprites->door_opened = image_load(MAP_DOOR_OPENED);
+    sprites->door_closed = image_load(MAP_DOOR_CLOSED);
     sprites->princess = image_load(PRINCESS);
 }
 
@@ -131,8 +131,8 @@ static void map_unload(struct sprites *sprites) {
     SDL_FreeSurface(sprites->box);
     SDL_FreeSurface(sprites->key);
     SDL_FreeSurface(sprites->stone);
-    SDL_FreeSurface(sprites->door_open);
-    SDL_FreeSurface(sprites->door_close);
+    SDL_FreeSurface(sprites->door_opened);
+    SDL_FreeSurface(sprites->door_closed);
     SDL_FreeSurface(sprites->princess);
 }
 
@@ -286,12 +286,12 @@ SDL_Surface *sprites_get_scenery(struct sprites *sprites, enum scenery_type type
 
 SDL_Surface *sprites_get_door(struct sprites *sprites, enum door_status status) {
 
-    if (status == OPEN) {
-        assert(sprites->door_open);
-        return sprites->door_open;
-    } else if (status == CLOSE) {
-        assert(sprites->door_close);
-        return sprites->door_close;
+    if (status == OPENED) {
+        assert(sprites->door_opened);
+        return sprites->door_opened;
+    } else if (status == CLOSED) {
+        assert(sprites->door_closed);
+        return sprites->door_closed;
     }
 
     return NULL;

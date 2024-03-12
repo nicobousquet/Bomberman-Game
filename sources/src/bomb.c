@@ -14,10 +14,6 @@ struct bomb {
     enum bomb_type ttl; /**< Time to live for the bomb */
     struct timer *timer; /**< Timer of 1 second */
     int range; /**< Range of explosion */
-    int north_range; /**< Range of explosion in the north direction */
-    int south_range; /**< Range of explosion in the south direction */
-    int east_range; /**< Range of explosion in the east direction */
-    int west_range; /**< Range of explosion in the west direction */
 };
 
 struct bomb *bomb_new(int x, int y, int range) {
@@ -37,10 +33,6 @@ struct bomb *bomb_new(int x, int y, int range) {
     bomb->ttl = TTL4;
     bomb->timer = timer_new();
     bomb->range = range;
-    bomb->north_range = 0;
-    bomb->south_range = 0;
-    bomb->east_range = 0;
-    bomb->west_range = 0;
 
     return bomb;
 }
@@ -96,66 +88,6 @@ int bomb_get_range(struct bomb *bomb) {
     return bomb->range;
 }
 
-int bomb_get_north_range(struct bomb *bomb) {
-    assert(bomb);
-    return bomb->north_range;
-}
-
-int bomb_get_south_range(struct bomb *bomb) {
-    assert(bomb);
-    return bomb->south_range;
-}
-
-int bomb_get_east_range(struct bomb *bomb) {
-    assert(bomb);
-    return bomb->east_range;
-}
-
-int bomb_get_west_range(struct bomb *bomb) {
-    assert(bomb);
-    return bomb->west_range;
-}
-
-int *bomb_get_north_range_ptr(struct bomb *bomb) {
-    assert(bomb);
-    return &bomb->north_range;
-}
-
-int *bomb_get_south_range_ptr(struct bomb *bomb) {
-    assert(bomb);
-    return &bomb->south_range;
-}
-
-int *bomb_get_east_range_ptr(struct bomb *bomb) {
-    assert(bomb);
-    return &bomb->east_range;
-}
-
-int *bomb_get_west_range_ptr(struct bomb *bomb) {
-    assert(bomb);
-    return &bomb->west_range;
-}
-
-void bomb_set_north_range(struct bomb *bomb, int north_range) {
-    assert(bomb);
-    bomb->north_range = north_range;
-}
-
-void bomb_set_south_range(struct bomb *bomb, int south_range) {
-    assert(bomb);
-    bomb->south_range = south_range;
-}
-
-void bomb_set_east_range(struct bomb *bomb, int east_range) {
-    assert(bomb);
-    bomb->east_range = east_range;
-}
-
-void bomb_set_west_range(struct bomb *bomb, int west_range) {
-    assert(bomb);
-    bomb->west_range = west_range;
-}
-
 enum bomb_type bomb_get_ttl(struct bomb *bomb) {
     assert(bomb);
     return bomb->ttl;
@@ -164,6 +96,11 @@ enum bomb_type bomb_get_ttl(struct bomb *bomb) {
 void bomb_dec_ttl(struct bomb *bomb) {
     assert(bomb);
     bomb->ttl--;
+}
+
+void bomb_set_ttl(struct bomb *bomb, enum bomb_type ttl) {
+    assert(bomb);
+    bomb->ttl = ttl;
 }
 
 struct timer *bomb_get_timer(struct bomb *bomb) {

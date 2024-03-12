@@ -17,7 +17,7 @@ struct game {
     int num_levels; /**< Number of game maps */
     int current_level; /**< Current level */
     struct player *player; /**< Player of the game */
-    int is_paused; /**< Is the game paused? */
+    bool is_paused; /**< Is the game paused ? */
 };
 
 struct game *game_new(void) {
@@ -33,7 +33,7 @@ struct game *game_new(void) {
 
     game->num_levels = NUM_LEVELS;
     game->current_level = 0;
-    game->is_paused = 0;
+    game->is_paused = false;
     game->player = player_new(NUM_BOMBS_MAX);
     game->sprites = sprites_new();
     game->list_maps = malloc(game->num_levels * sizeof(struct map *));
@@ -249,11 +249,11 @@ static void save_game(struct game *game) {
     }
 }
 
-static short input_keyboard(struct game *game) {
+static bool input_keyboard(struct game *game) {
     assert(game);
 
     SDL_Event event = {0};
-    int move = 0;
+    bool move = false;
     struct player *player = game_get_player(game);
     struct map *map = game_get_current_map(game);
 
@@ -264,7 +264,7 @@ static short input_keyboard(struct game *game) {
             switch (event.type) {
 
                 case SDL_QUIT:
-                    return 1;
+                    return true;
 
                 case SDL_KEYDOWN: {
                     switch (event.key.keysym.sym) {
@@ -272,7 +272,7 @@ static short input_keyboard(struct game *game) {
                         case SDLK_s:
                             if (event.key.keysym.mod & KMOD_CTRL) {
                                 save_game(game);
-                                return 1;
+                                return true;
                             }
 
                             break;
@@ -294,7 +294,7 @@ static short input_keyboard(struct game *game) {
             switch (event.type) {
 
                 case SDL_QUIT:
-                    return 1;
+                    return true;
 
                 case SDL_KEYDOWN: {
                     switch (event.key.keysym.sym) {
@@ -302,7 +302,7 @@ static short input_keyboard(struct game *game) {
                         case SDLK_s:
                             if (event.key.keysym.mod & KMOD_CTRL) {
                                 save_game(game);
-                                return 1;
+                                return true;
                             }
 
                             break;
@@ -310,7 +310,7 @@ static short input_keyboard(struct game *game) {
                         case SDLK_UP:
 
                             if (map_move_player(map, player, NORTH)) {
-                                move = 1;
+                                move = true;
                             }
 
                             break;
@@ -318,7 +318,7 @@ static short input_keyboard(struct game *game) {
                         case SDLK_DOWN:
 
                             if (map_move_player(map, player, SOUTH)) {
-                                move = 1;
+                                move = true;
                             }
 
                             break;
@@ -326,7 +326,7 @@ static short input_keyboard(struct game *game) {
                         case SDLK_RIGHT:
 
                             if (map_move_player(map, player, EAST)) {
-                                move = 1;
+                                move = true;
                             }
 
                             break;
@@ -334,7 +334,7 @@ static short input_keyboard(struct game *game) {
                         case SDLK_LEFT:
 
                             if (map_move_player(map, player, WEST)) {
-                                move = 1;
+                                move = true;
                             }
 
                             break;
@@ -355,7 +355,7 @@ static short input_keyboard(struct game *game) {
                             if (map_is_inside(map, x_next_player, y_next_player)) {
                                 uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);
 
-                                if (((type & 0xf1) == (CELL_DOOR | CLOSE)) && player_get_num_keys(player) ) {
+                                if (((type & 0xf1) == (CELL_DOOR | CLOSED)) && player_get_num_keys(player) ) {
                                     map_set_cell_value(map, x_next_player, y_next_player, type & 0xfe);
                                     player_dec_num_keys(player);
                                 }
@@ -387,7 +387,7 @@ static short input_keyboard(struct game *game) {
         }
     }
 
-    return 0;
+    return false;
 }
 
 short game_update(struct game *game) {
