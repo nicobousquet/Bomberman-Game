@@ -26,12 +26,12 @@ enum direction {
  * This function calculates the resulting x-coordinate by applying the given delta value
  * in the specified direction to the source x-coordinate.
  *
- * @param x_src The source x-coordinate.
  * @param direction The direction.
+ * @param x_src The source x-coordinate.
  * @param delta The delta value to apply.
  * @return The resulting x-coordinate.
  */
-int direction_get_x(int x_src, enum direction, int delta);
+int direction_get_x(enum direction, int x_src, int delta);
 
 /**
  * @brief Get the y-coordinate based on the source y-coordinate, direction, and delta.
@@ -39,12 +39,12 @@ int direction_get_x(int x_src, enum direction, int delta);
  * This function calculates the resulting y-coordinate by applying the given delta value
  * in the specified direction to the source y-coordinate.
  *
- * @param y_src The source y-coordinate.
  * @param direction The direction.
+ * @param y_src The source y-coordinate.
  * @param delta The delta value to apply.
  * @return The resulting y-coordinate.
  */
-int direction_get_y(int y_src, enum direction, int delta);
+int direction_get_y(enum direction, int y_src, int delta);
 
 /**
  * @brief Get a random direction on the grid.
@@ -55,6 +55,6 @@ int direction_get_y(int y_src, enum direction, int delta);
  * @param grid_height The grid_height of the grid.
  * @return A random direction on the grid.
  */
-enum direction direction_get_random(int x_src, int y_src, bool *grid, int grid_width, int grid_height);
+enum direction direction_get_random(int x_src, int y_src, const bool *grid, int grid_width, int grid_height);
 
 #endif // DIRECTION_H

@@ -6,7 +6,7 @@
  */
 #define CELL(i, j) ((i) + (j) * grid_width)
 
-int direction_get_x(int x_src, enum direction direction, int delta) {
+int direction_get_x(enum direction direction, int x_src, int delta) {
     int x_dest = x_src;
 
     if (direction == EAST) {
@@ -18,7 +18,7 @@ int direction_get_x(int x_src, enum direction direction, int delta) {
     return x_dest;
 }
 
-int direction_get_y(int y_src, enum direction direction, int delta) {
+int direction_get_y(enum direction direction, int y_src, int delta) {
     int y_dest = y_src;
 
     if (direction == NORTH) {
@@ -39,7 +39,7 @@ static bool is_inside(int x, int y, int grid_width, int grid_height) {
     return false;
 }
 
-enum direction direction_get_random(int x_src, int y_src, bool *grid, int grid_width, int grid_height) {
+enum direction direction_get_random(int x_src, int y_src, const bool *grid, int grid_width, int grid_height) {
     bool visited_directions[4] = {false, false, false, false};
 
     while (visited_directions[NORTH] != true || visited_directions[SOUTH] != true || visited_directions[EAST] != true || visited_directions[WEST] != true) {
@@ -47,8 +47,8 @@ enum direction direction_get_random(int x_src, int y_src, bool *grid, int grid_w
         enum direction direction = directions[rand() % 4];
 
         if (visited_directions[direction] != true) {
-            int next_x = direction_get_x(x_src, direction, 1);
-            int next_y = direction_get_y(y_src, direction, 1);
+            int next_x = direction_get_x(direction, x_src, 1);
+            int next_y = direction_get_y(direction, y_src, 1);
 
             if (grid[CELL(next_x, next_y)] == false && is_inside(next_x, next_x, grid_width, grid_height)) {
                 return direction;

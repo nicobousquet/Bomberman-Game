@@ -20,13 +20,11 @@ enum strategy {
 struct map;
 
 /**
- * @brief Create a new empty map with the specified width and height.
- * @param width The width of the map.
- * @param height The height of the map.
- * @param monsters_strategy The strategy of the monsters (RANDOM or DIJKSTRA)
+ * @brief Create a new map from the file filename.
+ * @param filename The filename to read the map from.
  * @return A pointer to the newly created map.
  */
-struct map *map_new(int width, int height, enum strategy monsters_strategy);
+struct map *map_new(char *filename);
 
 /**
  * @brief Free the memory occupied by a map.
@@ -47,13 +45,6 @@ void map_write(struct map *map, FILE *file);
  * @param file The file to read the map from.
  */
 void map_read(struct map *map, FILE *file);
-
-/**
- * @brief Read a map from a file.
- * @param filename The name of the file to read the map from.
- * @return A pointer to the map.
- */
-struct map *map_read_file(char *filename);
 
 /**
  * @brief Get the width of the map.

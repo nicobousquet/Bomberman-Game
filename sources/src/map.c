@@ -18,30 +18,71 @@ struct map {
     enum strategy monsters_strategy; /**< The strategy of the monsters (RANDOM, DIJKSTRA) */
 };
 
-struct map *map_new(int width, int height, enum strategy monsters_strategy) {
-    assert(width > 0 && height > 0);
+struct map *map_new(char *filename) {
+    assert(filename);
 
     struct map *map = malloc(sizeof(*map));
+
+    memset(map, 0, sizeof(*map));
 
     if (map == NULL) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
         exit(EXIT_FAILURE);
     }
 
-    map->width = width;
-    map->height = height;
-    map->grid = malloc(height * width);
-    map->monsters_strategy = monsters_strategy;
+    FILE *fp = fopen(filename, "rb");
+
+    if (!fp) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
+    fseek(fp, 0, SEEK_END);
+
+    long size = ftell(fp);
+
+    fseek(fp, 0, SEEK_SET);
+
+    char *file_content = malloc(size);
+    char *file_content_copy = file_content;
+
+    if (!file_content) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
+    size_t numread = fread(file_content, sizeof(*file_content), size, fp);
+
+    if ((long) numread != size) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
+    fclose(fp);
+
+    map->width = (int) strtol(file_content, &file_content, 10);
+    map->height = (int) strtol(file_content + 1, &file_content, 10);
+    map->monsters_strategy = strtol(file_content, &file_content, 10);
+
+    map->grid = malloc(sizeof(uint8_t) * (map->width * map->height));
 
     if (!map->grid) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
-            map->grid[CELL(i, j)] = CELL_EMPTY;
-        }
+    for (int i = 0; i < map->width * map->height; i++) {
+        map->grid[i] = (uint8_t) strtol(file_content, &file_content, 10);
+    }
+
+    free(file_content_copy);
+
+    for (int i = 0; i < NUM_BOMBS_MAX; i++) {
+        map->list_bombs[i] = NULL;
+    }
+
+    for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
+        map->list_monsters[i] = NULL;
     }
 
     return map;
@@ -109,54 +150,6 @@ void map_read(struct map *map, FILE *file) {
             monster_read(map->list_monsters[i], file);
         }
     }
-}
-
-struct map *map_read_file(char *filename) {
-    assert(filename);
-
-    FILE *fp = fopen(filename, "rb");
-
-    if (!fp) {
-        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
-        exit(EXIT_FAILURE);
-    }
-
-    fseek(fp, 0, SEEK_END);
-
-    long size = ftell(fp);
-
-    fseek(fp, 0, SEEK_SET);
-
-    char *grid = malloc(size);
-    char *grid_copy = grid;
-
-    if (!grid) {
-        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
-        exit(EXIT_FAILURE);
-    }
-
-    size_t numread = fread(grid, sizeof(*grid), size, fp);
-
-    if ((long) numread != size) {
-        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
-        exit(EXIT_FAILURE);
-    }
-
-    fclose(fp);
-
-    int width = strtol(grid, &grid, 10);
-    int height = strtol(grid + 1, &grid, 10);
-    enum strategy monsters_strategy = strtol(grid, &grid, 10);
-
-    struct map *map = map_new(width, height, monsters_strategy);
-
-    for (int i = 0; i < width * height; i++) {
-        int ret = strtol(grid, &grid, 10);
-        map->grid[i] = (uint8_t) ret;
-    }
-
-    free(grid_copy);
-    return map;
 }
 
 int map_get_width(struct map *map) {
@@ -389,8 +382,8 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
 
     for (int range = 1; range <= bomb_get_range(current_bomb); range++) {
 
-        int x = direction_get_x(bomb_get_x(current_bomb), dir, range);
-        int y = direction_get_y(bomb_get_y(current_bomb), dir, range);
+        int x = direction_get_x(dir, bomb_get_x(current_bomb), range);
+        int y = direction_get_y(dir, bomb_get_y(current_bomb), range);
 
         if (map_is_inside(map, x, y)) {
 
@@ -442,9 +435,9 @@ static void clean_explosion_cells(struct map *map, struct bomb *bomb, enum direc
     assert(bomb);
 
     for (int range = 1; range <= bomb_get_range(bomb); range++) {
-        if (map_is_inside(map, direction_get_x(bomb_get_x(bomb), explosion_direction, range), direction_get_y(bomb_get_y(bomb), explosion_direction, range))) {
-            if (map_get_cell_value(map, direction_get_x(bomb_get_x(bomb), explosion_direction, range), direction_get_y(bomb_get_y(bomb), explosion_direction, range)) == (CELL_BOMB | EXPLOSING)) {
-                map_set_cell_value(map, direction_get_x(bomb_get_x(bomb), explosion_direction, range), direction_get_y(bomb_get_y(bomb), explosion_direction, range), CELL_EMPTY);
+        if (map_is_inside(map, direction_get_x(explosion_direction, bomb_get_x(bomb), range), direction_get_y(explosion_direction, bomb_get_y(bomb), range))) {
+            if (map_get_cell_value(map, direction_get_x(explosion_direction, bomb_get_x(bomb), range), direction_get_y(explosion_direction, bomb_get_y(bomb), range)) == (CELL_BOMB | EXPLOSING)) {
+                map_set_cell_value(map, direction_get_x(explosion_direction, bomb_get_x(bomb), range), direction_get_y(explosion_direction, bomb_get_y(bomb), range), CELL_EMPTY);
                 continue;
             }
             return;
@@ -551,8 +544,8 @@ static bool can_player_move(struct map *map, struct player *player, enum directi
     assert(map);
     assert(player);
 
-    int next_x = direction_get_x(player_get_x(player), direction, 1);
-    int next_y = direction_get_y(player_get_y(player), direction, 1);
+    int next_x = direction_get_x(direction, player_get_x(player), 1);
+    int next_y = direction_get_y(direction, player_get_y(player), 1);
 
 
     if (!map_is_inside(map, next_x, next_y)) {
@@ -578,8 +571,8 @@ static bool can_player_move(struct map *map, struct player *player, enum directi
 
         case CELL_BOX: {
 
-            int x_dest = direction_get_x(player_get_x(player), direction, 2);
-            int y_dest = direction_get_y(player_get_y(player), direction, 2);
+            int x_dest = direction_get_x(direction, player_get_x(player), 2);
+            int y_dest = direction_get_y(direction, player_get_y(player), 2);
 
             if (is_box_pushable(map, x_dest, y_dest)) {
                 map_set_cell_value(map, x_dest, y_dest, CELL_BOX);
@@ -665,8 +658,8 @@ static bool can_monster_move(struct map *map, struct player *player, struct mons
     assert(player);
     assert(monster);
 
-    int next_x = direction_get_x(monster_get_x(monster), direction, 1);
-    int next_y = direction_get_y(monster_get_y(monster), direction, 1);
+    int next_x = direction_get_x(direction, monster_get_x(monster), 1);
+    int next_y = direction_get_y(direction, monster_get_y(monster), 1);
 
     if (!map_is_inside(map, next_x, next_y)) {
         return false;
@@ -738,7 +731,7 @@ void map_update_monsters(struct map *map, struct player *player) {
                 }
 
                 if (can_monster_move(map, player, monster, monster_direction)) {
-                    if (will_monster_meet_player(direction_get_x(monster_get_x(monster), monster_direction, 1), direction_get_y(monster_get_y(monster), monster_direction, 1), player)) {
+                    if (will_monster_meet_player(direction_get_x(monster_direction, monster_get_x(monster), 1), direction_get_y(monster_direction, monster_get_y(monster), 1), player)) {
                         monster_meeting_player(monster, player, monster_direction);
                     } else {
                         monster_move(monster, monster_direction);

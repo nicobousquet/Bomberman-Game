@@ -24,8 +24,8 @@ void window_display_image(SDL_Surface *window, SDL_Surface *sprite, int x, int y
 
     SDL_Rect place;
 
-    place.x = x;
-    place.y = y;
+    place.x = (Sint16) x;
+    place.y = (Sint16) y;
 
     SDL_BlitSurface(sprite, NULL, window, &place);
 }

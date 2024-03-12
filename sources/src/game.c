@@ -1,5 +1,4 @@
 #include "../include/game.h"
-#include "../include/bomb.h"
 #include "../include/map.h"
 #include "../include/constant.h"
 #include <assert.h>
@@ -55,19 +54,7 @@ struct game *game_new(void) {
     };
 
     for (int i = 0; i < game->num_levels; i++) {
-        game->list_maps[i] = map_read_file(maps_filenames[i]);
-
-        struct bomb **list_bombs = map_get_list_bombs(game->list_maps[i]);
-
-        for (int j = 0; j < NUM_BOMBS_MAX; j++) {
-            list_bombs[j] = NULL;
-        }
-
-        struct monster **list_monsters = map_get_list_monsters(game->list_maps[i]);
-
-        for (int j = 0; j < NUM_MONSTERS_MAX; j++) {
-            list_monsters[j] = NULL;
-        }
+        game->list_maps[i] = map_new(maps_filenames[i]);
     }
 
     game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
@@ -349,8 +336,8 @@ static bool input_keyboard(struct game *game) {
 
                         case SDLK_RETURN: {
 
-                            int x_next_player = direction_get_x(player_get_x(player), player_get_direction(player), 1);
-                            int y_next_player = direction_get_y(player_get_y(player), player_get_direction(player), 1);
+                            int x_next_player = direction_get_x(player_get_direction(player), player_get_x(player), 1);
+                            int y_next_player = direction_get_y(player_get_direction(player), player_get_y(player), 1);
 
                             if (map_is_inside(map, x_next_player, y_next_player)) {
                                 uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);

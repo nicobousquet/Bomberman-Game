@@ -112,8 +112,8 @@ void monster_move(struct monster *monster, enum direction direction) {
 
     monster_set_direction(monster, direction);
 
-    monster_set_x(monster, direction_get_x(monster_get_x(monster), direction, 1));
-    monster_set_y(monster, direction_get_y(monster_get_y(monster), direction, 1));
+    monster_set_x(monster, direction_get_x(direction, monster_get_x(monster), 1));
+    monster_set_y(monster, direction_get_y(direction, monster_get_y(monster), 1));
 
     timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
 }
