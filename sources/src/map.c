@@ -269,8 +269,7 @@ static void add_monster(struct map *map, int x, int y) {
         struct monster **list_monsters = map_get_list_monsters(map);
 
         if (list_monsters[i] == NULL) {
-            struct monster *monster = monster_new(x, y);
-            list_monsters[i] = monster;
+            list_monsters[i] = monster_new(x, y);;
 
             break;
         }
@@ -307,8 +306,7 @@ void map_set_bomb(struct map *map, struct player *player) {
 
         for (int i = 0; i < NUM_BOMBS_MAX; i++)
             if (list_bombs[i] == NULL) {
-                struct bomb *bomb = bomb_new(player_get_x(player), player_get_y(player), player_get_range_bombs(player));
-                list_bombs[i] = bomb;
+                list_bombs[i] =  bomb_new(player_get_x(player), player_get_y(player), player_get_range_bombs(player));
                 player_dec_num_bomb(player);
 
                 break;

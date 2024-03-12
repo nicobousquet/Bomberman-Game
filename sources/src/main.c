@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     int ideal_duration = 1000 / DEFAULT_GAME_FPS;
 
     struct timer *timer = timer_new();
-    short done = 0;
+    bool done = false;
 
     while (!done) {
         timer_start(timer, ideal_duration);

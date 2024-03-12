@@ -377,7 +377,7 @@ static bool input_keyboard(struct game *game) {
     return false;
 }
 
-short game_update(struct game *game) {
+bool game_update(struct game *game) {
     assert(game);
 
     struct map *map = game_get_current_map(game);
@@ -389,20 +389,20 @@ short game_update(struct game *game) {
     assert(player);
 
     if (input_keyboard(game)) {
-        return 1;
+        return true;
     }
 
     if (player_get_num_lives(player) == 0) {
         printf("===========================================\n");
         printf(" >>>>>>>>>>>>>  YOU LOST!!!  <<<<<<<<<<<<<\n");
         printf("===========================================\n");
-        return 1;
+        return true;
 
     } else if (map_get_cell_value(map, player_get_x(player), player_get_y(player)) == (CELL_SCENERY | SCENERY_PRINCESS)) {
         printf("==========================================\n");
         printf(" >>>>>>>>>>>>>  YOU WON!!!  <<<<<<<<<<<<<\n");
         printf("==========================================\n");
-        return 1;
+        return true;
     }
 
     if (!game->is_paused) {
@@ -410,5 +410,5 @@ short game_update(struct game *game) {
         map_update_monsters(map, player);
     }
 
-    return 0;
+    return false;
 }
