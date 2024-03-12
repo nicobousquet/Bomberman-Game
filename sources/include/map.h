@@ -93,9 +93,9 @@ struct monster **map_get_list_monsters(struct map *map);
  * @param map A pointer to the map.
  * @param x The x-coordinate.
  * @param y The y-coordinate.
- * @return True if the coordinates are inside the map, false otherwise.
+ * @return 1 if the coordinates are inside the map, 0 otherwise.
  */
-bool map_is_inside(struct map *map, int x, int y);
+int map_is_inside(struct map *map, int x, int y);
 
 /**
  * @brief Get the value of the cell at the specified coordinates (x, y).
@@ -148,7 +148,7 @@ void map_update_bombs(struct map *map, struct player *player);
 @param direction The direction where the player is moving.
 @return An integer representing the result of the player's movement.
 */
-bool map_move_player(struct map *map, struct player *player, enum direction direction);
+int map_move_player(struct map *map, struct player *player, enum direction direction);
 
 /**
 @brief Update the state of monsters and their position on the map.

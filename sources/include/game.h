@@ -2,7 +2,6 @@
 #define GAME_H
 
 #include <stdio.h>
-#include <stdbool.h>
 
 /**
  * @file game.h
@@ -66,8 +65,8 @@ void game_display(struct game *game);
 /**
  * @brief Update the game state.
  * @param game A pointer to the game.
- * @return True if game is over, false otherwise.
+ * @return 1 if game is over, 0 otherwise.
  */
-bool game_update(struct game *game);
+int game_update(struct game *game);
 
 #endif /* GAME_H */

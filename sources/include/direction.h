@@ -2,7 +2,6 @@
 #define DIRECTION_H
 
 #include <stdint.h>
-#include <stdbool.h>
 
 /**
  * @file direction.h
@@ -50,11 +49,11 @@ int direction_get_y(enum direction, int y_src, int delta);
  * @brief Get a random direction on the grid.
  * @param x_src x_coordinate of the source position.
  * @param y_src y_coordinate of the source position.
- * @param grid The grid, where true is an obstacle, false otherwise.
+ * @param grid The grid, where 1 is an obstacle, 0 otherwise.
  * @param grid_width The grid_width of the grid.
  * @param grid_height The grid_height of the grid.
  * @return A random direction on the grid.
  */
-enum direction direction_get_random(int x_src, int y_src, const bool *grid, int grid_width, int grid_height);
+enum direction direction_get_random(int x_src, int y_src, const int *grid, int grid_width, int grid_height);
 
 #endif // DIRECTION_H

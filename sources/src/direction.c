@@ -30,31 +30,31 @@ int direction_get_y(enum direction direction, int y_src, int delta) {
     return y_dest;
 }
 
-static bool is_inside(int x, int y, int grid_width, int grid_height) {
+static int is_inside(int x, int y, int grid_width, int grid_height) {
 
     if (x >= 0 && x < grid_width && y >= 0 && y < grid_height) {
-        return true;
+        return 1;
     }
 
-    return false;
+    return 0;
 }
 
-enum direction direction_get_random(int x_src, int y_src, const bool *grid, int grid_width, int grid_height) {
-    bool visited_directions[4] = {false, false, false, false};
+enum direction direction_get_random(int x_src, int y_src, const int *grid, int grid_width, int grid_height) {
+    int visited_directions[4] = {0, 0, 0, 0};
 
-    while (visited_directions[NORTH] != true || visited_directions[SOUTH] != true || visited_directions[EAST] != true || visited_directions[WEST] != true) {
+    while (visited_directions[NORTH] != 1 || visited_directions[SOUTH] != 1 || visited_directions[EAST] != 1 || visited_directions[WEST] != 1) {
         enum direction directions[4] = {NORTH, SOUTH, EAST, WEST};
         enum direction direction = directions[rand() % 4];
 
-        if (visited_directions[direction] != true) {
+        if (visited_directions[direction] != 1) {
             int next_x = direction_get_x(direction, x_src, 1);
             int next_y = direction_get_y(direction, y_src, 1);
 
-            if (grid[CELL(next_x, next_y)] == false && is_inside(next_x, next_x, grid_width, grid_height)) {
+            if (grid[CELL(next_x, next_y)] == 0 && is_inside(next_x, next_x, grid_width, grid_height)) {
                 return direction;
             }
 
-            visited_directions[direction] = true;
+            visited_directions[direction] = 1;
         }
     }
 

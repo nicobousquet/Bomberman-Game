@@ -16,7 +16,7 @@ struct game {
     int num_levels; /**< Number of game maps */
     int current_level; /**< Current level */
     struct player *player; /**< Player of the game */
-    bool is_paused; /**< Is the game paused ? */
+    int is_paused; /**< Is the game paused ? */
 };
 
 struct game *game_new(void) {
@@ -32,7 +32,7 @@ struct game *game_new(void) {
 
     game->num_levels = NUM_LEVELS;
     game->current_level = 0;
-    game->is_paused = false;
+    game->is_paused = 0;
     game->player = player_new(NUM_BOMBS_MAX);
     game->sprites = sprites_new();
     game->list_maps = malloc(game->num_levels * sizeof(struct map *));
@@ -236,11 +236,11 @@ static void save_game(struct game *game) {
     }
 }
 
-static bool input_keyboard(struct game *game) {
+static int input_keyboard(struct game *game) {
     assert(game);
 
     SDL_Event event = {0};
-    bool move = false;
+    int move = 0;
     struct player *player = game_get_player(game);
     struct map *map = game_get_current_map(game);
 
@@ -251,7 +251,7 @@ static bool input_keyboard(struct game *game) {
             switch (event.type) {
 
                 case SDL_QUIT:
-                    return true;
+                    return 1;
 
                 case SDL_KEYDOWN: {
                     switch (event.key.keysym.sym) {
@@ -259,7 +259,7 @@ static bool input_keyboard(struct game *game) {
                         case SDLK_s:
                             if (event.key.keysym.mod & KMOD_CTRL) {
                                 save_game(game);
-                                return true;
+                                return 1;
                             }
 
                             break;
@@ -281,7 +281,7 @@ static bool input_keyboard(struct game *game) {
             switch (event.type) {
 
                 case SDL_QUIT:
-                    return true;
+                    return 1;
 
                 case SDL_KEYDOWN: {
                     switch (event.key.keysym.sym) {
@@ -289,7 +289,7 @@ static bool input_keyboard(struct game *game) {
                         case SDLK_s:
                             if (event.key.keysym.mod & KMOD_CTRL) {
                                 save_game(game);
-                                return true;
+                                return 1;
                             }
 
                             break;
@@ -297,7 +297,7 @@ static bool input_keyboard(struct game *game) {
                         case SDLK_UP:
 
                             if (map_move_player(map, player, NORTH)) {
-                                move = true;
+                                move = 1;
                             }
 
                             break;
@@ -305,7 +305,7 @@ static bool input_keyboard(struct game *game) {
                         case SDLK_DOWN:
 
                             if (map_move_player(map, player, SOUTH)) {
-                                move = true;
+                                move = 1;
                             }
 
                             break;
@@ -313,7 +313,7 @@ static bool input_keyboard(struct game *game) {
                         case SDLK_RIGHT:
 
                             if (map_move_player(map, player, EAST)) {
-                                move = true;
+                                move = 1;
                             }
 
                             break;
@@ -321,7 +321,7 @@ static bool input_keyboard(struct game *game) {
                         case SDLK_LEFT:
 
                             if (map_move_player(map, player, WEST)) {
-                                move = true;
+                                move = 1;
                             }
 
                             break;
@@ -374,10 +374,10 @@ static bool input_keyboard(struct game *game) {
         }
     }
 
-    return false;
+    return 0;
 }
 
-bool game_update(struct game *game) {
+int game_update(struct game *game) {
     assert(game);
 
     struct map *map = game_get_current_map(game);
@@ -389,20 +389,20 @@ bool game_update(struct game *game) {
     assert(player);
 
     if (input_keyboard(game)) {
-        return true;
+        return 1;
     }
 
     if (player_get_num_lives(player) == 0) {
         printf("===========================================\n");
         printf(" >>>>>>>>>>>>>  YOU LOST!!!  <<<<<<<<<<<<<\n");
         printf("===========================================\n");
-        return true;
+        return 1;
 
     } else if (map_get_cell_value(map, player_get_x(player), player_get_y(player)) == (CELL_SCENERY | SCENERY_PRINCESS)) {
         printf("==========================================\n");
         printf(" >>>>>>>>>>>>>  YOU WON!!!  <<<<<<<<<<<<<\n");
         printf("==========================================\n");
-        return true;
+        return 1;
     }
 
     if (!game->is_paused) {
@@ -410,5 +410,5 @@ bool game_update(struct game *game) {
         map_update_monsters(map, player);
     }
 
-    return false;
+    return 0;
 }

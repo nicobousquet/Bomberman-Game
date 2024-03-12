@@ -184,14 +184,14 @@ struct monster **map_get_list_monsters(struct map *map) {
     return map->list_monsters;
 }
 
-bool map_is_inside(struct map *map, int x, int y) {
+int map_is_inside(struct map *map, int x, int y) {
     assert(map);
 
     if (x >= 0 && x < map->width && y >= 0 && y < map->height) {
-        return true;
+        return 1;
     }
 
-    return false;
+    return 0;
 }
 
 uint8_t map_get_cell_value(struct map *map, int x, int y) {
@@ -355,22 +355,22 @@ static struct monster **is_explosion_reaching_monster(int x_explosion, int y_exp
     return NULL;
 }
 
-static bool is_explosion_reaching_player(int explosion_x, int explosion_y, struct player *player) {
+static int is_explosion_reaching_player(int explosion_x, int explosion_y, struct player *player) {
     assert(player);
 
     if (explosion_x == player_get_x(player) && explosion_y == player_get_y(player)) {
-        return true;
+        return 1;
     }
 
-    return false;
+    return 0;
 }
 
-static bool can_bomb_propagate(enum cell_type cell_type) {
+static int can_bomb_propagate(enum cell_type cell_type) {
     if (cell_type != CELL_SCENERY && cell_type != CELL_DOOR && cell_type != CELL_KEY) {
-        return true;
+        return 1;
     }
 
-    return false;
+    return 0;
 }
 
 static void propagate_bomb_explosion(struct map *map, struct player *player, struct bomb *list_bombs[NUM_BOMBS_MAX], struct bomb *current_bomb, enum direction dir) {
@@ -496,49 +496,49 @@ void map_update_bombs(struct map *map, struct player *player) {
     }
 }
 
-static bool will_box_be_blocked_by_monsters(struct monster **list_monsters, int x_dest, int y_dest) {
+static int will_box_be_blocked_by_monsters(struct monster **list_monsters, int x_dest, int y_dest) {
     assert(list_monsters);
 
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
         if (list_monsters[i] != NULL) {
             if (monster_get_x(list_monsters[i]) == x_dest && monster_get_y(list_monsters[i]) == y_dest) {
-                return true;
+                return 1;
             }
         }
     }
 
-    return false;
+    return 0;
 }
 
-static bool is_box_pushable(struct map *map, int x_dest, int y_dest) {
+static int is_box_pushable(struct map *map, int x_dest, int y_dest) {
     assert(map);
 
     if (!map_is_inside(map, x_dest, y_dest)) {
-        return false;
+        return 0;
     }
 
     if ((map_get_cell_value(map, x_dest, y_dest) & 0xf0) == CELL_EMPTY && !will_box_be_blocked_by_monsters(map_get_list_monsters(map), x_dest, y_dest)) {
-        return true;
+        return 1;
     }
 
-    return false;
+    return 0;
 }
 
-static bool will_player_meet_a_monster(int player_next_x, int player_next_y, struct monster **list_monsters) {
+static int will_player_meet_a_monster(int player_next_x, int player_next_y, struct monster **list_monsters) {
     assert(list_monsters);
 
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
         if (list_monsters[i] != NULL) {
             if (monster_get_x(list_monsters[i]) == player_next_x && monster_get_y(list_monsters[i]) == player_next_y) {
-                return true;
+                return 1;
             }
         }
     }
 
-    return false;
+    return 0;
 }
 
-static bool can_player_move(struct map *map, struct player *player, enum direction direction) {
+static int can_player_move(struct map *map, struct player *player, enum direction direction) {
     assert(map);
     assert(player);
 
@@ -547,12 +547,12 @@ static bool can_player_move(struct map *map, struct player *player, enum directi
 
 
     if (!map_is_inside(map, next_x, next_y)) {
-        return false;
+        return 0;
     }
 
     if (will_player_meet_a_monster(next_x, next_y, map_get_list_monsters(map))) {
         player_dec_num_lives(player);
-        return false;
+        return 0;
     }
 
     uint8_t cell = map_get_cell_value(map, next_x, next_y);
@@ -562,10 +562,10 @@ static bool can_player_move(struct map *map, struct player *player, enum directi
         case CELL_SCENERY:
 
             if ((cell & 0x0f) == SCENERY_PRINCESS) {
-                return true;
+                return 1;
             }
 
-            return false;
+            return 0;
 
         case CELL_BOX: {
 
@@ -576,17 +576,17 @@ static bool can_player_move(struct map *map, struct player *player, enum directi
                 map_set_cell_value(map, x_dest, y_dest, CELL_BOX);
                 map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
 
-                return true;
+                return 1;
             }
 
-            return false;
+            return 0;
         }
 
         case CELL_BONUS:
             player_get_bonus(player, cell & 0x0f);
             map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
 
-            return true;
+            return 1;
 
         case CELL_BOMB:
 
@@ -594,64 +594,64 @@ static bool can_player_move(struct map *map, struct player *player, enum directi
                 player_dec_num_lives(player);
             }
 
-            return true;
+            return 1;
 
         case CELL_KEY:
             player_inc_num_keys(player);
             map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
-            return true;
+            return 1;
 
         case CELL_DOOR:
             if ((cell & 0x01) == OPENED) {
-                return true;
+                return 1;
             }
 
-            return false;
+            return 0;
 
         default:
             break;
     }
 
-    return true;
+    return 1;
 }
 
-bool map_move_player(struct map *map, struct player *player, enum direction direction) {
+int map_move_player(struct map *map, struct player *player, enum direction direction) {
     assert(player);
     assert(map);
 
     if (can_player_move(map, player, direction)) {
         player_move(player, direction);
-        return true;
+        return 1;
     }
 
-    return false;
+    return 0;
 }
 
-static bool will_monster_meet_player(int monster_x, int monster_y, struct player *player) {
+static int will_monster_meet_player(int monster_x, int monster_y, struct player *player) {
     assert(player);
 
     if (monster_x == player_get_x(player) && monster_y == player_get_y(player)) {
-        return true;
+        return 1;
     }
 
-    return false;
+    return 0;
 }
 
-static bool will_monster_meet_other_monsters(int monster_x, int monster_y, struct monster **list_monsters) {
+static int will_monster_meet_other_monsters(int monster_x, int monster_y, struct monster **list_monsters) {
     assert(list_monsters);
 
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
         if (list_monsters[i] != NULL) {
             if (monster_get_x(list_monsters[i]) == monster_x && monster_get_y(list_monsters[i]) == monster_y) {
-                return true;
+                return 1;
             }
         }
     }
 
-    return false;
+    return 0;
 }
 
-static bool can_monster_move(struct map *map, struct player *player, struct monster *monster, enum direction direction) {
+static int can_monster_move(struct map *map, struct player *player, struct monster *monster, enum direction direction) {
     assert(map);
     assert(player);
     assert(monster);
@@ -660,11 +660,11 @@ static bool can_monster_move(struct map *map, struct player *player, struct mons
     int next_y = direction_get_y(direction, monster_get_y(monster), 1);
 
     if (!map_is_inside(map, next_x, next_y)) {
-        return false;
+        return 0;
     }
 
     if (will_monster_meet_other_monsters(next_x, next_y, map_get_list_monsters(map))) {
-        return false;
+        return 0;
     }
 
     switch (map_get_cell_value(map, next_x, next_y) & 0xf0) {
@@ -673,10 +673,10 @@ static bool can_monster_move(struct map *map, struct player *player, struct mons
         case CELL_BOMB:
         case CELL_DOOR:
         case CELL_BOX:
-            return false;
+            return 0;
 
         default:
-            return true;
+            return 1;
     }
 }
 
@@ -703,7 +703,7 @@ void map_update_monsters(struct map *map, struct player *player) {
 
             if (timer_get_state(monster_get_timer(monster)) == IS_OVER) {
 
-                bool grid[map_get_width(map) * map_get_height(map)];
+                int grid[map_get_width(map) * map_get_height(map)];
 
                 for (int j = 0; j < map_get_width(map); j++) {
                     for (int k = 0; k < map_get_height(map); k++) {
@@ -712,11 +712,11 @@ void map_update_monsters(struct map *map, struct player *player) {
                             case CELL_BOMB:
                             case CELL_DOOR:
                             case CELL_BOX:
-                                grid[CELL(j, k)] = true;
+                                grid[CELL(j, k)] = 1;
                                 break;
 
                             default:
-                                grid[CELL(j, k)] = false;
+                                grid[CELL(j, k)] = 0;
                                 break;
                         }
                     }
