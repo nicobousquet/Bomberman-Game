@@ -408,15 +408,8 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
                     for (int i = 0; i < NUM_BOMBS_MAX; i++) {
                         if (list_bombs[i]) {
                             if (list_bombs[i] != current_bomb && bomb_get_x(list_bombs[i]) == x && bomb_get_y(list_bombs[i]) == y) {
-
-                                map_set_cell_value(map, bomb_get_x(list_bombs[i]), bomb_get_y(list_bombs[i]), CELL_BOMB | EXPLOSING);
-                                propagate_bomb_explosion(map, player, list_bombs, list_bombs[i], NORTH);
-                                propagate_bomb_explosion(map, player, list_bombs, list_bombs[i], SOUTH);
-                                propagate_bomb_explosion(map, player, list_bombs, list_bombs[i], EAST);
-                                propagate_bomb_explosion(map, player, list_bombs, list_bombs[i], WEST);
-
-                                bomb_set_ttl(list_bombs[i], EXPLODED);
-                                timer_start(bomb_get_timer(list_bombs[i]), DURATION_BOMB_PERIOD);
+                                bomb_set_ttl(list_bombs[i], TTL1);
+                                timer_start(bomb_get_timer(list_bombs[i]), 60);
                             }
                         }
                     }
@@ -567,13 +560,7 @@ static bool can_player_move(struct map *map, struct player *player, enum directi
     }
 
     if (will_player_meet_a_monster(next_x, next_y, map_get_list_monsters(map))) {
-        timer_update(player_get_timer_invincibility(player));
-
-        if (timer_get_state(player_get_timer_invincibility(player)) == IS_OVER) {
-            player_dec_num_lives(player);
-            timer_start(player_get_timer_invincibility(player), DURATION_PLAYER_INVINCIBILITY);
-        }
-
+        player_dec_num_lives(player);
         return false;
     }
 
@@ -613,11 +600,7 @@ static bool can_player_move(struct map *map, struct player *player, enum directi
         case CELL_BOMB:
 
             if ((cell & 0x0f) == EXPLOSING) {
-                timer_update(player_get_timer_invincibility(player));
-                if (timer_get_state(player_get_timer_invincibility(player)) == IS_OVER) {
-                    player_dec_num_lives(player);
-                    timer_start(player_get_timer_invincibility(player), DURATION_PLAYER_INVINCIBILITY);
-                }
+                player_dec_num_lives(player);
             }
 
             return true;
@@ -709,14 +692,7 @@ static bool can_monster_move(struct map *map, struct player *player, struct mons
 static void monster_meeting_player(struct monster *monster, struct player *player, enum direction monster_direction) {
     monster_set_direction(monster, monster_direction);
 
-    struct timer *timer_invincibility = player_get_timer_invincibility(player);
-
-    timer_update(timer_invincibility);
-
-    if (timer_get_state(timer_invincibility) == IS_OVER) {
-        player_dec_num_lives(player);
-        timer_start(timer_invincibility, DURATION_PLAYER_INVINCIBILITY);
-    }
+    player_dec_num_lives(player);
 
     timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
 }

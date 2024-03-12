@@ -30,7 +30,7 @@ struct bomb *bomb_new(int x, int y, int range) {
 
     bomb->x = x;
     bomb->y = y;
-    bomb->ttl = TTL4;
+    bomb->ttl = INIT;
     bomb->timer = timer_new();
     bomb->range = range;
 
