@@ -240,7 +240,7 @@ static int input_keyboard(struct game *game) {
     assert(game);
 
     SDL_Event event = {0};
-    int move = 0;
+    int has_moved = 0;
     struct player *player = game_get_player(game);
     struct map *map = game_get_current_map(game);
 
@@ -297,7 +297,7 @@ static int input_keyboard(struct game *game) {
                         case SDLK_UP:
 
                             if (map_move_player(map, player, NORTH)) {
-                                move = 1;
+                                has_moved = 1;
                             }
 
                             break;
@@ -305,7 +305,7 @@ static int input_keyboard(struct game *game) {
                         case SDLK_DOWN:
 
                             if (map_move_player(map, player, SOUTH)) {
-                                move = 1;
+                                has_moved = 1;
                             }
 
                             break;
@@ -313,7 +313,7 @@ static int input_keyboard(struct game *game) {
                         case SDLK_RIGHT:
 
                             if (map_move_player(map, player, EAST)) {
-                                move = 1;
+                                has_moved = 1;
                             }
 
                             break;
@@ -321,7 +321,7 @@ static int input_keyboard(struct game *game) {
                         case SDLK_LEFT:
 
                             if (map_move_player(map, player, WEST)) {
-                                move = 1;
+                                has_moved = 1;
                             }
 
                             break;
@@ -342,7 +342,7 @@ static int input_keyboard(struct game *game) {
                             if (map_is_inside(map, x_next_player, y_next_player)) {
                                 uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);
 
-                                if (((type & 0xf1) == (CELL_DOOR | CLOSED)) && player_get_num_keys(player) ) {
+                                if (((type & 0xf1) == (CELL_DOOR | CLOSED)) && player_get_num_keys(player)) {
                                     map_set_cell_value(map, x_next_player, y_next_player, type & 0xfe);
                                     player_dec_num_keys(player);
                                 }
@@ -355,13 +355,21 @@ static int input_keyboard(struct game *game) {
                             break;
                     }
 
-                    if (move) {
+                    if (has_moved) {
 
                         uint8_t cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
 
                         if ((cell & 0xf0) == CELL_DOOR) {
                             int level = (cell & 0x0e) / 2;
                             change_current_level(game, level);
+
+                        } else if (cell == (CELL_SCENERY | SCENERY_PRINCESS)) {
+
+                            printf("==========================================\n");
+                            printf(" >>>>>>>>>>>>>  YOU WON!!!  <<<<<<<<<<<<<\n");
+                            printf("==========================================\n");
+
+                            return 1;
                         }
                     }
 
@@ -396,12 +404,7 @@ int game_update(struct game *game) {
         printf("===========================================\n");
         printf(" >>>>>>>>>>>>>  YOU LOST!!!  <<<<<<<<<<<<<\n");
         printf("===========================================\n");
-        return 1;
 
-    } else if (map_get_cell_value(map, player_get_x(player), player_get_y(player)) == (CELL_SCENERY | SCENERY_PRINCESS)) {
-        printf("==========================================\n");
-        printf(" >>>>>>>>>>>>>  YOU WON!!!  <<<<<<<<<<<<<\n");
-        printf("==========================================\n");
         return 1;
     }
 
