@@ -146,7 +146,7 @@ void map_update_bombs(struct map *map, struct player *player);
 @param map A pointer to the map.
 @param player A pointer to the player.
 @param direction The direction where the player is moving.
-@return An integer representing the result of the player's movement.
+@return 1 if player really moved, 0 otherwise.
 */
 int map_move_player(struct map *map, struct player *player, enum direction direction);
 
