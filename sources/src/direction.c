@@ -50,8 +50,10 @@ enum direction direction_get_random(int x_src, int y_src, const int *grid, int g
             int next_x = direction_get_x(direction, x_src, 1);
             int next_y = direction_get_y(direction, y_src, 1);
 
-            if (grid[CELL(next_x, next_y)] == 0 && is_inside(next_x, next_x, grid_width, grid_height)) {
-                return direction;
+            if (is_inside(next_x, next_y, grid_width, grid_height)) {
+                if (grid[CELL(next_x, next_y)] == 0) {
+                    return direction;
+                }
             }
 
             visited_directions[direction] = 1;
