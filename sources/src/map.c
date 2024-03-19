@@ -651,23 +651,19 @@ static int will_monster_meet_other_monsters(int monster_x, int monster_y, struct
     return 0;
 }
 
-static int can_monster_move(struct map *map, struct player *player, struct monster *monster, enum direction direction) {
+static int can_monster_move(struct map *map, struct player *player, int x, int y) {
     assert(map);
     assert(player);
-    assert(monster);
 
-    int next_x = direction_get_x(direction, monster_get_x(monster), 1);
-    int next_y = direction_get_y(direction, monster_get_y(monster), 1);
-
-    if (!map_is_inside(map, next_x, next_y)) {
+    if (!map_is_inside(map, x, y)) {
         return 0;
     }
 
-    if (will_monster_meet_other_monsters(next_x, next_y, map_get_list_monsters(map))) {
+    if (will_monster_meet_other_monsters(x, y, map_get_list_monsters(map))) {
         return 0;
     }
 
-    switch (map_get_cell_value(map, next_x, next_y) & 0xf0) {
+    switch (map_get_cell_value(map, x, y) & 0xf0) {
 
         case CELL_SCENERY:
         case CELL_BOMB:
@@ -707,17 +703,11 @@ void map_update_monsters(struct map *map, struct player *player) {
 
                 for (int j = 0; j < map_get_width(map); j++) {
                     for (int k = 0; k < map_get_height(map); k++) {
-                        switch (map_get_cell_value(map, j, k) & 0xf0) {
-                            case CELL_SCENERY:
-                            case CELL_BOMB:
-                            case CELL_DOOR:
-                            case CELL_BOX:
-                                grid[CELL(j, k)] = 1;
-                                break;
 
-                            default:
-                                grid[CELL(j, k)] = 0;
-                                break;
+                        if (can_monster_move(map, player, j, k)) {
+                            grid[CELL(j, k)] = 0;
+                        } else {
+                            grid[CELL(j, k)] = 1;
                         }
                     }
                 }
@@ -728,12 +718,10 @@ void map_update_monsters(struct map *map, struct player *player) {
                     monster_direction = direction_get_random(monster_get_x(monster), monster_get_y(monster), grid, map_get_width(map), map_get_height(map));
                 }
 
-                if (can_monster_move(map, player, monster, monster_direction)) {
-                    if (will_monster_meet_player(direction_get_x(monster_direction, monster_get_x(monster), 1), direction_get_y(monster_direction, monster_get_y(monster), 1), player)) {
-                        monster_meeting_player(monster, player, monster_direction);
-                    } else {
-                        monster_move(monster, monster_direction);
-                    }
+                if (will_monster_meet_player(direction_get_x(monster_direction, monster_get_x(monster), 1), direction_get_y(monster_direction, monster_get_y(monster), 1), player)) {
+                    monster_meeting_player(monster, player, monster_direction);
+                } else {
+                    monster_move(monster, monster_direction);
                 }
             }
         }
