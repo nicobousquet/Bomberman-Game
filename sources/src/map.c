@@ -306,7 +306,7 @@ void map_set_bomb(struct map *map, struct player *player) {
 
         for (int i = 0; i < NUM_BOMBS_MAX; i++)
             if (list_bombs[i] == NULL) {
-                list_bombs[i] =  bomb_new(player_get_x(player), player_get_y(player), player_get_range_bombs(player));
+                list_bombs[i] = bomb_new(player_get_x(player), player_get_y(player), player_get_range_bombs(player));
                 player_dec_num_bomb(player);
 
                 break;
@@ -538,7 +538,7 @@ static int will_player_meet_a_monster(int player_next_x, int player_next_y, stru
     return 0;
 }
 
-static int can_player_move(struct map *map, struct player *player, enum direction direction) {
+int map_move_player(struct map *map, struct player *player, enum direction direction) {
     assert(map);
     assert(player);
 
@@ -550,6 +550,11 @@ static int can_player_move(struct map *map, struct player *player, enum directio
         return 0;
     }
 
+    if (will_player_meet_a_monster(next_x, next_y, map_get_list_monsters(map))) {
+        player_dec_num_lives(player);
+        return 0;
+    }
+
     uint8_t cell = map_get_cell_value(map, next_x, next_y);
 
     switch (cell & 0xf0) {
@@ -557,7 +562,7 @@ static int can_player_move(struct map *map, struct player *player, enum directio
         case CELL_SCENERY:
 
             if ((cell & 0x0f) == SCENERY_PRINCESS) {
-                return 1;
+                break;
             }
 
             return 0;
@@ -568,82 +573,48 @@ static int can_player_move(struct map *map, struct player *player, enum directio
             int y_dest = direction_get_y(direction, player_get_y(player), 2);
 
             if (is_box_pushable(map, x_dest, y_dest)) {
-                return 1;
+                map_set_cell_value(map, x_dest, y_dest, cell);
+                map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
+
+                break;
             }
 
             return 0;
         }
 
+        case CELL_BONUS:
+            player_get_bonus(player, cell & 0x0f);
+            map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
+
+            break;
+
+        case CELL_BOMB:
+
+            if ((cell & 0x0f) == EXPLOSING) {
+                player_dec_num_lives(player);
+            }
+
+            break;
+
+        case CELL_KEY:
+            player_inc_num_keys(player);
+            map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
+
+            break;
+
         case CELL_DOOR:
             if ((cell & 0x01) == OPENED) {
-                return 1;
+                break;
             }
 
             return 0;
 
         default:
-            return 1;
-    }
-}
-
-int map_move_player(struct map *map, struct player *player, enum direction direction) {
-    assert(player);
-    assert(map);
-
-    if (can_player_move(map, player, direction)) {
-
-        int next_x = direction_get_x(direction, player_get_x(player), 1);
-        int next_y = direction_get_y(direction, player_get_y(player), 1);
-
-        if (will_player_meet_a_monster(next_x, next_y, map_get_list_monsters(map))) {
-            player_dec_num_lives(player);
-            return 0;
-        }
-
-        uint8_t cell = map_get_cell_value(map, next_x, next_y);
-
-        switch (cell & 0xf0) {
-
-            case CELL_BOX: {
-
-                int x_box_dest = direction_get_x(direction, player_get_x(player), 2);
-                int y_box_dest = direction_get_y(direction, player_get_y(player), 2);
-
-                map_set_cell_value(map, x_box_dest, y_box_dest, cell);
-                map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
-
-                break;
-            }
-
-            case CELL_BONUS:
-                player_get_bonus(player, cell & 0x0f);
-                map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
-
-                break;
-
-            case CELL_BOMB:
-                if ((cell & 0x0f) == EXPLOSING) {
-                    player_dec_num_lives(player);
-                }
-
-                break;
-
-            case CELL_KEY:
-                player_inc_num_keys(player);
-                map_set_cell_value(map, next_x, next_y, CELL_EMPTY);
-
-                break;
-
-            default:
-                break;
-        }
-
-        player_move(player, direction);
-
-        return 1;
+            break;
     }
 
-    return 0;
+    player_move(player, direction);
+    return 1;
 }
 
 static int will_monster_meet_player(int monster_x, int monster_y, struct player *player) {

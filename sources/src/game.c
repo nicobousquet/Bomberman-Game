@@ -400,17 +400,17 @@ int game_update(struct game *game) {
         return 1;
     }
 
+    if (!game->is_paused) {
+        map_update_bombs(map, player);
+        map_update_monsters(map, player);
+    }
+
     if (player_get_num_lives(player) == 0) {
         printf("===========================================\n");
         printf(" >>>>>>>>>>>>>  YOU LOST!!!  <<<<<<<<<<<<<\n");
         printf("===========================================\n");
 
         return 1;
-    }
-
-    if (!game->is_paused) {
-        map_update_bombs(map, player);
-        map_update_monsters(map, player);
     }
 
     return 0;
