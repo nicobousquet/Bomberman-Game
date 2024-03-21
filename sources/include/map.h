@@ -98,6 +98,13 @@ struct monster **map_get_list_monsters(struct map *map);
 int map_is_inside(struct map *map, int x, int y);
 
 /**
+ * @brief Get the movement strategy of the monsters.
+ * @param map A pointer to the map.
+ * @return The strategy of the monsters.
+ */
+enum strategy map_get_monster_strategy(struct map *map);
+
+/**
  * @brief Get the value of the cell at the specified coordinates (x, y).
  * @param map A pointer to the map.
  * @param x The x-coordinate.
@@ -151,10 +158,28 @@ void map_update_bombs(struct map *map, struct player *player);
 int map_move_player(struct map *map, struct player *player, enum direction direction);
 
 /**
-@brief Update the state of monsters and their position on the map.
-@param map A pointer to the map.
-@param player A pointer to the player.
+@brief Checks if a monster will meet the player on the next move.
+@param monster A pointer to the monster.
+@param monster_direction The direction of the monster.
+@return 1 if current monster will meet other monsters, 0 otherwise.
 */
-void map_update_monsters(struct map *map, struct player *player);
+int map_will_monster_meet_player(struct monster *monster, struct player *player, enum direction monster_direction);
+
+/**
+@brief Checks if a monster can move.
+@param A pointer to the player.
+@param monster A pointer to the monster.
+@param monster_direction The direction of the monster.
+@return 1 if current monster can move, 0 otherwise.
+*/
+int map_can_monster_move(struct map *map, struct player *player, struct monster *monster, enum direction monster_direction);
+
+/**
+@brief Meeting between a monster and the player.
+@param monster A pointer to the monster.
+@param player A pointer to the player.
+@param monster_direction The direction of the monster.
+*/
+void map_monster_meeting_player(struct monster *monster, struct player *player, enum direction monster_direction);
 
 #endif /* MAP_H */

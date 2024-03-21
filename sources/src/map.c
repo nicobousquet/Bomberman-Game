@@ -184,6 +184,11 @@ struct monster **map_get_list_monsters(struct map *map) {
     return map->list_monsters;
 }
 
+enum strategy map_get_monster_strategy(struct map *map) {
+    assert(map);
+    return map->monsters_strategy;
+}
+
 int map_is_inside(struct map *map, int x, int y) {
     assert(map);
 
@@ -615,22 +620,12 @@ int map_move_player(struct map *map, struct player *player, enum direction direc
     return 1;
 }
 
-static int will_monster_meet_player(int monster_x, int monster_y, struct player *player) {
-    assert(player);
-
-    if (monster_x == player_get_x(player) && monster_y == player_get_y(player)) {
-        return 1;
-    }
-
-    return 0;
-}
-
-static int will_monster_meet_other_monsters(int monster_x, int monster_y, struct monster **list_monsters) {
+static int will_monster_meet_other_monsters(struct monster *current_monster, struct monster **list_monsters, enum direction current_monster_direction) {
     assert(list_monsters);
 
     for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
         if (list_monsters[i] != NULL) {
-            if (monster_get_x(list_monsters[i]) == monster_x && monster_get_y(list_monsters[i]) == monster_y) {
+            if (monster_get_x(list_monsters[i]) == direction_get_x(current_monster_direction, monster_get_x(current_monster), 1) && monster_get_y(list_monsters[i]) == direction_get_y(current_monster_direction, monster_get_y(current_monster), 1)) {
                 return 1;
             }
         }
@@ -639,15 +634,19 @@ static int will_monster_meet_other_monsters(int monster_x, int monster_y, struct
     return 0;
 }
 
-static int can_monster_move(struct map *map, struct player *player, int x, int y) {
+int map_can_monster_move(struct map *map, struct player *player, struct monster *monster, enum direction monster_direction) {
     assert(map);
     assert(player);
+    assert(monster);
+
+    int x = direction_get_x(monster_direction, monster_get_x(monster), 1);
+    int y = direction_get_y(monster_direction, monster_get_y(monster), 1);
 
     if (!map_is_inside(map, x, y)) {
         return 0;
     }
 
-    if (will_monster_meet_other_monsters(x, y, map_get_list_monsters(map))) {
+    if (will_monster_meet_other_monsters(monster, map_get_list_monsters(map), monster_direction)) {
         return 0;
     }
 
@@ -664,56 +663,20 @@ static int can_monster_move(struct map *map, struct player *player, int x, int y
     }
 }
 
-static void monster_meeting_player(struct monster *monster, struct player *player, enum direction monster_direction) {
+int map_will_monster_meet_player(struct monster *monster, struct player *player, enum direction monster_direction) {
+    assert(player);
+
+    if (direction_get_x(monster_direction, monster_get_x(monster), 1) == player_get_x(player) && direction_get_y(monster_direction, monster_get_y(monster), 1) == player_get_y(player)) {
+        return 1;
+    }
+
+    return 0;
+}
+
+void map_monster_meeting_player(struct monster *monster, struct player *player, enum direction monster_direction) {
     monster_set_direction(monster, monster_direction);
 
     player_dec_num_lives(player);
 
     timer_start(monster_get_timer(monster), DURATION_MONSTER_MOVE);
-}
-
-void map_update_monsters(struct map *map, struct player *player) {
-    assert(map);
-    assert(player);
-
-    struct monster **list_monsters = map_get_list_monsters(map);
-
-    for (int i = 0; i < NUM_MONSTERS_MAX; i++) {
-        if (list_monsters[i] != NULL) {
-
-            struct monster *monster = list_monsters[i];
-
-            timer_update(monster_get_timer(monster));
-
-            if (timer_get_state(monster_get_timer(monster)) == IS_OVER) {
-
-                int grid[map_get_width(map) * map_get_height(map)];
-
-                for (int j = 0; j < map_get_width(map); j++) {
-                    for (int k = 0; k < map_get_height(map); k++) {
-
-                        if (can_monster_move(map, player, j, k)) {
-                            grid[CELL(j, k)] = 0;
-                        } else {
-                            grid[CELL(j, k)] = 1;
-                        }
-                    }
-                }
-
-                enum direction monster_direction;
-
-                if (map->monsters_strategy == RANDOM_STRATEGY) {
-                    monster_direction = direction_get_random(monster_get_x(monster), monster_get_y(monster), grid, map_get_width(map), map_get_height(map));
-                }
-
-                if (can_monster_move(map, player, direction_get_x(monster_direction, monster_get_x(monster), 1), direction_get_y(monster_direction, monster_get_y(monster), 1))) {
-                    if (will_monster_meet_player(direction_get_x(monster_direction, monster_get_x(monster), 1), direction_get_y(monster_direction, monster_get_y(monster), 1), player)) {
-                        monster_meeting_player(monster, player, monster_direction);
-                    } else {
-                        monster_move(monster, monster_direction);
-                    }
-                }
-            }
-        }
-    }
 }
