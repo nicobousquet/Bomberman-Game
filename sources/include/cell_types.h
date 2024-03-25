@@ -5,7 +5,6 @@
  * @brief Enumeration of bomb types.
  */
 enum bomb_type {
-    EXPLODED, /**< Exploded type. */
     EXPLOSING, /**< Explosion type. */
     TTL1, /**< Time-to-live type 1. */
     TTL2, /**< Time-to-live type 2. */

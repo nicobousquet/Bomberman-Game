@@ -12,11 +12,6 @@ enum state_timer {
 };
 
 /**
- * @brief Structure representing a timer.
- */
-struct timer;
-
-/**
  * @brief Initialize a timer.
  * @return A pointer to the initialized timer.
  */

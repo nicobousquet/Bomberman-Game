@@ -4,12 +4,6 @@
 #include "sprites.h"
 
 /**
- * @file player.h
- * @brief This file contains the declaration of the player structure and related functions.
- */
-struct player;
-
-/**
  * @brief Creates a new player with a given number of available bombs.
  * @param num_bombs The number of bombs the player can initially have.
  * @return A pointer to the created player.

@@ -5,12 +5,6 @@
 #include "sprites.h"
 
 /**
- * @file monster.h
- * @brief This file contains the declarations of functions and data types for monsters.
- */
-struct monster;
-
-/**
  * @brief Initialize a monster with the specified coordinates and timer duration.
  * @param x The x-coordinate of the monster.
  * @param y The y-coordinate of the monster.

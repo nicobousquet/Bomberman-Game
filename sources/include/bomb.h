@@ -4,12 +4,6 @@
 #include <stdio.h>
 
 /**
- * @file bomb.h
- * @brief This file contains the declarations of functions and data types for bombs.
- */
-struct bomb;
-
-/**
  * @brief Initialize a bomb with the specified coordinates and range.
  * @param bomb A pointer to the bomb.
  * @param x The x-coordinate of the bomb.

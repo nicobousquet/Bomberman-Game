@@ -14,12 +14,6 @@ enum strategy {
 };
 
 /**
- * @file map.h
- * @brief This file contains the declarations of functions and data types for the game map.
- */
-struct map;
-
-/**
  * @brief Create a new map from the file filename.
  * @param filename The filename to read the map from.
  * @return A pointer to the newly created map.

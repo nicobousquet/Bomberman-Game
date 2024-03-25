@@ -5,8 +5,6 @@
 #include "direction.h"
 #include "cell_types.h"
 
-struct sprites;
-
 struct sprites *sprites_new();
 
 /**
