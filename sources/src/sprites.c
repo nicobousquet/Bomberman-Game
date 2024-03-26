@@ -71,11 +71,11 @@ struct sprites {
 };
 
 static void bomb_load(struct sprites *sprites) {
-    sprites->bomb_img[EXPLOSING - 1] = image_load(BOMB_EXPLOSION);
-    sprites->bomb_img[TTL1 - 1] = image_load(BOMB_TTL1);
-    sprites->bomb_img[TTL2 - 1] = image_load(BOMB_TTL2);
-    sprites->bomb_img[TTL3 - 1] = image_load(BOMB_TTL3);
-    sprites->bomb_img[TTL4 - 1] = image_load(BOMB_TTL4);
+    sprites->bomb_img[EXPLOSING] = image_load(BOMB_EXPLOSION);
+    sprites->bomb_img[TTL1] = image_load(BOMB_TTL1);
+    sprites->bomb_img[TTL2] = image_load(BOMB_TTL2);
+    sprites->bomb_img[TTL3] = image_load(BOMB_TTL3);
+    sprites->bomb_img[TTL4] = image_load(BOMB_TTL4);
 }
 
 static void bomb_unload(struct sprites *sprites) {
@@ -298,6 +298,6 @@ SDL_Surface *sprites_get_door(struct sprites *sprites, enum door_status status) 
 }
 
 SDL_Surface *sprites_get_bomb(struct sprites *sprites, uint8_t ttl) {
-    assert(sprites->bomb_img[ttl - 1]);
-    return sprites->bomb_img[ttl - 1];
+    assert(sprites->bomb_img[ttl]);
+    return sprites->bomb_img[ttl];
 }
