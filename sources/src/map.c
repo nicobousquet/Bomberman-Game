@@ -409,6 +409,7 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
                             }
                         }
                     }
+
                 } else if (is_explosion_reaching_player(x, y, player)) {
                     player_dec_num_lives(player);
                     return;
