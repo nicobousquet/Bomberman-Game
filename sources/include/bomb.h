@@ -1,6 +1,7 @@
 #ifndef SOURCES_BOMB_H
 #define SOURCES_BOMB_H
 
+#include "../include/cell_types.h"
 #include <stdio.h>
 
 /**

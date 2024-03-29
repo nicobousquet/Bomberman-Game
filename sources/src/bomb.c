@@ -1,6 +1,5 @@
 #include "../include/bomb.h"
 #include "../include/timer.h"
-#include "../include/cell_types.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>

@@ -8,7 +8,7 @@ CC = gcc
 SDLCFLAGS = `sdl-config  --cflags`
 SDLLDFLAGS = `sdl-config --libs` 
 
-CFLAGS = -Wall -Wextra -O0 -g -std=gnu99 -I../include/ $(SDLCFLAGS)
+CFLAGS = -Wall -Wextra -Wpedantic -O0 -g -std=gnu99 -I../include/ $(SDLCFLAGS)
 LDFLAGS = $(SDLLDFLAGS) -lSDL_image
 
 SRC  = $(wildcard $(SRCDIR)/*.c)
