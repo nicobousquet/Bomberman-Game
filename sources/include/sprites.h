@@ -1,9 +1,9 @@
 #ifndef SPRITES_H
 #define SPRITES_H
 
-#include <SDL/SDL.h>
 #include "direction.h"
 #include "cell_types.h"
+#include <SDL/SDL.h>
 
 struct sprites *sprites_new();
 
