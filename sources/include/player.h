@@ -5,10 +5,12 @@
 
 /**
  * @brief Creates a new player with a given number of available bombs.
+ * @param x The initial x position of the player.
+ * @param y The initial y position of the player.
  * @param num_bombs The number of bombs the player can initially have.
  * @return A pointer to the created player.
  */
-struct player *player_new(int num_bombs);
+struct player *player_new(int x, int y, int num_bombs);
 
 /**
  * @brief Free the memory occupied by the player.

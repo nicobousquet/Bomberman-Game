@@ -30,10 +30,23 @@ struct game *game_new(void) {
 
     memset(game, 0, sizeof(struct game));
 
-    game->num_levels = NUM_LEVELS;
-    game->current_level = 0;
+    FILE *data_file = fopen("data/game_data.txt", "r");
+
+    if (!data_file) {
+        perror("fopen data file");
+        exit(EXIT_FAILURE);
+    }
+
+    int x_player, y_player;
+    char map_pattern[10];
+
+    if (fscanf(data_file, "%i%i:%i,%i%s", &game->num_levels, &game->current_level, &x_player, &y_player, map_pattern) != 5) {
+        perror("Error reading data from game_data.txt");
+        exit(EXIT_FAILURE);
+    };
+
+    game->player = player_new(x_player, y_player, NUM_BOMBS_MAX);
     game->is_paused = 0;
-    game->player = player_new(NUM_BOMBS_MAX);
     game->sprites = sprites_new();
     game->list_maps = malloc(game->num_levels * sizeof(struct map *));
 
@@ -42,19 +55,11 @@ struct game *game_new(void) {
         exit(EXIT_FAILURE);
     }
 
-    char *maps_filenames[] = {
-            "maps/map_0",
-            "maps/map_1",
-            "maps/map_2",
-            "maps/map_3",
-            "maps/map_4",
-            "maps/map_5",
-            "maps/map_6",
-            "maps/map_7"
-    };
+    char filename[100];
 
     for (int i = 0; i < game->num_levels; i++) {
-        game->list_maps[i] = map_new(maps_filenames[i]);
+        sprintf(filename, "maps/%s_%i", map_pattern, i);
+        game->list_maps[i] = map_new(filename);
     }
 
     game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);

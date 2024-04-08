@@ -23,59 +23,38 @@ struct map *map_new(char *filename) {
 
     struct map *map = malloc(sizeof(struct map));
 
-    memset(map, 0, sizeof(struct map));
-
     if (map == NULL) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
         exit(EXIT_FAILURE);
     }
 
+    memset(map, 0, sizeof(struct map));
+
     FILE *fp = fopen(filename, "rb");
-
     if (!fp) {
-        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        perror("fopen map file");
         exit(EXIT_FAILURE);
     }
 
-    fseek(fp, 0, SEEK_END);
-
-    long size = ftell(fp);
-
-    fseek(fp, 0, SEEK_SET);
-
-    char *file_content = malloc(size);
-    char *file_content_copy = file_content;
-
-    if (!file_content) {
-        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+    if (fscanf(fp, "%i:%i%u", &(map->width), &(map->height), &(map->monsters_strategy)) != 3) {
+        perror("Error reading map dimensions and monsters strategy");
         exit(EXIT_FAILURE);
     }
-
-    size_t numread = fread(file_content, sizeof(char), size, fp);
-
-    if ((long) numread != size) {
-        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
-        exit(EXIT_FAILURE);
-    }
-
-    fclose(fp);
-
-    map->width = (int) strtol(file_content, &file_content, 10);
-    map->height = (int) strtol(file_content + 1, &file_content, 10);
-    map->monsters_strategy = strtol(file_content, &file_content, 10);
 
     map->grid = malloc(sizeof(unsigned char) * (map->width * map->height));
-
     if (!map->grid) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
         exit(EXIT_FAILURE);
     }
 
     for (int i = 0; i < map->width * map->height; i++) {
-        map->grid[i] = (unsigned char) strtol(file_content, &file_content, 10);
+        if (fscanf(fp, "%hhu", &(map->grid[i])) != 1) {
+            fprintf(stderr, "Error reading map grid");
+            exit(EXIT_FAILURE);
+        }
     }
 
-    free(file_content_copy);
+    fclose(fp);
 
     for (int i = 0; i < NUM_BOMBS_MAX; i++) {
         map->list_bombs[i] = NULL;
