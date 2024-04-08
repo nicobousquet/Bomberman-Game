@@ -62,11 +62,6 @@
 #define DURATION_PLAYER_INVINCIBILITY 1000
 
 /**
- * @brief Number of levels in the game.
- */
-#define NUM_LEVELS 8
-
-/**
  * @brief Macro to calculate the index of a cell in the map given its row and column.
  */
 #define CELL(i, j) ((i) + (j) * map->width)
