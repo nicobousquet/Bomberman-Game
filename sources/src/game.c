@@ -55,11 +55,11 @@ struct game *game_new(void) {
         exit(EXIT_FAILURE);
     }
 
-    char filename[100];
+    char map_filename[100];
 
     for (int i = 0; i < game->num_levels; i++) {
-        sprintf(filename, "maps/%s_%i", map_pattern, i);
-        game->list_maps[i] = map_new(filename);
+        sprintf(map_filename, "maps/%s_%i", map_pattern, i);
+        game->list_maps[i] = map_new(map_filename);
     }
 
     game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
