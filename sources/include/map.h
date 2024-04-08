@@ -59,14 +59,14 @@ int map_get_height(struct map *map);
  * @param map A pointer to the map.
  * @return A pointer to the grid.
  */
-uint8_t *map_get_grid(struct map *map);
+unsigned char *map_get_grid(struct map *map);
 
 /**
  * @brief Set the grid data of the map.
  * @param map A pointer to the map.
  * @param grid A pointer to the grid.
  */
-void map_set_grid(struct map *map, uint8_t *grid);
+void map_set_grid(struct map *map, unsigned char *grid);
 
 /**
  * @brief Get the list of bombs on the map.
@@ -105,7 +105,7 @@ enum strategy map_get_monster_strategy(struct map *map);
  * @param y The y-coordinate.
  * @return The value of the cell.
  */
-uint8_t map_get_cell_value(struct map *map, int x, int y);
+unsigned char map_get_cell_value(struct map *map, int x, int y);
 
 /**
  * @brief Set the value of the cell at the specified coordinates (x, y).
@@ -114,7 +114,7 @@ uint8_t map_get_cell_value(struct map *map, int x, int y);
  * @param y The y-coordinate.
  * @param value The value to set for the cell.
  */
-void map_set_cell_value(struct map *map, int x, int y, uint8_t value);
+void map_set_cell_value(struct map *map, int x, int y, unsigned char value);
 
 /**
  * @brief Display the map on the screen.

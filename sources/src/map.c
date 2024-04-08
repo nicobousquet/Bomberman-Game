@@ -12,7 +12,7 @@
 struct map {
     int width; /**< Width of the map */
     int height; /**< Height of the map */
-    uint8_t *grid; /**< Grid of the map */
+    unsigned char *grid; /**< Grid of the map */
     struct bomb *list_bombs[NUM_BOMBS_MAX]; /**< List of bombs on the map */
     struct monster *list_monsters[NUM_MONSTERS_MAX]; /**< List of monsters on the map */
     enum strategy monsters_strategy; /**< The strategy of the monsters (RANDOM, DIJKSTRA) */
@@ -21,9 +21,9 @@ struct map {
 struct map *map_new(char *filename) {
     assert(filename);
 
-    struct map *map = malloc(sizeof(*map));
+    struct map *map = malloc(sizeof(struct map));
 
-    memset(map, 0, sizeof(*map));
+    memset(map, 0, sizeof(struct map));
 
     if (map == NULL) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
@@ -51,7 +51,7 @@ struct map *map_new(char *filename) {
         exit(EXIT_FAILURE);
     }
 
-    size_t numread = fread(file_content, sizeof(*file_content), size, fp);
+    size_t numread = fread(file_content, sizeof(char), size, fp);
 
     if ((long) numread != size) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
@@ -64,7 +64,7 @@ struct map *map_new(char *filename) {
     map->height = (int) strtol(file_content + 1, &file_content, 10);
     map->monsters_strategy = strtol(file_content, &file_content, 10);
 
-    map->grid = malloc(sizeof(uint8_t) * (map->width * map->height));
+    map->grid = malloc(sizeof(unsigned char) * (map->width * map->height));
 
     if (!map->grid) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
@@ -72,7 +72,7 @@ struct map *map_new(char *filename) {
     }
 
     for (int i = 0; i < map->width * map->height; i++) {
-        map->grid[i] = (uint8_t) strtol(file_content, &file_content, 10);
+        map->grid[i] = (unsigned char) strtol(file_content, &file_content, 10);
     }
 
     free(file_content_copy);
@@ -111,7 +111,7 @@ void map_write(struct map *map, FILE *file) {
     assert(map);
     assert(file);
 
-    fwrite(map, sizeof(*map), 1, file);
+    fwrite(map, sizeof(struct map), 1, file);
     fwrite(map->grid, map->width * map->height, 1, file);
 
 
@@ -131,9 +131,9 @@ void map_write(struct map *map, FILE *file) {
 void map_read(struct map *map, FILE *file) {
     assert(map);
 
-    uint8_t *grid = map->grid;
+    unsigned char *grid = map->grid;
 
-    fread(map, sizeof(*map), 1, file);
+    fread(map, sizeof(struct map), 1, file);
     map->grid = grid;
     fread(map->grid, map->width * map->height, 1, file);
 
@@ -162,12 +162,12 @@ int map_get_height(struct map *map) {
     return map->height;
 }
 
-uint8_t *map_get_grid(struct map *map) {
+unsigned char *map_get_grid(struct map *map) {
     assert(map);
     return map->grid;
 }
 
-void map_set_grid(struct map *map, uint8_t *grid) {
+void map_set_grid(struct map *map, unsigned char *grid) {
     assert(map);
     assert(grid);
 
@@ -199,7 +199,7 @@ int map_is_inside(struct map *map, int x, int y) {
     return 0;
 }
 
-uint8_t map_get_cell_value(struct map *map, int x, int y) {
+unsigned char map_get_cell_value(struct map *map, int x, int y) {
     assert(map);
     assert(map->grid);
     assert(map_is_inside(map, x, y));
@@ -207,7 +207,7 @@ uint8_t map_get_cell_value(struct map *map, int x, int y) {
     return map->grid[CELL(x, y)];
 }
 
-void map_set_cell_value(struct map *map, int x, int y, uint8_t value) {
+void map_set_cell_value(struct map *map, int x, int y, unsigned char value) {
     assert(map);
     assert(map_is_inside(map, x, y));
 
@@ -223,7 +223,7 @@ void map_display(struct map *map, struct SDL_Surface *window, struct sprites *sp
             int x = i * SIZE_BLOC;
             int y = j * SIZE_BLOC;
 
-            uint8_t type = map_get_cell_value(map, i, j);
+            unsigned char type = map_get_cell_value(map, i, j);
 
             switch ((enum cell_type) (type & 0xf0)) {
                 case CELL_SCENERY:
@@ -390,7 +390,7 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
 
         if (map_is_inside(map, x, y)) {
 
-            uint8_t cell_value = map_get_cell_value(map, x, y);
+            unsigned char cell_value = map_get_cell_value(map, x, y);
 
             if (can_bomb_propagate(cell_value & 0xf0)) {
 
@@ -560,7 +560,7 @@ int map_move_player(struct map *map, struct player *player, enum direction direc
         return 0;
     }
 
-    uint8_t cell = map_get_cell_value(map, next_x, next_y);
+    unsigned char cell = map_get_cell_value(map, next_x, next_y);
 
     switch (cell & 0xf0) {
         case CELL_SCENERY:

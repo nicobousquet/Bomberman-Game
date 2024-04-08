@@ -105,7 +105,7 @@ SDL_Surface *sprites_get_banner_range(struct sprites *sprites);
  * @param ttl The time to live of the bomb.
  * @return The SDL surface for the bomb sprite with the specified time to live.
  */
-SDL_Surface *sprites_get_bomb(struct sprites *sprites, uint8_t ttl);
+SDL_Surface *sprites_get_bomb(struct sprites *sprites, unsigned char ttl);
 
 /**
  * @brief Get the sprite for a monster in a specific direction.

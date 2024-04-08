@@ -190,7 +190,7 @@ static void sprites_load(struct sprites *sprites) {
 }
 
 struct sprites *sprites_new() {
-    struct sprites *sprites = malloc(sizeof(*sprites));
+    struct sprites *sprites = malloc(sizeof(struct sprites));
 
     if (!sprites) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
@@ -297,7 +297,7 @@ SDL_Surface *sprites_get_door(struct sprites *sprites, enum door_status status) 
     return NULL;
 }
 
-SDL_Surface *sprites_get_bomb(struct sprites *sprites, uint8_t ttl) {
+SDL_Surface *sprites_get_bomb(struct sprites *sprites, unsigned char ttl) {
     assert(sprites->bomb_img[ttl]);
     return sprites->bomb_img[ttl];
 }

@@ -14,14 +14,14 @@ struct timer {
 };
 
 struct timer *timer_new() {
-    struct timer *timer = malloc(sizeof(*timer));
+    struct timer *timer = malloc(sizeof(struct timer));
 
     if (!timer) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
         exit(EXIT_FAILURE);
     }
 
-    memset(timer, 0, sizeof(*timer));
+    memset(timer, 0, sizeof(struct timer));
 
     timer->state = IS_OVER;
 
@@ -37,14 +37,14 @@ void timer_write(struct timer *timer, FILE *file) {
     assert(timer);
     assert(file);
 
-    fwrite(timer, sizeof(*timer), 1, file);
+    fwrite(timer, sizeof(struct timer), 1, file);
 }
 
 void timer_read(struct timer *timer, FILE *file) {
     assert(timer);
     assert(file);
 
-    fread(timer, sizeof(*timer), 1, file);
+    fread(timer, sizeof(struct timer), 1, file);
     timer->start_time = SDL_GetTicks() - (timer->duration - timer->remaining);
 }
 

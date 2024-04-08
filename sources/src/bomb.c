@@ -18,14 +18,14 @@ struct bomb {
 struct bomb *bomb_new(int x, int y, int range) {
     assert(range > 0);
 
-    struct bomb *bomb = malloc(sizeof(*bomb));
+    struct bomb *bomb = malloc(sizeof(struct bomb));
 
     if (!bomb) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
         exit(EXIT_FAILURE);
     }
 
-    memset(bomb, 0, sizeof(*bomb));
+    memset(bomb, 0, sizeof(struct bomb));
 
     bomb->x = x;
     bomb->y = y;
@@ -48,7 +48,7 @@ void bomb_write(struct bomb *bomb, FILE *file) {
     assert(bomb);
     assert(file);
 
-    fwrite(bomb, sizeof(*bomb), 1, file);
+    fwrite(bomb, sizeof(struct bomb), 1, file);
     timer_write(bomb->timer, file);
 }
 
@@ -57,7 +57,7 @@ void bomb_read(struct bomb *bomb, FILE *file) {
 
     struct timer *timer = bomb->timer;
 
-    fread(bomb, sizeof(*bomb), 1, file);
+    fread(bomb, sizeof(struct bomb), 1, file);
     bomb->timer = timer;
     timer_read(bomb->timer, file);
 }

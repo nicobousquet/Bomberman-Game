@@ -21,14 +21,14 @@ struct game {
 
 struct game *game_new(void) {
 
-    struct game *game = malloc(sizeof(*game));
+    struct game *game = malloc(sizeof(struct game));
 
     if (!game) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
         exit(EXIT_FAILURE);
     }
 
-    memset(game, 0, sizeof(*game));
+    memset(game, 0, sizeof(struct game));
 
     game->num_levels = NUM_LEVELS;
     game->current_level = 0;
@@ -90,7 +90,7 @@ void game_free(struct game *game) {
 }
 
 void game_write(struct game *game, FILE *file) {
-    fwrite(game, sizeof(*game), 1, file);
+    fwrite(game, sizeof(struct game), 1, file);
 
     player_write(game->player, file);
 
@@ -106,7 +106,7 @@ void game_read(struct game *game, FILE *file) {
     struct sprites *sprites = game->sprites;
     SDL_Surface *window = game->window;
 
-    fread(game, sizeof(*game), 1, file);
+    fread(game, sizeof(struct game), 1, file);
 
     game->player = player;
     game->list_maps = list_maps;
@@ -340,7 +340,7 @@ static int input_keyboard(struct game *game) {
                             int y_next_player = direction_get_y(player_get_direction(player), player_get_y(player), 1);
 
                             if (map_is_inside(map, x_next_player, y_next_player)) {
-                                uint8_t type = map_get_cell_value(map, x_next_player, y_next_player);
+                                unsigned char type = map_get_cell_value(map, x_next_player, y_next_player);
 
                                 if (((type & 0xf1) == (CELL_DOOR | CLOSED)) && player_get_num_keys(player)) {
                                     map_set_cell_value(map, x_next_player, y_next_player, type & 0xfe);
@@ -357,7 +357,7 @@ static int input_keyboard(struct game *game) {
 
                     if (has_moved) {
 
-                        uint8_t cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
+                        unsigned char cell = map_get_cell_value(map, player_get_x(player), player_get_y(player));
 
                         if ((cell & 0xf0) == CELL_DOOR) {
                             int level = (cell & 0x0e) / 2;
