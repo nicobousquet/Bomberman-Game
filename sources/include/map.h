@@ -99,14 +99,14 @@ void map_add_monster_node(struct map *map, struct monster_node *to_add);
 void map_remove_monster_node(struct map *map, struct monster_node *to_remove);
 
 /**
- * @brief Get the list of bombs on the map.
+ * @brief Get the head of the bombs' linked list on the map.
  * @param map A pointer to the map.
  * @return A pointer to the list of bombs.
  */
 struct bomb_node *map_get_bomb_head(struct map *map);
 
 /**
- * @brief Get the list of monsters on the map.
+ * @brief Get the head of the monsters' linked list on the map.
  * @param map A pointer to the map.
  * @return A pointer to the list of monsters.
  */
@@ -159,7 +159,7 @@ void map_display(struct map *map, struct SDL_Surface *window, struct sprites *sp
 void map_init_list_monsters(struct map *map);
 
 /**
-@brief Set a bomb_head on the map at the player's current position.
+@brief Set a bomb on the map at the player's current position.
 @param map A pointer to the map.
 @param player A pointer to the player.
 */
