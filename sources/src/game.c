@@ -406,11 +406,11 @@ int game_update(struct game *game) {
     }
 
     if (!game->is_paused) {
+        map_update_bombs(map, player);
+
         if (map_get_monster_strategy(map) == RANDOM_STRATEGY) {
             random_update_monsters(map, player);
         }
-
-        map_update_bombs(map, player);
     }
 
     if (player_get_num_lives(player) == 0) {

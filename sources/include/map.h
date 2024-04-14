@@ -3,6 +3,8 @@
 
 #include "player.h"
 #include "window.h"
+#include "bomb_node.h"
+#include "monster_node.h"
 
 /**
  * @enum strategy
@@ -69,18 +71,46 @@ unsigned char *map_get_grid(struct map *map);
 void map_set_grid(struct map *map, unsigned char *grid);
 
 /**
+ * @brief Add a bomb on the map.
+ * @param map A pointer to the map.
+ * @param to_add A pointer to the bomb to add.
+ */
+void map_add_bomb_node(struct map *map, struct bomb_node *to_add);
+
+/**
+ * @brief Add a bomb on the map.
+ * @param map A pointer to the map.
+ * @param to_remove A pointer to the bomb to remove.
+ */
+void map_remove_bomb_node(struct map *map, struct bomb_node *to_remove);
+
+/**
+ * @brief Add a monster on the map.
+ * @param map A pointer to the map.
+ * @param to_add A pointer to the monster to add.
+ */
+void map_add_monster_node(struct map *map, struct monster_node *to_add);
+
+/**
+ * @brief Remove a monster on the map.
+ * @param map A pointer to the map.
+ * @param to_remove A pointer to the monster to remove.
+ */
+void map_remove_monster_node(struct map *map, struct monster_node *to_remove);
+
+/**
  * @brief Get the list of bombs on the map.
  * @param map A pointer to the map.
  * @return A pointer to the list of bombs.
  */
-struct bomb **map_get_list_bombs(struct map *map);
+struct bomb_node *map_get_bomb_head(struct map *map);
 
 /**
  * @brief Get the list of monsters on the map.
  * @param map A pointer to the map.
  * @return A pointer to the list of monsters.
  */
-struct monster **map_get_list_monsters(struct map *map);
+struct monster_node *map_get_monster_head(struct map *map);
 
 /**
  * @brief Test if the specified coordinates (x, y) are within the map boundaries.
@@ -129,7 +159,7 @@ void map_display(struct map *map, struct SDL_Surface *window, struct sprites *sp
 void map_init_list_monsters(struct map *map);
 
 /**
-@brief Set a bomb on the map at the player's current position.
+@brief Set a bomb_head on the map at the player's current position.
 @param map A pointer to the map.
 @param player A pointer to the player.
 */
@@ -152,28 +182,28 @@ void map_update_bombs(struct map *map, struct player *player);
 int map_move_player(struct map *map, struct player *player, enum direction direction);
 
 /**
-@brief Checks if a monster will meet the player on the next move.
-@param monster A pointer to the monster.
-@param monster_direction The direction of the monster.
-@return 1 if current monster will meet other monsters, 0 otherwise.
+@brief Checks if a monster_node will meet the player on the next move.
+@param monster A pointer to the monster_node.
+@param monster_direction The direction of the monster_node.
+@return 1 if current monster_node will meet other monsters, 0 otherwise.
 */
-int map_will_monster_meet_player(struct monster *monster, struct player *player, enum direction monster_direction);
+int map_will_monster_meet_player(struct monster_node *monster, struct player *player, enum direction monster_direction);
 
 /**
-@brief Checks if a monster can move.
+@brief Checks if a monster_node can move.
 @param A pointer to the player.
-@param monster A pointer to the monster.
-@param monster_direction The direction of the monster.
-@return 1 if current monster can move, 0 otherwise.
+@param monster A pointer to the monster_node.
+@param monster_direction The direction of the monster_node.
+@return 1 if current monster_node can move, 0 otherwise.
 */
-int map_can_monster_move(struct map *map, struct player *player, struct monster *monster, enum direction monster_direction);
+int map_can_monster_move(struct map *map, struct player *player, struct monster_node *monster, enum direction monster_direction);
 
 /**
-@brief Meeting between a monster and the player.
-@param monster A pointer to the monster.
+@brief Meeting between a monster_node and the player.
+@param monster A pointer to the monster_node.
 @param player A pointer to the player.
-@param monster_direction The direction of the monster.
+@param monster_direction The direction of the monster_node.
 */
-void map_monster_meeting_player(struct monster *monster, struct player *player, enum direction monster_direction);
+void map_monster_meeting_player(struct monster_node *monster, struct player *player, enum direction monster_direction);
 
 #endif /* MAP_H */

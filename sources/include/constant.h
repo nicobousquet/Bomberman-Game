@@ -27,11 +27,6 @@
 #define DEFAULT_GAME_FPS 30
 
 /**
- * @brief Maximum number of monsters per map allowed.
- */
-#define NUM_MONSTERS_MAX 10
-
-/**
  * @brief Maximum number of bombs per map allowed.
  */
 #define NUM_BOMBS_MAX 9
