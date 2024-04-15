@@ -5,42 +5,42 @@
  * @brief Enumeration of bomb types.
  */
 enum bomb_type {
-    EXPLOSING, /**< Explosion type. */
-    TTL1, /**< Time-to-live type 1. */
-    TTL2, /**< Time-to-live type 2. */
-    TTL3, /**< Time-to-live type 3. */
-    TTL4, /**< Time-to-live type 4. */
-    INIT  /**< Initial time-to-live. */
+    EXPLOSING = 0x00, /**< Explosion type. */
+    TTL1 = 0x01, /**< Time-to-live type 1. */
+    TTL2 = 0x02, /**< Time-to-live type 2. */
+    TTL3 = 0x03, /**< Time-to-live type 3. */
+    TTL4 = 0x04, /**< Time-to-live type 4. */
+    INIT = 0x05  /**< Initial time-to-live. */
 };
 
 /**
  * @brief Enumeration of bonus types.
  */
 enum bonus_type {
-    EMPTY = 0, /**< Empty bonus type. */
-    BONUS_BOMB_RANGE_DEC, /**< Bonus type for decreasing bomb range. */
-    BONUS_BOMB_RANGE_INC, /**< Bonus type for increasing bomb range. */
-    BONUS_BOMB_NB_DEC, /**< Bonus type for decreasing bomb count. */
-    BONUS_BOMB_NB_INC, /**< Bonus type for increasing bomb count. */
-    BONUS_LIFE, /**< Bonus type for extra life. */
-    BONUS_MONSTER /**< Bonus type for summoning a monster. */
+    EMPTY = 0x00, /**< Empty bonus type. */
+    BONUS_BOMB_RANGE_DEC = 0x01, /**< Bonus type for decreasing bomb range. */
+    BONUS_BOMB_RANGE_INC = 0x02, /**< Bonus type for increasing bomb range. */
+    BONUS_BOMB_NB_DEC = 0x03, /**< Bonus type for decreasing bomb count. */
+    BONUS_BOMB_NB_INC = 0x04, /**< Bonus type for increasing bomb count. */
+    BONUS_LIFE = 0x05, /**< Bonus type for extra life. */
+    BONUS_MONSTER = 0x06 /**< Bonus type for summoning a monster. */
 };
 
 /**
  * @brief Enumeration of scenery types.
  */
 enum scenery_type {
-    SCENERY_STONE = 1, /**< Stone scenery type. */
-    SCENERY_TREE = 2, /**< Tree scenery type. */
-    SCENERY_PRINCESS = 4 /**< Princess scenery type. */
+    SCENERY_STONE = 0x01, /**< Stone scenery type. */
+    SCENERY_TREE = 0x02, /**< Tree scenery type. */
+    SCENERY_PRINCESS = 0x04 /**< Princess scenery type. */
 };
 
 /**
  * @brief Enumeration of door statuses.
  */
 enum door_status {
-    OPENED = 0, /**< Opened door status. */
-    CLOSED /**< Closed door status. */
+    OPENED = 0x00, /**< Opened door status. */
+    CLOSED = 0x01  /**< Closed door status. */
 };
 
 /**
@@ -54,7 +54,7 @@ enum levels {
     LEVEL5 = 0x08, /**< Level 5. */
     LEVEL6 = 0x0a, /**< Level 6. */
     LEVEL7 = 0x0c, /**< Level 7. */
-    LEVEL8 = 0x0e /**< Level 8. */
+    LEVEL8 = 0x0e  /**< Level 8. */
 };
 
 /**

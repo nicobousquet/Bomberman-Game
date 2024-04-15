@@ -34,7 +34,7 @@ struct map *map_new(char *filename) {
         exit(EXIT_FAILURE);
     }
 
-    if (fscanf(fp, "%i:%i%u", &(map->width), &(map->height), &(map->monsters_strategy)) != 3) {
+    if (fscanf(fp, "%i:%i%hhu", &(map->width), &(map->height), (unsigned char *) &(map->monsters_strategy)) != 3) {
         perror("Error reading map dimensions and monsters strategy");
         exit(EXIT_FAILURE);
     }
