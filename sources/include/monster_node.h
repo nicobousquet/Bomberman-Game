@@ -47,8 +47,18 @@ void monster_node_set_x(struct monster_node *monster_node, int x);
  */
 void monster_node_set_y(struct monster_node *monster_node, int y);
 
+/**
+ * @brief Get the monster node.
+ * @param monster_node A pointer to the monster node.
+ * @return The next monster node.
+ */
 struct monster_node *monster_node_get_next(struct monster_node *monster_node);
 
+/**
+ * @brief Set the next monster node.
+ * @param monster_node A pointer to the monster node.
+ * @param next A pointer to the next monster node.
+ */
 void monster_node_set_next(struct monster_node *monster_node, struct monster_node *next);
 
 /**
