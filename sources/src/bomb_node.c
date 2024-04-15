@@ -5,7 +5,7 @@
 #include <string.h>
 
 /**
- * @brief Structure representing a bomb.
+ * @brief Structure representing a bomb_node.
  */
 struct bomb_node {
     int x; /**< X-coordinate of the bomb node */
