@@ -55,8 +55,22 @@ struct map *map_new(char *filename) {
     fclose(fp);
 
     map->bomb_head = NULL;
-
     map->monster_head = NULL;
+
+    for (int i = 0; i < map_get_width(map); i++) {
+        for (int j = 0; j < map_get_height(map); j++) {
+
+            if ((map_get_cell_value(map, i, j) & 0xf0) == CELL_BOMB) {
+                map_add_bomb_node(map, bomb_node_new(i, j, 1));
+                map_set_cell_value(map, i, j, CELL_EMPTY);
+            }
+
+            if ((map_get_cell_value(map, i, j) & 0xf0) == CELL_MONSTER) {
+                map_add_monster_node(map, monster_node_new(i, j));
+                map_set_cell_value(map, i, j, CELL_EMPTY);
+            }
+        }
+    }
 
     return map;
 }
@@ -100,40 +114,52 @@ void map_write(struct map *map, FILE *file) {
     }
 }
 
-void map_read(struct map *map, FILE *file) {
-    assert(map);
+struct map *map_read(FILE *file) {
+    assert(file);
 
-    unsigned char *grid = map->grid;
+    struct map *map = malloc(sizeof(struct map));
+
+    if (!map) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
 
     fread(map, sizeof(struct map), 1, file);
-    map->grid = grid;
+
+    map->grid = malloc(sizeof(unsigned char) * map->width * map->height);
+
+    if (!map->grid) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
     fread(map->grid, map->width * map->height, 1, file);
 
     if (map->bomb_head != NULL) {
 
-        map->bomb_head = bomb_node_new(0, 0, 1);
+        map->bomb_head = bomb_node_read(file);
 
         for (struct bomb_node *current = map->bomb_head; current != NULL; current = bomb_node_get_next(current)) {
-            bomb_node_read(current, file);
 
             if (bomb_node_get_next(current) != NULL) {
-                bomb_node_set_next(current, bomb_node_new(0, 0, 1));
+                bomb_node_set_next(current, bomb_node_read(file));
             }
         }
     }
 
     if (map->monster_head != NULL) {
 
-        map->monster_head = monster_node_new(0, 0);
+        map->monster_head = monster_node_read(file);
 
         for (struct monster_node *current = map->monster_head; current != NULL; current = monster_node_get_next(current)) {
-            monster_node_read(current, file);
 
             if (monster_node_get_next(current) != NULL) {
-                monster_node_set_next(current, monster_node_new(0, 0));
+                monster_node_set_next(current, monster_node_read(file));
             }
         }
     }
+
+    return map;
 }
 
 int map_get_width(struct map *map) {
@@ -302,20 +328,6 @@ void map_display(struct map *map, struct SDL_Surface *window, struct sprites *sp
 
     for (struct monster_node *current = map->monster_head; current != NULL; current = monster_node_get_next(current)) {
         monster_node_display(current, window, sprites);
-    }
-}
-
-void map_init_list_monsters(struct map *map) {
-    assert(map);
-
-    for (int i = 0; i < map_get_width(map); i++) {
-        for (int j = 0; j < map_get_height(map); j++) {
-
-            if ((map_get_cell_value(map, i, j) & 0xf0) == CELL_MONSTER) {
-                map_add_monster_node(map, monster_node_new(i, j));
-                map_set_cell_value(map, i, j, CELL_EMPTY);
-            }
-        }
     }
 }
 

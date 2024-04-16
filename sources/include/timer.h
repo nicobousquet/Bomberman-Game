@@ -32,10 +32,10 @@ void timer_write(struct timer *timer, FILE *file);
 
 /**
  * @brief Read a timer from a file.
- * @param timer The timer to read.
  * @param file The file to read the timer from.
+ * @return A pointer to the timer read.
  */
-void timer_read(struct timer *timer, FILE *file);
+struct timer *timer_read(FILE *file);
 
 /**
  * @brief Get the duration of the timer.

@@ -60,15 +60,21 @@ void player_write(struct player *player, FILE *file) {
     timer_write(player->timer_invincibility, file);
 }
 
-void player_read(struct player *player, FILE *file) {
-    assert(player);
+struct player *player_read(FILE *file) {
     assert(file);
 
-    struct timer *timer_invincibility = player->timer_invincibility;
+    struct player *player = malloc(sizeof(struct player));
+
+    if (!player) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
 
     fread(player, sizeof(struct player), 1, file);
-    player->timer_invincibility = timer_invincibility;
-    timer_read(player->timer_invincibility, file);
+
+    player->timer_invincibility = timer_read(file);
+
+    return player;
 }
 
 enum direction player_get_direction(struct player *player) {

@@ -29,10 +29,10 @@ void bomb_node_write(struct bomb_node *bomb_node, FILE *file);
 
 /**
  * @brief Read a bomb node from a file.
- * @param bomb_node The bomb node to read.
  * @param file The file to read the bomb node from.
+ * @return A pointer to the bomb_node read.
  */
-void bomb_node_read(struct bomb_node *bomb_node, FILE *file);
+struct bomb_node *bomb_node_read(FILE *file);
 
 /**
  * @brief Get the next bomb node in the linked list of bombs.

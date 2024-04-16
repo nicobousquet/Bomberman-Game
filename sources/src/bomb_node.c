@@ -60,14 +60,21 @@ void bomb_node_write(struct bomb_node *bomb_node, FILE *file) {
     timer_write(bomb_node->timer, file);
 }
 
-void bomb_node_read(struct bomb_node *bomb_node, FILE *file) {
-    assert(bomb_node);
+struct bomb_node *bomb_node_read(FILE *file) {
+    assert(file);
 
-    struct timer *timer = bomb_node->timer;
+    struct bomb_node *bomb_node = malloc(sizeof(struct bomb_node));
+
+    if (!bomb_node) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
 
     fread(bomb_node, sizeof(struct bomb_node), 1, file);
-    bomb_node->timer = timer;
-    timer_read(bomb_node->timer, file);
+
+    bomb_node->timer = timer_read(file);
+
+    return bomb_node;
 }
 
 struct bomb_node *bomb_node_get_next(struct bomb_node *bomb_node) {

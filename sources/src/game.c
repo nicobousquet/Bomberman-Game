@@ -64,15 +64,6 @@ struct game *game_new(void) {
 
     game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
 
-    FILE *backup_file = fopen(FILENAME_BACKUP, "rb");
-
-    if (!backup_file) {
-        map_init_list_monsters(game->list_maps[game->current_level]);
-        return game;
-    }
-
-    fclose(backup_file);
-
     return game;
 }
 
@@ -95,6 +86,9 @@ void game_free(struct game *game) {
 }
 
 void game_write(struct game *game, FILE *file) {
+    assert(game);
+    assert(file);
+
     fwrite(game, sizeof(struct game), 1, file);
 
     player_write(game->player, file);
@@ -104,25 +98,35 @@ void game_write(struct game *game, FILE *file) {
     }
 }
 
-void game_read(struct game *game, FILE *file) {
+struct game *game_read(FILE *file) {
+    assert(file);
 
-    struct player *player = game->player;
-    struct map **list_maps = game->list_maps;
-    struct sprites *sprites = game->sprites;
-    SDL_Surface *window = game->window;
+    struct game *game = malloc(sizeof(struct game));
+
+    if (!game) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
 
     fread(game, sizeof(struct game), 1, file);
 
-    game->player = player;
-    game->list_maps = list_maps;
-    game->sprites = sprites;
-    game->window = window;
+    game->player = player_read(file);
 
-    player_read(game->player, file);
+    game->list_maps = malloc(game->num_levels * sizeof(struct map *));
+
+    if (!game->list_maps) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
 
     for (int i = 0; i < game->num_levels; i++) {
-        map_read(game->list_maps[i], file);
+        game->list_maps[i] = map_read(file);
     }
+
+    game->sprites = sprites_new();
+    game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
+
+    return game;
 }
 
 struct map *game_get_current_map(struct game *game) {
@@ -218,11 +222,10 @@ static void change_current_level(struct game *game, int level) {
 
     game_set_current_level(game, level);
 
-    struct map *map = game_get_current_map(game);
     struct player *player = game_get_player(game);
-
     player_set_num_bombs(player, NUM_BOMBS_MAX);
-    map_init_list_monsters(map);
+
+    struct map *map = game_get_current_map(game);
     game->window = window_create(SIZE_BLOC * map_get_width(map), SIZE_BLOC * map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
 }
 

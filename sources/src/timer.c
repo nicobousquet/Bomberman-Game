@@ -40,12 +40,21 @@ void timer_write(struct timer *timer, FILE *file) {
     fwrite(timer, sizeof(struct timer), 1, file);
 }
 
-void timer_read(struct timer *timer, FILE *file) {
-    assert(timer);
+struct timer *timer_read(FILE *file) {
     assert(file);
 
+    struct timer *timer = malloc(sizeof(struct timer));
+
+    if (!timer) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+
     fread(timer, sizeof(struct timer), 1, file);
+
     timer->start_time = SDL_GetTicks() - (timer->duration - timer->remaining);
+
+    return timer;
 }
 
 void timer_start(struct timer *timer, int duration) {

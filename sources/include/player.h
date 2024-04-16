@@ -27,10 +27,10 @@ void player_write(struct player *player, FILE *file);
 
 /**
  * @brief Read the player from a file.
- * @param player The player to read.
  * @param file The file to read the player from.
+ * @return A pointer to the player read.
  */
-void player_read(struct player *player, FILE *file);
+struct player *player_read(FILE *file);
 
 /**
  * @brief Get the current x-coordinate of the player's position.

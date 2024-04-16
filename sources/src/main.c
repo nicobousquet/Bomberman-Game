@@ -11,14 +11,16 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    struct game *game = game_new();
+    struct game *game = NULL;
 
     FILE *backup_file = fopen(FILENAME_BACKUP, "rb");
 
     if (backup_file) {
-        game_read(game, backup_file);
+        game = game_read(backup_file);
         fclose(backup_file);
         remove(FILENAME_BACKUP);
+    } else {
+        game = game_new();
     }
 
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);

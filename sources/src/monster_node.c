@@ -52,15 +52,21 @@ void monster_node_write(struct monster_node *monster_node, FILE *file) {
     timer_write(monster_node->timer, file);
 }
 
-void monster_node_read(struct monster_node *monster_node, FILE *file) {
-    assert(monster_node);
+struct monster_node *monster_node_read(FILE *file) {
     assert(file);
 
-    struct timer *timer = monster_node->timer;
+    struct monster_node *monster_node = malloc(sizeof(struct monster_node));
+
+    if (!monster_node) {
+        fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
+        exit(EXIT_FAILURE);
+    }
 
     fread(monster_node, sizeof(struct monster_node), 1, file);
-    monster_node->timer = timer;
-    timer_read(monster_node->timer, file);
+
+    monster_node->timer = timer_read(file);
+
+    return monster_node;
 }
 
 int monster_node_get_x(struct monster_node *monster_node) {

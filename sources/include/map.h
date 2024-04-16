@@ -37,10 +37,10 @@ void map_write(struct map *map, FILE *file);
 
 /**
  * @brief Read a map from a file.
- * @param map The map to read.
  * @param file The file to read the map from.
+ * @return A pointer to the map read.
  */
-void map_read(struct map *map, FILE *file);
+struct map *map_read(FILE *file);
 
 /**
  * @brief Get the width of the map.
@@ -151,12 +151,6 @@ void map_set_cell_value(struct map *map, int x, int y, unsigned char value);
  * @param map A pointer to the map.
  */
 void map_display(struct map *map, struct SDL_Surface *window, struct sprites *sprites);
-
-/**
- * @brief Initialize the list of monsters on the map.
- * @param map A pointer to the map.
- */
-void map_init_list_monsters(struct map *map);
 
 /**
 @brief Set a bomb on the map at the player's current position.

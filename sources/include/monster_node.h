@@ -28,10 +28,10 @@ void monster_node_write(struct monster_node *monster_node, FILE *file);
 
 /**
  * @brief Read a monster node from a file.
- * @param monster_node The monster node to read.
  * @param file The file to read the monster node from.
+ * @return A pointer to the monster read.
  */
-void monster_node_read(struct monster_node *monster_node, FILE *file);
+struct monster_node *monster_node_read(FILE *file);
 
 /**
  * @brief Set the x-coordinate of the monster node.

@@ -24,10 +24,10 @@ void game_write(struct game *game, FILE *file);
 
 /**
  * @brief Read the game from a file.
- * @param game The game to read.
  * @param file The file to read the game from.
+ * @return A pointer to the game read.
  */
-void game_read(struct game *game, FILE *file);
+struct game *game_read(FILE *file);
 
 /**
  * @brief Get the player of the game.
