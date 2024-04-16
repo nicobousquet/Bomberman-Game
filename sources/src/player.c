@@ -64,10 +64,10 @@ void player_read(struct player *player, FILE *file) {
     assert(player);
     assert(file);
 
-    struct timer *timer_invicibility = player->timer_invincibility;
+    struct timer *timer_invincibility = player->timer_invincibility;
 
     fread(player, sizeof(struct player), 1, file);
-    player->timer_invincibility = timer_invicibility;
+    player->timer_invincibility = timer_invincibility;
     timer_read(player->timer_invincibility, file);
 }
 
