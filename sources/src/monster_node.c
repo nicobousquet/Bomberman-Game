@@ -116,7 +116,7 @@ void monster_node_display(struct monster_node *monster_node, struct SDL_Surface 
     assert(monster_node);
     assert(window);
     assert(sprites);
-    
+
     window_display_image(window, sprites_get_monster(sprites, monster_node->direction), monster_node->x * SIZE_BLOC, monster_node->y * SIZE_BLOC);
 }
 

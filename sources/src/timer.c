@@ -60,7 +60,7 @@ void timer_start(struct timer *timer, int duration) {
 void timer_update(struct timer *timer) {
     assert(timer);
 
-    if ((timer->remaining = timer->duration - (int)(SDL_GetTicks() - timer->start_time)) < 0) {
+    if ((timer->remaining = timer->duration - (int) (SDL_GetTicks() - timer->start_time)) < 0) {
         timer->state = IS_OVER;
     }
 }
