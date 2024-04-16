@@ -32,6 +32,11 @@
 #define NUM_BOMBS_MAX 9
 
 /**
+ * @brief Maximum range of bombs Sallowed.
+ */
+#define RANGE_BOMBS_MAX 9
+
+/**
  * @brief Maximum number of keys allowed.
  */
 #define NUM_KEYS_MAX 9

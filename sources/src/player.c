@@ -173,7 +173,7 @@ int player_get_range_bombs(struct player *player) {
 void player_inc_range_bombs(struct player *player) {
     assert(player);
 
-    if (player->range_bombs < NUM_BOMBS_MAX) {
+    if (player->range_bombs < RANGE_BOMBS_MAX) {
         player->range_bombs++;
     }
 }
