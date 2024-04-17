@@ -43,7 +43,7 @@ struct game *game_new(void) {
     if (fscanf(data_file, "%i%i:%i,%i%s", &game->num_levels, &game->current_level, &x_player, &y_player, map_pattern) != 5) {
         perror("Error reading data from game_data.txt");
         exit(EXIT_FAILURE);
-    };
+    }
 
     game->player = player_new(x_player, y_player, NUM_BOMBS_MAX);
     game->is_paused = 0;

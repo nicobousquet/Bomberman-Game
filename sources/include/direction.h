@@ -1,13 +1,6 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
-#include <stdint.h>
-
-/**
- * @file direction.h
- * @brief This file contains the declaration of the direction enumeration and related functions.
- */
-
 /**
  * @enum direction
  * @brief Represents a direction.

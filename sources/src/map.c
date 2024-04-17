@@ -21,7 +21,7 @@ struct map *map_new(char *filename) {
 
     struct map *map = malloc(sizeof(struct map));
 
-    if (map == NULL) {
+    if (!map) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
         exit(EXIT_FAILURE);
     }
