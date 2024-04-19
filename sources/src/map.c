@@ -278,6 +278,7 @@ unsigned char map_get_cell_value(struct map *map, int x, int y) {
 
 void map_set_cell_value(struct map *map, int x, int y, unsigned char value) {
     assert(map);
+    assert(map->grid);
     assert(map_is_inside(map, x, y));
 
     map->grid[CELL(x, y)] = value;

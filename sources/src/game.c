@@ -38,9 +38,9 @@ struct game *game_new(void) {
     }
 
     int x_player, y_player;
-    char map_pattern[10];
+    char name_pattern[50];
 
-    if (fscanf(data_file, "%i%i:%i,%i%s", &game->num_levels, &game->current_level, &x_player, &y_player, map_pattern) != 5) {
+    if (fscanf(data_file, "%i%i:%i,%i%49s", &game->num_levels, &game->current_level, &x_player, &y_player, name_pattern) != 5) {
         perror("Error reading data from game_data.txt");
         exit(EXIT_FAILURE);
     }
@@ -58,7 +58,7 @@ struct game *game_new(void) {
     char map_filename[100];
 
     for (int i = 0; i < game->num_levels; i++) {
-        sprintf(map_filename, "maps/%s_%i", map_pattern, i);
+        snprintf(map_filename, sizeof(map_filename), "maps/%s_%i", name_pattern, i);
         game->list_maps[i] = map_new(map_filename);
     }
 
