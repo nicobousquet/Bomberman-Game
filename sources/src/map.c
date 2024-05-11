@@ -5,6 +5,11 @@
 #include <stdlib.h>
 
 /**
+ * @brief Macro to calculate the index of a cell in the map given its row and column.
+ */
+#define CELL(i, j) ((i) + (j) * map->width)
+
+/**
  * @brief Structure representing a map.
  */
 struct map {
@@ -40,6 +45,7 @@ struct map *map_new(char *filename) {
     }
 
     map->grid = malloc(sizeof(unsigned char) * (map->width * map->height));
+
     if (!map->grid) {
         fprintf(stderr, "Malloc failed line %d, file %s", __LINE__, __FILE__);
         exit(EXIT_FAILURE);

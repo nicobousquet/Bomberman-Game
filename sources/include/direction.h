@@ -9,8 +9,7 @@ enum direction {
     NORTH = 0, /**< North direction */
     EAST,      /**< East direction */
     SOUTH,     /**< South direction */
-    WEST,       /**< West direction */
-    NONE
+    WEST       /**< West direction */
 };
 
 /**
@@ -38,5 +37,7 @@ int direction_get_x(enum direction, int x_src, int delta);
  * @return The resulting y-coordinate.
  */
 int direction_get_y(enum direction, int y_src, int delta);
+
+enum direction direction_get_from_coordinates(int x_src, int y_src, int x_dest, int y_dest);
 
 #endif // DIRECTION_H

@@ -1,19 +1,34 @@
 #include "../include/dijkstra.h"
-#include "../include/constant.h"
 #include "../include/random.h"
 #include <limits.h>
 #include <assert.h>
 
+#define VERTEX(i, j) ((i) + (j) * graph->width)
+
 struct adj_vertex {
-    enum direction direction;
+    int x;
+    int y;
     struct adj_vertex *next;
 };
 
 struct vertex {
+    int x;
+    int y;
     int distance;
     int is_visited;
     struct adj_vertex *adj_vertex_head;
-    enum direction parent_dir;
+    int x_prev;
+    int y_prev;
+};
+
+struct graph {
+    int width;
+    int height;
+    struct vertex *list_vertices;
+    int x_start;
+    int y_start;
+    int x_dest;
+    int y_dest;
 };
 
 static int is_obstacle(struct map *map, int x, int y) {
@@ -36,12 +51,14 @@ static int is_obstacle(struct map *map, int x, int y) {
     }
 }
 
-static struct adj_vertex *adj_vertex_new(enum direction direction) {
+static struct adj_vertex *adj_vertex_new(int x, int y) {
     struct adj_vertex *new_adj_vertex = malloc(sizeof(struct adj_vertex));
 
     assert(new_adj_vertex);
 
-    new_adj_vertex->direction = direction;
+    new_adj_vertex->x = x;
+    new_adj_vertex->y = y;
+    new_adj_vertex->next = NULL;
 
     return new_adj_vertex;
 }
@@ -62,9 +79,12 @@ static void vertex_add_adj_vertex(struct vertex *vertex, struct adj_vertex *to_a
 
 static struct vertex vertex_new(struct map *map, int x, int y) {
     struct vertex vertex;
+    vertex.x = x;
+    vertex.y = y;
     vertex.distance = INT_MAX;
     vertex.is_visited = 0;
-    vertex.parent_dir = NONE;
+    vertex.x_prev = -1;
+    vertex.y_prev = -1;
     vertex.adj_vertex_head = NULL;
 
     if (is_obstacle(map, x, y)) {
@@ -77,7 +97,7 @@ static struct vertex vertex_new(struct map *map, int x, int y) {
 
     for (int i = 0; i < 4; i++) {
         if (!is_obstacle(map, direction_get_x(directions[i], x, 1), direction_get_y(directions[i], y, 1))) {
-            struct adj_vertex *adj_vertex = adj_vertex_new(directions[i]);
+            struct adj_vertex *adj_vertex = adj_vertex_new(direction_get_x(directions[i], x, 1), direction_get_y(directions[i], y, 1));
             vertex_add_adj_vertex(&vertex, adj_vertex);
         }
     }
@@ -99,46 +119,51 @@ static void vertex_free(struct vertex *to_free) {
     }
 }
 
-static enum direction opposite_direction(enum direction dir) {
-    switch (dir) {
-        case NORTH:
-            return SOUTH;
-        case SOUTH:
-            return NORTH;
-        case EAST:
-            return WEST;
-        case WEST:
-            return EAST;
-        default:
-            return NONE;
-    }
+static struct vertex *graph_get_vertex(struct graph *graph, int x, int y) {
+    assert(graph);
+
+    return &graph->list_vertices[VERTEX(x, y)];
 }
 
-static struct vertex *graph_new(struct map *map) {
+static struct graph *graph_new(struct map *map, struct monster_node *monster, struct player *player) {
     assert(map);
 
-    struct vertex *graph = malloc(map_get_height(map) * map_get_width(map) * sizeof(struct vertex));
+    struct graph *graph = malloc(sizeof(struct graph));
 
     assert(graph);
 
-    for (int i = 0; i < map_get_width(map); i++) {
-        for (int j = 0; j < map_get_height(map); j++) {
-            graph[CELL(i, j)] = vertex_new(map, i, j);
+    graph->width = map_get_width(map);
+    graph->height = map_get_height(map);
+
+    graph->list_vertices = malloc(graph->width * graph->height * sizeof(struct vertex));
+
+    assert(graph->list_vertices);
+
+    for (int i = 0; i < graph->width; i++) {
+        for (int j = 0; j < graph->height; j++) {
+            graph->list_vertices[VERTEX(i, j)] = vertex_new(map, i, j);
         }
     }
+
+    graph->x_start = monster_node_get_x(monster);
+    graph->y_start = monster_node_get_y(monster);
+
+    graph->x_dest = player_get_x(player);
+    graph->y_dest = player_get_y(player);
 
     return graph;
 }
 
-static void graph_free(struct vertex *graph, struct map *map) {
+static void graph_free(struct graph *graph) {
     assert(graph);
-    assert(map);
 
-    for (int i = 0; i < map_get_width(map); i++) {
-        for (int j = 0; j < map_get_height(map); j++) {
-            vertex_free(&graph[CELL(i, j)]);
+    for (int i = 0; i < graph->width; i++) {
+        for (int j = 0; j < graph->height; j++) {
+            vertex_free(graph_get_vertex(graph, i, j));
         }
     }
+
+    free(graph->list_vertices);
 
     free(graph);
 }
@@ -152,67 +177,62 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
 
         if (timer_get_state(monster_node_get_timer(current)) == IS_OVER) {
 
-            struct vertex *graph = graph_new(map);
+            struct graph *graph = graph_new(map, current, player);
 
-            int start_x = monster_node_get_x(current);
-            int start_y = monster_node_get_y(current);
-            graph[CELL(start_x, start_y)].distance = 0;
+            graph_get_vertex(graph, graph->x_start, graph->y_start)->distance = 0;
 
-            for (int count = 0; count < map_get_width(map) * map_get_height(map); count++) {
+            for (int count = 0; count < graph->width * graph->height; count++) {
 
                 int min_distance = INT_MAX;
-                int min_index = -1;
+                int x_min = -1;
+                int y_min = -1;
 
-                for (int i = 0; i < map_get_width(map) * map_get_height(map); i++) {
-                    if (!graph[i].is_visited && graph[i].distance < min_distance) {
-                        min_distance = graph[i].distance;
-                        min_index = i;
+                for (int i = 0; i < graph->width; i++) {
+                    for (int j = 0; j < graph->height; j++) {
+                        if (!graph_get_vertex(graph, i, j)->is_visited && graph_get_vertex(graph, i, j)->distance < min_distance) {
+                            min_distance = graph_get_vertex(graph, i, j)->distance;
+                            x_min = i;
+                            y_min = j;
+                        }
                     }
                 }
 
-                if (min_index == -1) {
+                if (x_min == -1 || y_min == -1) {
                     break;
                 }
 
-                graph[min_index].is_visited = 1;
+                graph_get_vertex(graph, x_min, y_min)->is_visited = 1;
 
-                if (min_index == CELL(player_get_x(player), player_get_y(player))) {
+                if (x_min == graph->x_dest && y_min == graph->y_dest) {
                     break;
                 }
 
-                for (struct adj_vertex *current_adj = graph[min_index].adj_vertex_head; current_adj != NULL; current_adj = current_adj->next) {
-                    int direction_x = direction_get_x(current_adj->direction, min_index % map_get_width(map), 1);
-                    int direction_y = direction_get_y(current_adj->direction, min_index / map_get_width(map), 1);
-                    int adjacent_index = CELL(direction_x, direction_y);
+                for (struct adj_vertex *current_adj = graph_get_vertex(graph, x_min, y_min)->adj_vertex_head; current_adj != NULL; current_adj = current_adj->next) {
 
-                    if (!graph[adjacent_index].is_visited && graph[min_index].distance != INT_MAX && graph[min_index].distance + 1 < graph[adjacent_index].distance) {
-                        graph[adjacent_index].distance = graph[min_index].distance + 1;
+                    if (!graph_get_vertex(graph, current_adj->x, current_adj->y)->is_visited && graph_get_vertex(graph, x_min, y_min)->distance != INT_MAX && graph_get_vertex(graph, x_min, y_min)->distance + 1 < graph_get_vertex(graph, current_adj->x, current_adj->y)->distance) {
+                        graph_get_vertex(graph, current_adj->x, current_adj->y)->distance = graph_get_vertex(graph, x_min, y_min)->distance + 1;
 
-                        enum direction parent_dir = opposite_direction(current_adj->direction);
-                        graph[adjacent_index].parent_dir = parent_dir;
+                        graph_get_vertex(graph, current_adj->x, current_adj->y)->x_prev = x_min;
+                        graph_get_vertex(graph, current_adj->x, current_adj->y)->y_prev = y_min;
                     }
                 }
             }
 
-            int x = player_get_x(player);
-            int y = player_get_y(player);
-            struct vertex *v = &graph[CELL(x, y)];
+            struct vertex *v = graph_get_vertex(graph, graph->x_dest, graph->y_dest);
 
-            if (v->parent_dir == NONE) {
-                graph_free(graph, map);
+            if (v->x_prev == -1 || v->y_prev == -1) {
+                graph_free(graph);
 
                 random_move_monster(map, current, player);
 
                 continue;
             }
 
-            while (direction_get_x(v->parent_dir, x, 1) != monster_node_get_x(current) || direction_get_y(v->parent_dir, y, 1) != monster_node_get_y(current)) {
-                x = direction_get_x(v->parent_dir, x, 1);
-                y = direction_get_y(v->parent_dir, y, 1);
-                v = &graph[CELL(x, y)];
+            while (v->x_prev != monster_node_get_x(current) || v->y_prev != monster_node_get_y(current)) {
+                v = graph_get_vertex(graph, v->x_prev, v->y_prev);
             }
 
-            enum direction next_dir = opposite_direction(v->parent_dir);
+            enum direction next_dir = direction_get_from_coordinates(graph->x_start, graph->y_start, v->x, v->y);
 
             if (map_can_monster_move(map, player, current, next_dir)) {
                 if (map_will_monster_meet_player(current, player, next_dir)) {
@@ -222,7 +242,7 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
                 }
             }
 
-            graph_free(graph, map);
+            graph_free(graph);
         }
     }
 }

@@ -1,4 +1,6 @@
 #include "../include/direction.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 int direction_get_x(enum direction direction, int x_src, int delta) {
     int x_dest = x_src;
@@ -22,4 +24,22 @@ int direction_get_y(enum direction direction, int y_src, int delta) {
     }
 
     return y_dest;
+}
+
+enum direction direction_get_from_coordinates(int x_src, int y_src, int x_dest, int y_dest) {
+    int delta_x = x_dest - x_src;
+    int delta_y = y_dest - y_src;
+
+    if (delta_x >= 1 && delta_y == 0) {
+        return EAST;
+    } else if (delta_x <= -1 && delta_y == 0) {
+        return WEST;
+    } else if (delta_x == 0 && delta_y <= -1) {
+        return NORTH;
+    } else if (delta_x == 0 && delta_y >= 1) {
+        return SOUTH;
+    } else {
+        perror("No direction");
+        exit(EXIT_FAILURE);
+    }
 }
