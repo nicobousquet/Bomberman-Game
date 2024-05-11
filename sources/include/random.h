@@ -3,6 +3,8 @@
 
 #include "map.h"
 
+void random_move_monster(struct map *map, struct monster_node *monster, struct player *player);
+
 /**
 @brief Update the state of monsters and their position randomly on the map.
 @param map A pointer to the map.

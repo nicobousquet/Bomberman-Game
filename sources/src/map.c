@@ -645,7 +645,7 @@ int map_move_player(struct map *map, struct player *player, enum direction direc
     return 1;
 }
 
-static int will_monster_meet_other_monsters(struct monster_node *current_monster, struct monster_node *monster_head, enum direction current_monster_direction) {
+int map_will_monster_meet_other_monsters(struct monster_node *current_monster, struct monster_node *monster_head, enum direction current_monster_direction) {
     assert(monster_head);
 
     for (struct monster_node *current = monster_head; current != NULL; current = monster_node_get_next(current)) {
@@ -669,7 +669,7 @@ int map_can_monster_move(struct map *map, struct player *player, struct monster_
         return 0;
     }
 
-    if (will_monster_meet_other_monsters(monster, map->monster_head, monster_direction)) {
+    if (map_will_monster_meet_other_monsters(monster, map->monster_head, monster_direction)) {
         return 0;
     }
 

@@ -1,5 +1,6 @@
 #include "../include/game.h"
 #include "../include/random.h"
+#include "../include/dijkstra.h"
 #include "../include/constant.h"
 #include <assert.h>
 #include <stdlib.h>
@@ -413,6 +414,8 @@ int game_update(struct game *game) {
 
         if (map_get_monster_strategy(map) == RANDOM_STRATEGY) {
             random_update_monsters(map, player);
+        } else {
+            dijkstra_update_monsters(map, player);
         }
     }
 

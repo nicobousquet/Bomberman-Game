@@ -9,7 +9,8 @@ enum direction {
     NORTH = 0, /**< North direction */
     EAST,      /**< East direction */
     SOUTH,     /**< South direction */
-    WEST       /**< West direction */
+    WEST,       /**< West direction */
+    NONE
 };
 
 /**

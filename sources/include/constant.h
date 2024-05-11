@@ -64,7 +64,7 @@
 /**
  * @brief Macro to calculate the index of a cell in the map given its row and column.
  */
-#define CELL(i, j) ((i) + (j) * map->width)
+#define CELL(i, j) ((i) + (j) * map_get_width(map))
 
 /**
  * @brief Number of different bonus types.

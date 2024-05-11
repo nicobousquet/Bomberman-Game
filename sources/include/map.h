@@ -183,6 +183,8 @@ int map_move_player(struct map *map, struct player *player, enum direction direc
 */
 int map_will_monster_meet_player(struct monster_node *monster, struct player *player, enum direction monster_direction);
 
+int map_will_monster_meet_other_monsters(struct monster_node *current_monster, struct monster_node *monster_head, enum direction current_monster_direction);
+
 /**
 @brief Checks if a monster_node can move.
 @param A pointer to the player.
