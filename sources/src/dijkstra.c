@@ -77,6 +77,28 @@ static void vertex_add_adj_vertex(struct vertex *vertex, struct adj_vertex *to_a
     vertex->adj_vertex_head = to_add;
 }
 
+static void vertex_remove_adj_vertex(struct vertex *vertex, struct adj_vertex *to_remove) {
+    assert(vertex);
+    assert(to_remove);
+
+    if (vertex->adj_vertex_head == to_remove) {
+        vertex->adj_vertex_head = to_remove->next;
+        adj_vertex_free(to_remove);
+
+        return;
+    }
+
+    for (struct adj_vertex *current = vertex->adj_vertex_head; current != NULL; current = current->next) {
+
+        if (current->next == to_remove) {
+            current->next = to_remove->next;
+            adj_vertex_free(to_remove);
+
+            return;
+        }
+    }
+}
+
 static struct vertex vertex_new(struct map *map, int x, int y) {
     struct vertex vertex;
     vertex.x = x;
@@ -113,9 +135,9 @@ static void vertex_free(struct vertex *to_free) {
     struct adj_vertex *current = to_free->adj_vertex_head;
 
     while (current != NULL) {
-        struct adj_vertex *tmp = current;
-        current = current->next;
-        adj_vertex_free(tmp);
+        struct adj_vertex *next = current->next;
+        vertex_remove_adj_vertex(to_free, current);
+        current = next;
     }
 }
 
