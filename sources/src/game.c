@@ -81,7 +81,6 @@ void game_free(struct game *game) {
 
     free(game->list_maps);
     sprites_free(game->sprites);
-    free(game->sprites);
     SDL_FreeSurface(game->window);
     free(game);
 }
@@ -231,6 +230,7 @@ static void change_current_level(struct game *game, int level) {
 }
 
 static void save_game(struct game *game) {
+    assert(game);
 
     FILE *file = fopen(FILENAME_BACKUP, "wb");
 

@@ -181,12 +181,25 @@ static void monster_unload(struct sprites *sprites) {
 }
 
 static void sprites_load(struct sprites *sprites) {
+    assert(sprites);
+
     map_load(sprites);
     bonus_load(sprites);
     banner_load(sprites);
     player_load(sprites);
     bomb_load(sprites);
     monster_load(sprites);
+}
+
+static void sprites_unload(struct sprites *sprites) {
+    assert(sprites);
+
+    map_unload(sprites);
+    bonus_unload(sprites);
+    banner_unload(sprites);
+    player_unload(sprites);
+    bomb_unload(sprites);
+    monster_unload(sprites);
 }
 
 struct sprites *sprites_new() {
@@ -203,12 +216,10 @@ struct sprites *sprites_new() {
 }
 
 void sprites_free(struct sprites *sprites) {
-    map_unload(sprites);
-    bonus_unload(sprites);
-    banner_unload(sprites);
-    player_unload(sprites);
-    bomb_unload(sprites);
-    monster_unload(sprites);
+    assert(sprites);
+
+    sprites_unload(sprites);
+    free(sprites);
 }
 
 SDL_Surface *sprites_get_number(struct sprites *sprites, int number) {

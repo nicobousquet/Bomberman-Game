@@ -111,10 +111,13 @@ void monster_node_set_direction(struct monster_node *monster_node, enum directio
 }
 
 void monster_node_set_timer(struct monster_node *monster_node, struct timer *timer) {
+    assert(monster_node);
+    assert(timer);
     monster_node->timer = timer;
 }
 
 struct timer *monster_node_get_timer(struct monster_node *monster_node) {
+    assert(monster_node);
     return monster_node->timer;
 }
 
