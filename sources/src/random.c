@@ -3,6 +3,10 @@
 #include <time.h>
 
 void random_move_monster(struct map *map, struct monster_node *monster, struct player *player) {
+    assert(map);
+    assert(monster);
+    assert(player);
+
     timer_update(monster_node_get_timer(monster));
 
     if (timer_get_state(monster_node_get_timer(monster)) == IS_OVER) {

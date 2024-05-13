@@ -100,6 +100,8 @@ static void vertex_remove_adj_vertex(struct vertex *vertex, struct adj_vertex *t
 }
 
 static struct vertex vertex_new(struct map *map, int x, int y) {
+    assert(map);
+
     struct vertex vertex;
     vertex.x = x;
     vertex.y = y;
@@ -149,6 +151,8 @@ static struct vertex *graph_get_vertex(struct graph *graph, int x, int y) {
 
 static struct graph *graph_new(struct map *map, struct monster_node *monster, struct player *player) {
     assert(map);
+    assert(monster);
+    assert(player);
 
     struct graph *graph = malloc(sizeof(struct graph));
 
