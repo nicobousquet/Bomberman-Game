@@ -5,10 +5,10 @@
 
 #define VERTEX(i, j) ((i) + (j) * graph->width)
 
-struct adj_vertex {
+struct adj_vertex_node {
     int x;
     int y;
-    struct adj_vertex *next;
+    struct adj_vertex_node *next;
 };
 
 struct vertex {
@@ -16,7 +16,7 @@ struct vertex {
     int y;
     int distance;
     int is_visited;
-    struct adj_vertex *adj_vertex_head;
+    struct adj_vertex_node *adj_vertex_head;
     int x_prev;
     int y_prev;
 };
@@ -51,8 +51,8 @@ static int is_obstacle(struct map *map, int x, int y) {
     }
 }
 
-static struct adj_vertex *adj_vertex_new(int x, int y) {
-    struct adj_vertex *new_adj_vertex = malloc(sizeof(struct adj_vertex));
+static struct adj_vertex_node *adj_vertex_node_new(int x, int y) {
+    struct adj_vertex_node *new_adj_vertex = malloc(sizeof(struct adj_vertex_node));
 
     assert(new_adj_vertex);
 
@@ -63,13 +63,12 @@ static struct adj_vertex *adj_vertex_new(int x, int y) {
     return new_adj_vertex;
 }
 
-static void adj_vertex_free(struct adj_vertex *to_free) {
+static void adj_vertex_node_free(struct adj_vertex_node *to_free) {
     assert(to_free);
-
     free(to_free);
 }
 
-static void vertex_add_adj_vertex(struct vertex *vertex, struct adj_vertex *to_add) {
+static void vertex_add_adj_vertex_node(struct vertex *vertex, struct adj_vertex_node *to_add) {
     assert(vertex);
     assert(to_add);
 
@@ -77,22 +76,22 @@ static void vertex_add_adj_vertex(struct vertex *vertex, struct adj_vertex *to_a
     vertex->adj_vertex_head = to_add;
 }
 
-static void vertex_remove_adj_vertex(struct vertex *vertex, struct adj_vertex *to_remove) {
+static void vertex_remove_adj_vertex_node(struct vertex *vertex, struct adj_vertex_node *to_remove) {
     assert(vertex);
     assert(to_remove);
 
     if (vertex->adj_vertex_head == to_remove) {
         vertex->adj_vertex_head = to_remove->next;
-        adj_vertex_free(to_remove);
+        adj_vertex_node_free(to_remove);
 
         return;
     }
 
-    for (struct adj_vertex *current = vertex->adj_vertex_head; current != NULL; current = current->next) {
+    for (struct adj_vertex_node *current = vertex->adj_vertex_head; current != NULL; current = current->next) {
 
         if (current->next == to_remove) {
             current->next = to_remove->next;
-            adj_vertex_free(to_remove);
+            adj_vertex_node_free(to_remove);
 
             return;
         }
@@ -121,8 +120,8 @@ static struct vertex vertex_new(struct map *map, int x, int y) {
 
     for (int i = 0; i < 4; i++) {
         if (!is_obstacle(map, direction_get_x(directions[i], x, 1), direction_get_y(directions[i], y, 1))) {
-            struct adj_vertex *adj_vertex = adj_vertex_new(direction_get_x(directions[i], x, 1), direction_get_y(directions[i], y, 1));
-            vertex_add_adj_vertex(&vertex, adj_vertex);
+            struct adj_vertex_node *adj_vertex = adj_vertex_node_new(direction_get_x(directions[i], x, 1), direction_get_y(directions[i], y, 1));
+            vertex_add_adj_vertex_node(&vertex, adj_vertex);
         }
     }
 
@@ -134,11 +133,11 @@ static struct vertex vertex_new(struct map *map, int x, int y) {
 static void vertex_free(struct vertex *to_free) {
     assert(to_free);
 
-    struct adj_vertex *current = to_free->adj_vertex_head;
+    struct adj_vertex_node *current = to_free->adj_vertex_head;
 
     while (current != NULL) {
-        struct adj_vertex *next = current->next;
-        vertex_remove_adj_vertex(to_free, current);
+        struct adj_vertex_node *next = current->next;
+        vertex_remove_adj_vertex_node(to_free, current);
         current = next;
     }
 }
@@ -233,11 +232,11 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
                     break;
                 }
 
-                for (struct adj_vertex *current_adj = graph_get_vertex(graph, x_min, y_min)->adj_vertex_head; current_adj != NULL; current_adj = current_adj->next) {
+                for (struct adj_vertex_node *current_adj = graph_get_vertex(graph, x_min, y_min)->adj_vertex_head; current_adj != NULL; current_adj = current_adj->next) {
 
                     if (!graph_get_vertex(graph, current_adj->x, current_adj->y)->is_visited && graph_get_vertex(graph, x_min, y_min)->distance != INT_MAX && graph_get_vertex(graph, x_min, y_min)->distance + 1 < graph_get_vertex(graph, current_adj->x, current_adj->y)->distance) {
-                        graph_get_vertex(graph, current_adj->x, current_adj->y)->distance = graph_get_vertex(graph, x_min, y_min)->distance + 1;
 
+                        graph_get_vertex(graph, current_adj->x, current_adj->y)->distance = graph_get_vertex(graph, x_min, y_min)->distance + 1;
                         graph_get_vertex(graph, current_adj->x, current_adj->y)->x_prev = x_min;
                         graph_get_vertex(graph, current_adj->x, current_adj->y)->y_prev = y_min;
                     }
