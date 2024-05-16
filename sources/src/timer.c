@@ -74,12 +74,12 @@ void timer_update(struct timer *timer) {
     }
 }
 
-long timer_get_remaining(struct timer *timer) {
+int timer_get_remaining(struct timer *timer) {
     assert(timer);
     return timer->remaining;
 }
 
-long timer_get_duration(struct timer *timer) {
+int timer_get_duration(struct timer *timer) {
     assert(timer);
     return timer->duration;
 }

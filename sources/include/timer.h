@@ -42,14 +42,14 @@ struct timer *timer_read(FILE *file);
  * @param timer The timer to get the duration from.
  * @return The duration of the timer in milliseconds.
  */
-long timer_get_duration(struct timer *timer);
+int timer_get_duration(struct timer *timer);
 
 /**
  * @brief Get the remaining time of the timer.
  * @param timer The timer to get the remaining time from.
  * @return The remaining time of the timer in milliseconds.
  */
-long timer_get_remaining(struct timer *timer);
+int timer_get_remaining(struct timer *timer);
 
 /**
  * @brief Set the start time of the timer.
