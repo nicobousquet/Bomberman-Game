@@ -98,7 +98,3 @@ void timer_set_state(struct timer *timer, enum state_timer state) {
     assert(timer);
     timer->state = state;
 }
-
-
-
-

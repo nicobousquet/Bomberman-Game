@@ -439,7 +439,8 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
 
                 } else if (is_explosion_reaching_player(x, y, player)) {
                     player_dec_num_lives(player);
-                    bomb_node_set_direction_range(current_bomb, dir, range - 1);
+                    map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
+                    bomb_node_set_direction_range(current_bomb, dir, range);
 
                     return;
 

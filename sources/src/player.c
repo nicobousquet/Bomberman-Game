@@ -248,4 +248,3 @@ void player_move(struct player *player, enum direction direction) {
     player_set_x(player, direction_get_x(direction, player_get_x(player), 1));
     player_set_y(player, direction_get_y(direction, player_get_y(player), 1));
 }
-

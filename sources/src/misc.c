@@ -22,4 +22,3 @@ SDL_Surface *image_load(const char *filename) {
 
     return img;
 }
-

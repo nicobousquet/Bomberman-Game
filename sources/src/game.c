@@ -222,11 +222,9 @@ static void change_current_level(struct game *game, int level) {
 
     game_set_current_level(game, level);
 
-    struct player *player = game_get_player(game);
-    player_set_num_bombs(player, NUM_BOMBS_MAX);
+    player_set_num_bombs(game_get_player(game), NUM_BOMBS_MAX);
 
-    struct map *map = game_get_current_map(game);
-    game->window = window_create(SIZE_BLOC * map_get_width(map), SIZE_BLOC * map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
+    game->window = window_create(SIZE_BLOC * map_get_width(game_get_current_map(game)), SIZE_BLOC * map_get_height(game_get_current_map(game)) + BANNER_HEIGHT + LINE_HEIGHT);
 }
 
 static void save_game(struct game *game) {
@@ -242,6 +240,9 @@ static void save_game(struct game *game) {
         printf("#########################################\n");
         printf("  Current game saved in backup/data.bin\n");
         printf("#########################################\n");
+    } else {
+        perror("fopen save_game");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -265,6 +266,7 @@ static int input_keyboard(struct game *game) {
                 case SDL_KEYDOWN: {
                     switch (event.key.keysym.sym) {
 
+                        // case ctrl + s
                         case SDLK_s:
                             if (event.key.keysym.mod & KMOD_CTRL) {
                                 save_game(game);
@@ -295,6 +297,7 @@ static int input_keyboard(struct game *game) {
                 case SDL_KEYDOWN: {
                     switch (event.key.keysym.sym) {
 
+                        // case ctrl + s
                         case SDLK_s:
                             if (event.key.keysym.mod & KMOD_CTRL) {
                                 save_game(game);
@@ -343,6 +346,7 @@ static int input_keyboard(struct game *game) {
                             game->is_paused = !game->is_paused;
                             break;
 
+                            // if pressing enter while looking toward the door
                         case SDLK_RETURN: {
 
                             int x_next_player = direction_get_x(player_get_direction(player), player_get_x(player), 1);
@@ -352,6 +356,7 @@ static int input_keyboard(struct game *game) {
                                 unsigned char type = map_get_cell_value(map, x_next_player, y_next_player);
 
                                 if (((type & 0xf1) == (CELL_DOOR | CLOSED)) && player_get_num_keys(player)) {
+                                    // opening the door
                                     map_set_cell_value(map, x_next_player, y_next_player, type & 0xfe);
                                     player_dec_num_keys(player);
                                 }
