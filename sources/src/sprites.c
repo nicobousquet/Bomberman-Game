@@ -64,7 +64,7 @@ struct sprites {
     SDL_Surface *door_closed;
     SDL_Surface *stone;
     SDL_Surface *tree;
-    SDL_Surface *bonus[6];
+    SDL_Surface *bonus[5];
     SDL_Surface *player_img[4];
     SDL_Surface *princess;
     SDL_Surface *monster_img[4];
@@ -137,7 +137,6 @@ static void map_unload(struct sprites *sprites) {
 }
 
 static void bonus_load(struct sprites *sprites) {
-    sprites->bonus[0] = NULL;
     sprites->bonus[BONUS_BOMB_RANGE_INC] = image_load(IMG_BONUS_BOMB_RANGE_INC);
     sprites->bonus[BONUS_BOMB_RANGE_DEC] = image_load(IMG_BONUS_BOMB_RANGE_DEC);
     sprites->bonus[BONUS_BOMB_NB_INC] = image_load(IMG_BONUS_BOMB_NB_INC);
@@ -146,10 +145,8 @@ static void bonus_load(struct sprites *sprites) {
 }
 
 static void bonus_unload(struct sprites *sprites) {
-    for (int i = 0; i < 6; i++) {
-        if (sprites->bonus[i]) {
-            SDL_FreeSurface(sprites->bonus[i]);
-        }
+    for (int i = 0; i < 5; i++) {
+        SDL_FreeSurface(sprites->bonus[i]);
     }
 }
 

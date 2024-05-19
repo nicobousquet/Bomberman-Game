@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <time.h>
 
 /**
  * @brief Macro to calculate the index of a cell in the map given its row and column.
@@ -358,8 +359,12 @@ static void set_bonus(struct map *map, int x, int y) {
 
     enum bonus_type bonus_type = map_get_cell_value(map, x, y) & 0x0f;
 
-    if (bonus_type == EMPTY) {
-        bonus_type = rand() % NUM_BONUS_TYPES + 1;
+    if (bonus_type == RANDOM) {
+        static int i = 0;
+
+        srand(time(NULL) + i++);
+
+        bonus_type = rand() % NUM_BONUS_TYPES;
     }
 
     if (bonus_type == BONUS_MONSTER) {

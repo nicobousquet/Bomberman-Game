@@ -17,13 +17,13 @@ enum bomb_type {
  * @brief Enumeration of bonus types.
  */
 enum bonus_type {
-    EMPTY = 0x00, /**< Empty bonus type. */
-    BONUS_BOMB_RANGE_DEC = 0x01, /**< Bonus type for decreasing bomb range. */
-    BONUS_BOMB_RANGE_INC = 0x02, /**< Bonus type for increasing bomb range. */
-    BONUS_BOMB_NB_DEC = 0x03, /**< Bonus type for decreasing bomb count. */
-    BONUS_BOMB_NB_INC = 0x04, /**< Bonus type for increasing bomb count. */
-    BONUS_LIFE = 0x05, /**< Bonus type for extra life. */
-    BONUS_MONSTER = 0x06 /**< Bonus type for summoning a monster. */
+    BONUS_BOMB_RANGE_DEC = 0x00, /**< Bonus type for decreasing bomb range. */
+    BONUS_BOMB_RANGE_INC = 0x01, /**< Bonus type for increasing bomb range. */
+    BONUS_BOMB_NB_DEC = 0x02, /**< Bonus type for decreasing bomb count. */
+    BONUS_BOMB_NB_INC = 0x03, /**< Bonus type for increasing bomb count. */
+    BONUS_LIFE = 0x04, /**< Bonus type for extra life. */
+    BONUS_MONSTER = 0x05, /**< Bonus type for summoning a monster. */
+    RANDOM = 0x06 /**< Random bonus type. */
 };
 
 /**
