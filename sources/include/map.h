@@ -126,7 +126,7 @@ int map_is_inside(struct map *map, int x, int y);
  * @param map A pointer to the map.
  * @return The strategy of the monsters.
  */
-enum strategy map_get_monster_strategy(struct map *map);
+enum strategy map_get_monsters_strategy(struct map *map);
 
 /**
  * @brief Get the value of the cell at the specified coordinates (x, y).

@@ -417,7 +417,7 @@ int game_update(struct game *game) {
     if (!game->is_paused) {
         map_update_bombs(map, player);
 
-        if (map_get_monster_strategy(map) == RANDOM_STRATEGY) {
+        if (map_get_monsters_strategy(map) == RANDOM_STRATEGY) {
             random_update_monsters(map, player);
         } else {
             dijkstra_update_monsters(map, player);

@@ -260,7 +260,7 @@ struct monster_node *map_get_monster_head(struct map *map) {
     return map->monster_head;
 }
 
-enum strategy map_get_monster_strategy(struct map *map) {
+enum strategy map_get_monsters_strategy(struct map *map) {
     assert(map);
     return map->monsters_strategy;
 }

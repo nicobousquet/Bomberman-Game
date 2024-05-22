@@ -13,7 +13,7 @@ void random_move_monster(struct map *map, struct monster_node *monster, struct p
 
         static int i = 0;
 
-         srand(time(NULL) + i++);
+        srand(time(NULL) + i++);
 
         int visited_directions[4] = {0, 0, 0, 0};
         while (visited_directions[NORTH] != 1 || visited_directions[SOUTH] != 1 || visited_directions[EAST] != 1 || visited_directions[WEST] != 1) {
