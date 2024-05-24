@@ -24,7 +24,7 @@ struct vertex {
 struct graph {
     int width;
     int height;
-    struct vertex *list_vertices;
+    struct vertex **list_vertices;
     int x_start;
     int y_start;
     int x_dest;
@@ -98,17 +98,20 @@ static void vertex_remove_adj_vertex_node(struct vertex *vertex, struct adj_vert
     }
 }
 
-static struct vertex vertex_new(struct map *map, int x, int y) {
+static struct vertex *vertex_new(struct map *map, int x, int y) {
     assert(map);
 
-    struct vertex vertex;
-    vertex.x = x;
-    vertex.y = y;
-    vertex.distance = INT_MAX;
-    vertex.is_visited = 0;
-    vertex.x_prev = -1;
-    vertex.y_prev = -1;
-    vertex.adj_vertex_head = NULL;
+    struct vertex *vertex = malloc(sizeof(struct vertex));
+
+    assert(vertex);
+
+    vertex->x = x;
+    vertex->y = y;
+    vertex->distance = INT_MAX;
+    vertex->is_visited = 0;
+    vertex->x_prev = -1;
+    vertex->y_prev = -1;
+    vertex->adj_vertex_head = NULL;
 
     if (is_obstacle(map, x, y)) {
         return vertex;
@@ -116,16 +119,12 @@ static struct vertex vertex_new(struct map *map, int x, int y) {
 
     enum direction directions[4] = {NORTH, SOUTH, EAST, WEST};
 
-    struct monster_node *monster = monster_node_new(x, y);
-
     for (int i = 0; i < 4; i++) {
         if (!is_obstacle(map, direction_get_x(directions[i], x, 1), direction_get_y(directions[i], y, 1))) {
             struct adj_vertex_node *adj_vertex = adj_vertex_node_new(direction_get_x(directions[i], x, 1), direction_get_y(directions[i], y, 1));
-            vertex_add_adj_vertex_node(&vertex, adj_vertex);
+            vertex_add_adj_vertex_node(vertex, adj_vertex);
         }
     }
-
-    monster_node_free(monster);
 
     return vertex;
 }
@@ -140,12 +139,21 @@ static void vertex_free(struct vertex *to_free) {
         vertex_remove_adj_vertex_node(to_free, current);
         current = next;
     }
+
+    free(to_free);
 }
 
 static struct vertex *graph_get_vertex(struct graph *graph, int x, int y) {
     assert(graph);
 
-    return &graph->list_vertices[VERTEX(x, y)];
+    return graph->list_vertices[VERTEX(x, y)];
+}
+
+static void graph_set_vertex(struct graph *graph, int x, int y, struct vertex *to_set) {
+    assert(graph);
+    assert(to_set);
+
+    graph->list_vertices[VERTEX(x, y)] = to_set;
 }
 
 static struct graph *graph_new(struct map *map, struct monster_node *monster, struct player *player) {
@@ -160,13 +168,13 @@ static struct graph *graph_new(struct map *map, struct monster_node *monster, st
     graph->width = map_get_width(map);
     graph->height = map_get_height(map);
 
-    graph->list_vertices = malloc(graph->width * graph->height * sizeof(struct vertex));
+    graph->list_vertices = malloc(graph->width * graph->height * sizeof(struct vertex *));
 
     assert(graph->list_vertices);
 
     for (int i = 0; i < graph->width; i++) {
         for (int j = 0; j < graph->height; j++) {
-            graph->list_vertices[VERTEX(i, j)] = vertex_new(map, i, j);
+            graph_set_vertex(graph, i, j, vertex_new(map, i, j));
         }
     }
 
