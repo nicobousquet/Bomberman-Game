@@ -17,18 +17,15 @@ struct vertex {
     int distance;
     int is_visited;
     struct adj_vertex_node *adj_vertex_head;
-    int x_prev;
-    int y_prev;
+    struct vertex *prev_vertex;
 };
 
 struct graph {
     int width;
     int height;
     struct vertex **list_vertices;
-    int x_start;
-    int y_start;
-    int x_dest;
-    int y_dest;
+    struct vertex *start_vertex;
+    struct vertex *dest_vertex;
 };
 
 static int is_obstacle(struct map *map, int x, int y) {
@@ -109,8 +106,7 @@ static struct vertex *vertex_new(struct map *map, int x, int y) {
     vertex->y = y;
     vertex->distance = INT_MAX;
     vertex->is_visited = 0;
-    vertex->x_prev = -1;
-    vertex->y_prev = -1;
+    vertex->prev_vertex = NULL;
     vertex->adj_vertex_head = NULL;
 
     if (is_obstacle(map, x, y)) {
@@ -178,11 +174,8 @@ static struct graph *graph_new(struct map *map, struct monster_node *monster, st
         }
     }
 
-    graph->x_start = monster_node_get_x(monster);
-    graph->y_start = monster_node_get_y(monster);
-
-    graph->x_dest = player_get_x(player);
-    graph->y_dest = player_get_y(player);
+    graph->start_vertex = graph_get_vertex(graph, monster_node_get_x(monster), monster_node_get_y(monster));
+    graph->dest_vertex = graph_get_vertex(graph, player_get_x(player), player_get_y(player));
 
     return graph;
 }
@@ -212,48 +205,45 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
 
             struct graph *graph = graph_new(map, current, player);
 
-            graph_get_vertex(graph, graph->x_start, graph->y_start)->distance = 0;
+            graph->start_vertex->distance = 0;
 
             for (int count = 0; count < graph->width * graph->height; count++) {
 
                 int min_distance = INT_MAX;
-                int x_min = -1;
-                int y_min = -1;
+                struct vertex *min_vertex = NULL;
 
                 for (int i = 0; i < graph->width; i++) {
                     for (int j = 0; j < graph->height; j++) {
                         if (!graph_get_vertex(graph, i, j)->is_visited && graph_get_vertex(graph, i, j)->distance < min_distance) {
-                            min_distance = graph_get_vertex(graph, i, j)->distance;
-                            x_min = i;
-                            y_min = j;
+                            min_vertex = graph_get_vertex(graph, i, j);
+                            min_distance = min_vertex->distance;
                         }
                     }
                 }
 
-                if (x_min == -1 || y_min == -1) {
+                if (min_vertex == NULL) {
                     break;
                 }
 
-                graph_get_vertex(graph, x_min, y_min)->is_visited = 1;
+                min_vertex->is_visited = 1;
 
-                if (x_min == graph->x_dest && y_min == graph->y_dest) {
+                if (min_vertex == graph->dest_vertex) {
                     break;
                 }
 
-                for (struct adj_vertex_node *current_adj = graph_get_vertex(graph, x_min, y_min)->adj_vertex_head; current_adj != NULL; current_adj = current_adj->next) {
+                for (struct adj_vertex_node *current_adj = min_vertex->adj_vertex_head; current_adj != NULL; current_adj = current_adj->next) {
 
-                    if (!graph_get_vertex(graph, current_adj->x, current_adj->y)->is_visited && graph_get_vertex(graph, x_min, y_min)->distance != INT_MAX && graph_get_vertex(graph, x_min, y_min)->distance + 1 < graph_get_vertex(graph, current_adj->x, current_adj->y)->distance) {
+                    if (!graph_get_vertex(graph, current_adj->x, current_adj->y)->is_visited && min_vertex->distance + 1 < graph_get_vertex(graph, current_adj->x, current_adj->y)->distance) {
 
-                        graph_get_vertex(graph, current_adj->x, current_adj->y)->distance = graph_get_vertex(graph, x_min, y_min)->distance + 1;
-                        graph_get_vertex(graph, current_adj->x, current_adj->y)->x_prev = x_min;
-                        graph_get_vertex(graph, current_adj->x, current_adj->y)->y_prev = y_min;
+                        graph_get_vertex(graph, current_adj->x, current_adj->y)->distance = min_vertex->distance + 1;
+                        graph_get_vertex(graph, current_adj->x, current_adj->y)->prev_vertex = min_vertex;
                     }
                 }
             }
 
-            struct vertex *v = graph_get_vertex(graph, graph->x_dest, graph->y_dest);
+            struct vertex *v = graph->dest_vertex;
 
-            if (v->x_prev == -1 || v->y_prev == -1) {
+            if (v->prev_vertex == NULL) {
                 graph_free(graph);
 
                 random_move_monster(map, current, player);
@@ -261,11 +251,11 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
                 continue;
             }
 
-            while (v->x_prev != monster_node_get_x(current) || v->y_prev != monster_node_get_y(current)) {
-                v = graph_get_vertex(graph, v->x_prev, v->y_prev);
+            while (v->prev_vertex != graph->start_vertex) {
+                v = v->prev_vertex;
             }
 
-            enum direction next_dir = direction_get_from_coordinates(graph->x_start, graph->y_start, v->x, v->y);
+            enum direction next_dir = direction_get_from_coordinates(graph->start_vertex->x, graph->start_vertex->y, v->x, v->y);
 
             if (map_can_monster_move(map, player, current, next_dir)) {
                 if (map_will_monster_meet_player(current, player, next_dir)) {
