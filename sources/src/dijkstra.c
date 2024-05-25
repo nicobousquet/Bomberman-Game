@@ -183,10 +183,8 @@ static struct graph *graph_new(struct map *map, struct monster_node *monster, st
 static void graph_free(struct graph *graph) {
     assert(graph);
 
-    for (int i = 0; i < graph->width; i++) {
-        for (int j = 0; j < graph->height; j++) {
-            vertex_free(graph_get_vertex(graph, i, j));
-        }
+    for (int i = 0; i < graph->width * graph->height; i++) {
+        vertex_free(graph->list_vertices[i]);
     }
 
     free(graph->list_vertices);
