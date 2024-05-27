@@ -146,11 +146,8 @@ struct map *map_read(FILE *file) {
 
         map->bomb_head = bomb_node_read(file);
 
-        for (struct bomb_node *current = map->bomb_head; current != NULL; current = bomb_node_get_next(current)) {
-
-            if (bomb_node_get_next(current) != NULL) {
-                bomb_node_set_next(current, bomb_node_read(file));
-            }
+        for (struct bomb_node *current = map->bomb_head; bomb_node_get_next(current) != NULL; current = bomb_node_get_next(current)) {
+            bomb_node_set_next(current, bomb_node_read(file));
         }
     }
 
@@ -158,11 +155,8 @@ struct map *map_read(FILE *file) {
 
         map->monster_head = monster_node_read(file);
 
-        for (struct monster_node *current = map->monster_head; current != NULL; current = monster_node_get_next(current)) {
-
-            if (monster_node_get_next(current) != NULL) {
-                monster_node_set_next(current, monster_node_read(file));
-            }
+        for (struct monster_node *current = map->monster_head; monster_node_get_next(current) != NULL; current = monster_node_get_next(current)) {
+            monster_node_set_next(current, monster_node_read(file));
         }
     }
 
@@ -415,60 +409,55 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
         int x = direction_get_x(dir, bomb_node_get_x(current_bomb), range);
         int y = direction_get_y(dir, bomb_node_get_y(current_bomb), range);
 
-        if (map_is_inside(map, x, y)) {
-
-            unsigned char cell_value = map_get_cell_value(map, x, y);
-
-            if (can_bomb_propagate(cell_value & 0xf0)) {
-
-                struct monster_node *dead_monster = NULL;
-
-                if ((cell_value & 0xf0) == CELL_BOX) {
-                    set_bonus(map, x, y);
-                    bomb_node_set_direction_range(current_bomb, dir, range - 1);
-
-                    return;
-
-                } else if ((cell_value & 0xf0) == CELL_BOMB && cell_value != (CELL_BOMB | EXPLOSING)) {
-
-                    for (struct bomb_node *current = map->bomb_head; current != NULL; current = bomb_node_get_next(current)) {
-                        if (current != current_bomb && bomb_node_get_x(current) == x && bomb_node_get_y(current) == y) {
-                            bomb_node_set_ttl(current, TTL1);
-                            timer_start(bomb_node_get_timer(current), 60);
-                        }
-                    }
-
-                    bomb_node_set_direction_range(current_bomb, dir, range - 1);
-
-                    return;
-
-                } else if (is_explosion_reaching_player(x, y, player)) {
-                    player_dec_num_lives(player);
-                    map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
-                    bomb_node_set_direction_range(current_bomb, dir, range);
-
-                    return;
-
-                } else if ((dead_monster = is_explosion_reaching_monster(x, y, map->monster_head)) != NULL) {
-                    map_remove_monster_node(map, dead_monster);
-                    map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
-                    bomb_node_set_direction_range(current_bomb, dir, range);
-
-                    return;
-
-                } else {
-                    map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
-                }
-
-            } else {
-                bomb_node_set_direction_range(current_bomb, dir, range - 1);
-                return;
-
-            }
-        } else {
+        if (!map_is_inside(map, x, y)) {
             bomb_node_set_direction_range(current_bomb, dir, range - 1);
             return;
+        }
 
+        unsigned char cell_value = map_get_cell_value(map, x, y);
+
+        if (!can_bomb_propagate(cell_value & 0xf0)) {
+            bomb_node_set_direction_range(current_bomb, dir, range - 1);
+            return;
+        }
+
+        struct monster_node *dead_monster = NULL;
+
+        if ((cell_value & 0xf0) == CELL_BOX) {
+            set_bonus(map, x, y);
+            bomb_node_set_direction_range(current_bomb, dir, range - 1);
+
+            return;
+
+        } else if ((cell_value & 0xf0) == CELL_BOMB && cell_value != (CELL_BOMB | EXPLOSING)) {
+
+            for (struct bomb_node *current = map->bomb_head; current != NULL; current = bomb_node_get_next(current)) {
+                if (current != current_bomb && bomb_node_get_x(current) == x && bomb_node_get_y(current) == y) {
+                    bomb_node_set_ttl(current, TTL1);
+                    timer_start(bomb_node_get_timer(current), 60);
+                }
+            }
+
+            bomb_node_set_direction_range(current_bomb, dir, range - 1);
+
+            return;
+
+        } else if (is_explosion_reaching_player(x, y, player)) {
+            player_dec_num_lives(player);
+            map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
+            bomb_node_set_direction_range(current_bomb, dir, range);
+
+            return;
+
+        } else if ((dead_monster = is_explosion_reaching_monster(x, y, map->monster_head)) != NULL) {
+            map_remove_monster_node(map, dead_monster);
+            map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
+            bomb_node_set_direction_range(current_bomb, dir, range);
+
+            return;
+
+        } else {
+            map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
         }
     }
 
@@ -494,15 +483,23 @@ void map_update_bombs(struct map *map, struct player *player) {
 
         timer_update(bomb_node_get_timer(current));
 
-        if (timer_get_state(bomb_node_get_timer(current)) == IS_OVER) {
+        if (timer_get_state(bomb_node_get_timer(current)) != IS_OVER) {
+            current = bomb_node_get_next(current);
+            continue;
+        }
 
-            bomb_node_dec_ttl(current);
+        bomb_node_dec_ttl(current);
 
-            if (bomb_node_get_ttl(current) <= TTL4 && bomb_node_get_ttl(current) >= TTL1) {
+        switch (bomb_node_get_ttl(current)) {
+
+            case TTL4:
+            case TTL3:
+            case TTL2:
+            case TTL1:
                 map_set_cell_value(map, bomb_node_get_x(current), bomb_node_get_y(current), CELL_BOMB | bomb_node_get_ttl(current));
+                break;
 
-            } else if (bomb_node_get_ttl(current) == EXPLOSING) {
-
+            case EXPLOSING:
                 if (is_explosion_reaching_player(bomb_node_get_x(current), bomb_node_get_y(current), player)) {
                     player_dec_num_lives(player);
                 }
@@ -514,15 +511,16 @@ void map_update_bombs(struct map *map, struct player *player) {
                     }
                 }
 
-                map_set_cell_value(map, bomb_node_get_x(current), bomb_node_get_y(current), CELL_BOMB | EXPLOSING);
+                map_set_cell_value(map, bomb_node_get_x(current), bomb_node_get_y(current), CELL_BOMB | bomb_node_get_ttl(current));
 
                 propagate_bomb_explosion(map, player, current, NORTH);
                 propagate_bomb_explosion(map, player, current, SOUTH);
                 propagate_bomb_explosion(map, player, current, EAST);
                 propagate_bomb_explosion(map, player, current, WEST);
 
-            } else {
+                break;
 
+            default:
                 map_set_cell_value(map, bomb_node_get_x(current), bomb_node_get_y(current), CELL_EMPTY);
 
                 clean_explosion_cells(map, current, NORTH);
@@ -535,11 +533,9 @@ void map_update_bombs(struct map *map, struct player *player) {
                 current = next;
 
                 continue;
-            }
-
-            timer_start(bomb_node_get_timer(current), DURATION_BOMB_PERIOD);
         }
 
+        timer_start(bomb_node_get_timer(current), DURATION_BOMB_PERIOD);
         current = bomb_node_get_next(current);
     }
 }

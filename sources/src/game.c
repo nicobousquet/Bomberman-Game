@@ -238,7 +238,7 @@ static void save_game(struct game *game) {
         fclose(file);
 
         printf("#########################################\n");
-        printf("  Current game saved in backup/data.bin\n");
+        printf("  Current game saved in %s\n", FILENAME_BACKUP);
         printf("#########################################\n");
     } else {
         perror("fopen save_game");
