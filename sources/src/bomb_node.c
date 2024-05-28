@@ -10,8 +10,8 @@
 struct bomb_node {
     int x; /**< X-coordinate of the bomb node */
     int y; /**< Y-coordinate of the bomb node */
-    enum bomb_type ttl; /**< Time to live for the bomb node */
-    struct timer *timer; /**< Timer of 1 second */
+    enum bomb_state state; /**< State of the bomb node (INIT, TTL4, TTL3, TTL2, TTL1, EXPLODING, DONE) */
+    struct timer *timer; /**< Timer of the bomb node */
     int north_range; /**< Range of explosion in the north direction */
     int south_range; /**< Range of explosion in the south direction */
     int east_range; /**< Range of explosion in the east direction */
@@ -33,7 +33,7 @@ struct bomb_node *bomb_node_new(int x, int y, int range) {
 
     bomb_node->x = x;
     bomb_node->y = y;
-    bomb_node->ttl = INIT;
+    bomb_node->state = INIT;
     bomb_node->timer = timer_new();
     bomb_node->north_range = 0;
     bomb_node->south_range = 0;
@@ -151,19 +151,19 @@ void bomb_node_set_y(struct bomb_node *bomb_node, int y) {
     bomb_node->y = y;
 }
 
-enum bomb_type bomb_node_get_ttl(struct bomb_node *bomb_node) {
+enum bomb_state bomb_node_get_state(struct bomb_node *bomb_node) {
     assert(bomb_node);
-    return bomb_node->ttl;
+    return bomb_node->state;
 }
 
-void bomb_node_dec_ttl(struct bomb_node *bomb_node) {
+void bomb_node_dec_state(struct bomb_node *bomb_node) {
     assert(bomb_node);
-    bomb_node->ttl--;
+    bomb_node->state--;
 }
 
-void bomb_node_set_ttl(struct bomb_node *bomb_node, enum bomb_type ttl) {
+void bomb_node_set_state(struct bomb_node *bomb_node, enum bomb_state state) {
     assert(bomb_node);
-    bomb_node->ttl = ttl;
+    bomb_node->state = state;
 }
 
 struct timer *bomb_node_get_timer(struct bomb_node *bomb_node) {

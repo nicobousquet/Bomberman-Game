@@ -4,14 +4,14 @@
 /**
  * @brief Enumeration of bomb types.
  */
-enum bomb_type {
+enum bomb_state {
     DONE = -1,
-    EXPLOSING = 0x00, /**< Explosion type. */
-    TTL1 = 0x01, /**< Time-to-live type 1. */
-    TTL2 = 0x02, /**< Time-to-live type 2. */
-    TTL3 = 0x03, /**< Time-to-live type 3. */
-    TTL4 = 0x04, /**< Time-to-live type 4. */
-    INIT = 0x05  /**< Initial time-to-live. */
+    EXPLODING = 0x00, /**< Explosion state. */
+    TTL1 = 0x01, /**< Time-to-live state 1. */
+    TTL2 = 0x02, /**< Time-to-live state 2. */
+    TTL3 = 0x03, /**< Time-to-live state 3. */
+    TTL4 = 0x04, /**< Time-to-live state 4. */
+    INIT = 0x05  /**< Initial state. */
 };
 
 /**

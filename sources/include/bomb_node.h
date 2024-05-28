@@ -93,24 +93,24 @@ void bomb_node_set_x(struct bomb_node *bomb_node, int x);
 void bomb_node_set_y(struct bomb_node *bomb_node, int y);
 
 /**
- * @brief Get the time to live (TTL) of the bomb node.
+ * @brief Get the state of the bomb node.
  * @param bomb_node A pointer to the bomb node.
- * @return The time to live of the bomb node.
+ * @return The state of the bomb node.
  */
-enum bomb_type bomb_node_get_ttl(struct bomb_node *bomb_node);
+enum bomb_state bomb_node_get_state(struct bomb_node *bomb_node);
 
 /**
- * @brief Decrement the time to live (TTL) of the bomb node.
+ * @brief Decrement the state of the bomb node.
  * @param bomb_node A pointer to the bomb node.
  */
-void bomb_node_dec_ttl(struct bomb_node *bomb_node);
+void bomb_node_dec_state(struct bomb_node *bomb_node);
 
 /**
- * @brief Set the time to live (TTL) of the bomb node.
+ * @brief Set the state of the bomb node.
  * @param bomb_node A pointer to the bomb node.
- * @param ttl The time to live to set.
+ * @param state The state to set.
  */
-void bomb_node_set_ttl(struct bomb_node *bomb_node, enum bomb_type ttl);
+void bomb_node_set_state(struct bomb_node *bomb_node, enum bomb_state state);
 
 /**
  * @brief Get the timer of the bomb node.

@@ -102,10 +102,10 @@ SDL_Surface *sprites_get_banner_range(struct sprites *sprites);
 
 /**
  * @brief Get the sprite for a bomb with a specific time to live.
- * @param ttl The time to live of the bomb.
+ * @param bomb_state The state of the bomb.
  * @return The SDL surface for the bomb sprite with the specified time to live.
  */
-SDL_Surface *sprites_get_bomb(struct sprites *sprites, unsigned char ttl);
+SDL_Surface *sprites_get_bomb(struct sprites *sprites, enum bomb_state bomb_state);
 
 /**
  * @brief Get the sprite for a monster in a specific direction.

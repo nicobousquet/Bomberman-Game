@@ -429,11 +429,11 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
 
             return;
 
-        } else if ((cell_value & 0xf0) == CELL_BOMB && cell_value != (CELL_BOMB | EXPLOSING)) {
+        } else if ((cell_value & 0xf0) == CELL_BOMB && cell_value != (CELL_BOMB | EXPLODING)) {
 
             for (struct bomb_node *current = map->bomb_head; current != NULL; current = bomb_node_get_next(current)) {
                 if (current != current_bomb && bomb_node_get_x(current) == x && bomb_node_get_y(current) == y) {
-                    bomb_node_set_ttl(current, TTL1);
+                    bomb_node_set_state(current, TTL1);
                     timer_start(bomb_node_get_timer(current), 60);
                 }
             }
@@ -444,20 +444,20 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
 
         } else if (is_explosion_reaching_player(x, y, player)) {
             player_dec_num_lives(player);
-            map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
+            map_set_cell_value(map, x, y, CELL_BOMB | EXPLODING);
             bomb_node_set_direction_range(current_bomb, dir, range);
 
             return;
 
         } else if ((dead_monster = is_explosion_reaching_monster(x, y, map->monster_head)) != NULL) {
             map_remove_monster_node(map, dead_monster);
-            map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
+            map_set_cell_value(map, x, y, CELL_BOMB | EXPLODING);
             bomb_node_set_direction_range(current_bomb, dir, range);
 
             return;
 
         } else {
-            map_set_cell_value(map, x, y, CELL_BOMB | EXPLOSING);
+            map_set_cell_value(map, x, y, CELL_BOMB | EXPLODING);
         }
     }
 
@@ -488,30 +488,30 @@ void map_update_bombs(struct map *map, struct player *player) {
             continue;
         }
 
-        bomb_node_dec_ttl(current);
+        bomb_node_dec_state(current);
 
-        switch (bomb_node_get_ttl(current)) {
+        switch (bomb_node_get_state(current)) {
 
             case TTL4:
             case TTL3:
             case TTL2:
             case TTL1:
-                map_set_cell_value(map, bomb_node_get_x(current), bomb_node_get_y(current), CELL_BOMB | bomb_node_get_ttl(current));
+                map_set_cell_value(map, bomb_node_get_x(current), bomb_node_get_y(current), CELL_BOMB | bomb_node_get_state(current));
                 break;
 
-            case EXPLOSING:
+            case EXPLODING:
                 if (is_explosion_reaching_player(bomb_node_get_x(current), bomb_node_get_y(current), player)) {
                     player_dec_num_lives(player);
                 }
 
                 for (struct bomb_node *current_bomb = map->bomb_head; current_bomb != NULL; current_bomb = bomb_node_get_next(current_bomb)) {
-                    if (current_bomb != current && bomb_node_get_x(current_bomb) == bomb_node_get_x(current) && bomb_node_get_y(current_bomb) == bomb_node_get_y(current) && bomb_node_get_ttl(current_bomb) != EXPLOSING) {
-                        bomb_node_set_ttl(current_bomb, TTL1);
+                    if (current_bomb != current && bomb_node_get_x(current_bomb) == bomb_node_get_x(current) && bomb_node_get_y(current_bomb) == bomb_node_get_y(current) && bomb_node_get_state(current_bomb) != EXPLODING) {
+                        bomb_node_set_state(current_bomb, TTL1);
                         timer_start(bomb_node_get_timer(current_bomb), 60);
                     }
                 }
 
-                map_set_cell_value(map, bomb_node_get_x(current), bomb_node_get_y(current), CELL_BOMB | bomb_node_get_ttl(current));
+                map_set_cell_value(map, bomb_node_get_x(current), bomb_node_get_y(current), CELL_BOMB | bomb_node_get_state(current));
 
                 propagate_bomb_explosion(map, player, current, NORTH);
                 propagate_bomb_explosion(map, player, current, SOUTH);
@@ -625,7 +625,7 @@ int map_move_player(struct map *map, struct player *player, enum direction direc
             break;
 
         case CELL_BOMB:
-            if ((cell & 0x0f) == EXPLOSING) {
+            if ((cell & 0x0f) == EXPLODING) {
                 player_dec_num_lives(player);
             }
 
