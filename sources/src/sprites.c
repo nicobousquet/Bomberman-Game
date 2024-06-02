@@ -1,5 +1,6 @@
 #include "../include/sprites.h"
 #include "../include/misc.h"
+#include "../include/constant.h"
 #include <assert.h>
 
 #define MAP_CASE           "sprite/wood_box.png"
@@ -65,9 +66,9 @@ struct sprites {
     SDL_Surface *stone;
     SDL_Surface *tree;
     SDL_Surface *bonus[5];
-    SDL_Surface *player_img[4];
+    SDL_Surface *player_img[NUM_DIRECTIONS];
     SDL_Surface *princess;
-    SDL_Surface *monster_img[4];
+    SDL_Surface *monster_img[NUM_DIRECTIONS];
 };
 
 static void bomb_load(struct sprites *sprites) {
@@ -159,7 +160,7 @@ static void player_load(struct sprites *sprites) {
 
 
 static void player_unload(struct sprites *sprites) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < NUM_DIRECTIONS; i++) {
         SDL_FreeSurface(sprites->player_img[i]);
     }
 }
@@ -172,7 +173,7 @@ static void monster_load(struct sprites *sprites) {
 }
 
 static void monster_unload(struct sprites *sprites) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < NUM_DIRECTIONS; i++) {
         SDL_FreeSurface(sprites->monster_img[i]);
     }
 }

@@ -1,4 +1,5 @@
 #include "../include/random.h"
+#include "../include/constant.h"
 #include <assert.h>
 #include <time.h>
 
@@ -15,10 +16,10 @@ void random_move_monster(struct map *map, struct monster_node *monster, struct p
 
         srand(time(NULL) + i++);
 
-        int visited_directions[4] = {0, 0, 0, 0};
+        int visited_directions[NUM_DIRECTIONS] = {0, 0, 0, 0};
         while (visited_directions[NORTH] != 1 || visited_directions[SOUTH] != 1 || visited_directions[EAST] != 1 || visited_directions[WEST] != 1) {
-            enum direction directions[4] = {NORTH, SOUTH, EAST, WEST};
-            enum direction direction = directions[rand() % 4];
+            enum direction directions[NUM_DIRECTIONS] = {NORTH, SOUTH, EAST, WEST};
+            enum direction direction = directions[rand() % NUM_DIRECTIONS];
 
             if (visited_directions[direction] != 1) {
                 if (map_can_monster_move(map, player, monster, direction)) {

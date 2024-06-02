@@ -1,5 +1,6 @@
 #include "../include/dijkstra.h"
 #include "../include/random.h"
+#include "../include/constant.h"
 #include <limits.h>
 #include <assert.h>
 
@@ -113,9 +114,9 @@ static struct vertex *vertex_new(struct map *map, int x, int y) {
         return vertex;
     }
 
-    enum direction directions[4] = {NORTH, SOUTH, EAST, WEST};
+    enum direction directions[NUM_DIRECTIONS] = {NORTH, SOUTH, EAST, WEST};
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < NUM_DIRECTIONS; i++) {
         if (!is_obstacle(map, direction_get_x(directions[i], x, 1), direction_get_y(directions[i], y, 1))) {
             struct adj_vertex_node *adj_vertex = adj_vertex_node_new(direction_get_x(directions[i], x, 1), direction_get_y(directions[i], y, 1));
             vertex_add_adj_vertex_node(vertex, adj_vertex);

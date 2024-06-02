@@ -71,4 +71,9 @@
  */
 #define FILENAME_BACKUP "backup/data.bin"
 
+/**
+ * @brief Number of directions (NORTH, SOUTH, EAST, WEST)
+ */
+#define NUM_DIRECTIONS 4
+
 #endif /* CONSTANT_H */
