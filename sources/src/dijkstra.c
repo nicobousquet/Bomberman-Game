@@ -25,8 +25,6 @@ struct graph {
     int width;
     int height;
     struct vertex **list_vertices;
-    struct vertex *start_vertex;
-    struct vertex *dest_vertex;
 };
 
 static int is_obstacle(struct map *map, int x, int y) {
@@ -175,14 +173,12 @@ static struct graph *graph_new(struct map *map, struct monster_node *monster, st
         }
     }
 
-    graph->start_vertex = graph_get_vertex(graph, monster_node_get_x(monster), monster_node_get_y(monster));
-    graph->dest_vertex = graph_get_vertex(graph, player_get_x(player), player_get_y(player));
-
     return graph;
 }
 
 static void graph_free(struct graph *graph) {
     assert(graph);
+    assert(graph->list_vertices);
 
     for (int i = 0; i < graph->width * graph->height; i++) {
         vertex_free(graph->list_vertices[i]);
@@ -206,7 +202,10 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
 
         struct graph *graph = graph_new(map, current, player);
 
-        graph->start_vertex->distance = 0;
+        struct vertex *start_vertex = graph_get_vertex(graph, monster_node_get_x(current), monster_node_get_y(current));
+        struct vertex *dest_vertex = graph_get_vertex(graph, player_get_x(player), player_get_y(player));
+
+        start_vertex->distance = 0;
 
         for (int count = 0; count < graph->width * graph->height; count++) {
 
@@ -228,7 +227,7 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
 
             min_vertex->is_visited = 1;
 
-            if (min_vertex == graph->dest_vertex) {
+            if (min_vertex == dest_vertex) {
                 break;
             }
 
@@ -242,7 +241,7 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
             }
         }
 
-        struct vertex *v = graph->dest_vertex;
+        struct vertex *v = dest_vertex;
 
         if (v->prev_vertex == NULL) {
             graph_free(graph);
@@ -252,11 +251,11 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
             continue;
         }
 
-        while (v->prev_vertex != graph->start_vertex) {
+        while (v->prev_vertex != start_vertex) {
             v = v->prev_vertex;
         }
 
-        enum direction next_dir = direction_get_from_coordinates(graph->start_vertex->x, graph->start_vertex->y, v->x, v->y);
+        enum direction next_dir = direction_get_from_coordinates(start_vertex->x, start_vertex->y, v->x, v->y);
 
         if (map_can_monster_move(map, player, current, next_dir)) {
             if (map_will_monster_meet_player(current, player, next_dir)) {
