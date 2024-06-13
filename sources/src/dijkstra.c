@@ -233,7 +233,7 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
 
             for (struct adj_vertex_node *current_adj = min_vertex->adj_vertex_head; current_adj != NULL; current_adj = current_adj->next) {
 
-                if (!graph_get_vertex(graph, current_adj->x, current_adj->y)->is_visited && min_vertex->distance + 1 < graph_get_vertex(graph, current_adj->x, current_adj->y)->distance) {
+                if (!graph_get_vertex(graph, current_adj->x, current_adj->y)->is_visited && (min_vertex->distance + 1) < graph_get_vertex(graph, current_adj->x, current_adj->y)->distance) {
 
                     graph_get_vertex(graph, current_adj->x, current_adj->y)->distance = min_vertex->distance + 1;
                     graph_get_vertex(graph, current_adj->x, current_adj->y)->prev_vertex = min_vertex;
