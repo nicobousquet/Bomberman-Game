@@ -41,7 +41,7 @@ struct game *game_new(void) {
     int x_player, y_player;
     char name_pattern[50];
 
-    if (fscanf(data_file, "%i%i:%i,%i%49s", &game->num_levels, &game->current_level, &x_player, &y_player, name_pattern) != 5) {
+    if (fscanf(data_file, "%i\n%i:%i,%i\n%49s", &game->num_levels, &game->current_level, &x_player, &y_player, name_pattern) != 5) {
         perror("Error reading data from game_data.txt");
         exit(EXIT_FAILURE);
     }
@@ -417,10 +417,10 @@ int game_update(struct game *game) {
     if (!game->is_paused) {
         map_update_bombs(map, player);
 
-        if (map_get_monsters_strategy(map) == RANDOM_STRATEGY) {
-            random_update_monsters(map, player);
-        } else {
+        if (map_get_monsters_strategy(map) == DIJKSTRA_STRATEGY) {
             dijkstra_update_monsters(map, player);
+        } else {
+            random_update_monsters(map, player);
         }
     }
 
