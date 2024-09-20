@@ -8,7 +8,7 @@
  * @param width The width of the window.
  * @param height The height of the window.
  */
-struct SDL_Surface *window_create(int width, int height);
+SDL_Surface *window_create(int width, int height);
 
 /**
  * @brief Free the game window.

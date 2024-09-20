@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-struct SDL_Surface *window_create(int width, int height) {
+SDL_Surface *window_create(int width, int height) {
     assert(width > 0 && height > 0);
 
     SDL_WM_SetCaption(WINDOW_NAME, NULL);

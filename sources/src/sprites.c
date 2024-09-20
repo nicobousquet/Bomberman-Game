@@ -281,11 +281,15 @@ SDL_Surface *sprites_get_scenery(struct sprites *sprites, enum scenery_type type
         assert(sprites->stone);
         return sprites->stone;
 
-    } else if (type == SCENERY_TREE) {
+    }
+
+    if (type == SCENERY_TREE) {
         assert(sprites->tree);
         return sprites->tree;
 
-    } else if (type == SCENERY_PRINCESS) {
+    }
+
+    if (type == SCENERY_PRINCESS) {
         assert(sprites->princess);
         return sprites->princess;
     }
@@ -298,7 +302,9 @@ SDL_Surface *sprites_get_door(struct sprites *sprites, enum door_status status) 
     if (status == OPENED) {
         assert(sprites->door_opened);
         return sprites->door_opened;
-    } else if (status == CLOSED) {
+    }
+
+    if (status == CLOSED) {
         assert(sprites->door_closed);
         return sprites->door_closed;
     }

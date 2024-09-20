@@ -107,7 +107,7 @@ void monster_node_set_timer(struct monster_node *monster_node, struct timer *tim
  * @brief Display the sprite of the monster node.
  * @param monster_node A pointer to the monster node.
  */
-void monster_node_display(struct monster_node *monster_node, struct SDL_Surface *window, struct sprites *sprites);
+void monster_node_display(struct monster_node *monster_node, SDL_Surface *window, struct sprites *sprites);
 
 /**
  * @brief Move the monster node.

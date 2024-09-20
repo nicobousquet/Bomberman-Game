@@ -285,7 +285,7 @@ void map_set_cell_value(struct map *map, int x, int y, unsigned char value) {
     map->grid[CELL(x, y)] = value;
 }
 
-void map_display(struct map *map, struct SDL_Surface *window, struct sprites *sprites) {
+void map_display(struct map *map, SDL_Surface *window, struct sprites *sprites) {
     assert(map);
     assert(window);
     assert(sprites);
@@ -429,7 +429,9 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
 
             return;
 
-        } else if ((cell_value & 0xf0) == CELL_BOMB && cell_value != (CELL_BOMB | EXPLODING)) {
+        }
+
+        if ((cell_value & 0xf0) == CELL_BOMB && cell_value != (CELL_BOMB | EXPLODING)) {
 
             for (struct bomb_node *current = map->bomb_head; current != NULL; current = bomb_node_get_next(current)) {
                 if (current != current_bomb && bomb_node_get_x(current) == x && bomb_node_get_y(current) == y) {
@@ -442,23 +444,27 @@ static void propagate_bomb_explosion(struct map *map, struct player *player, str
 
             return;
 
-        } else if (is_explosion_reaching_player(x, y, player)) {
+        }
+
+        if (is_explosion_reaching_player(x, y, player)) {
             player_dec_num_lives(player);
             map_set_cell_value(map, x, y, CELL_BOMB | EXPLODING);
             bomb_node_set_direction_range(current_bomb, dir, range);
 
             return;
 
-        } else if ((dead_monster = is_explosion_reaching_monster(x, y, map->monster_head)) != NULL) {
+        }
+
+        if ((dead_monster = is_explosion_reaching_monster(x, y, map->monster_head)) != NULL) {
             map_remove_monster_node(map, dead_monster);
             map_set_cell_value(map, x, y, CELL_BOMB | EXPLODING);
             bomb_node_set_direction_range(current_bomb, dir, range);
 
             return;
 
-        } else {
-            map_set_cell_value(map, x, y, CELL_BOMB | EXPLODING);
         }
+
+        map_set_cell_value(map, x, y, CELL_BOMB | EXPLODING);
     }
 
     bomb_node_set_direction_range(current_bomb, dir, player_get_range_bombs(player));

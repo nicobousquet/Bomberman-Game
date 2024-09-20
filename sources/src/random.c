@@ -26,10 +26,10 @@ void random_move_monster(struct map *map, struct monster_node *monster, struct p
                     if (map_will_monster_meet_player(monster, player, direction)) {
                         map_monster_meeting_player(monster, player, direction);
                         break;
-                    } else {
-                        monster_node_move(monster, direction);
-                        break;
                     }
+
+                    monster_node_move(monster, direction);
+                    break;
                 }
 
                 visited_directions[direction] = 1;

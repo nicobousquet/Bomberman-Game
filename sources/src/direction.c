@@ -32,14 +32,20 @@ enum direction direction_get_from_coordinates(int x_src, int y_src, int x_dest, 
 
     if (delta_x >= 1 && delta_y == 0) {
         return EAST;
-    } else if (delta_x <= -1 && delta_y == 0) {
-        return WEST;
-    } else if (delta_x == 0 && delta_y <= -1) {
-        return NORTH;
-    } else if (delta_x == 0 && delta_y >= 1) {
-        return SOUTH;
-    } else {
-        perror("No direction");
-        exit(EXIT_FAILURE);
     }
+
+    if (delta_x <= -1 && delta_y == 0) {
+        return WEST;
+    }
+
+    if (delta_x == 0 && delta_y <= -1) {
+        return NORTH;
+    }
+
+    if (delta_x == 0 && delta_y >= 1) {
+        return SOUTH;
+    }
+
+    perror("No direction");
+    exit(EXIT_FAILURE);
 }

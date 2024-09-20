@@ -121,7 +121,7 @@ struct timer *monster_node_get_timer(struct monster_node *monster_node) {
     return monster_node->timer;
 }
 
-void monster_node_display(struct monster_node *monster_node, struct SDL_Surface *window, struct sprites *sprites) {
+void monster_node_display(struct monster_node *monster_node, SDL_Surface *window, struct sprites *sprites) {
     assert(monster_node);
     assert(window);
     assert(sprites);

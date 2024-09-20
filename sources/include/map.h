@@ -150,7 +150,7 @@ void map_set_cell_value(struct map *map, int x, int y, unsigned char value);
  * @brief Display the map on the screen.
  * @param map A pointer to the map.
  */
-void map_display(struct map *map, struct SDL_Surface *window, struct sprites *sprites);
+void map_display(struct map *map, SDL_Surface *window, struct sprites *sprites);
 
 /**
 @brief Set a bomb on the map at the player's current position.
