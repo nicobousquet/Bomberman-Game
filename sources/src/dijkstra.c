@@ -196,7 +196,7 @@ void dijkstra_update_monsters(struct map *map, struct player *player) {
     for (struct monster_node *current = map_get_monster_head(map); current != NULL; current = monster_node_get_next(current)) {
         timer_update(monster_node_get_timer(current));
 
-        if (timer_get_state(monster_node_get_timer(current)) != IS_OVER) {
+        if (timer_is_over(monster_node_get_timer(current)) == 0) {
             continue;
         }
 

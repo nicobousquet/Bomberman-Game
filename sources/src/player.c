@@ -157,7 +157,7 @@ void player_dec_num_lives(struct player *player) {
 
     timer_update(player->timer_invincibility);
 
-    if (player->num_lives > 0 && timer_get_state(player->timer_invincibility) == IS_OVER) {
+    if (player->num_lives > 0 && timer_is_over(player->timer_invincibility) == 1) {
         player->num_lives--;
         timer_start(player->timer_invincibility, DURATION_PLAYER_INVINCIBILITY);
     }

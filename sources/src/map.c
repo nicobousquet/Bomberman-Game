@@ -489,7 +489,7 @@ void map_update_bombs(struct map *map, struct player *player) {
 
         timer_update(bomb_node_get_timer(current));
 
-        if (timer_get_state(bomb_node_get_timer(current)) != IS_OVER) {
+        if (timer_is_over(bomb_node_get_timer(current)) == 0) {
             current = bomb_node_get_next(current);
             continue;
         }

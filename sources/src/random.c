@@ -10,8 +10,7 @@ void random_move_monster(struct map *map, struct monster_node *monster, struct p
 
     timer_update(monster_node_get_timer(monster));
 
-    if (timer_get_state(monster_node_get_timer(monster)) == IS_OVER) {
-
+    if (timer_is_over(monster_node_get_timer(monster)) == 1) {
         static int i = 0;
 
         srand(time(NULL) + i++);

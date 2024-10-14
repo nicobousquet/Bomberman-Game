@@ -8,7 +8,7 @@
  */
 struct timer {
     int duration;          /**< The duration of the timer. */
-    enum state_timer state;/**< The state of the timer. */
+    int is_over; /**< The state of the timer. */
     long start_time;       /**< The start time of the timer. */
     int remaining;         /**< The remaining time of the timer. */
 };
@@ -23,7 +23,7 @@ struct timer *timer_new() {
 
     memset(timer, 0, sizeof(struct timer));
 
-    timer->state = IS_OVER;
+    timer->is_over = 1;
 
     return timer;
 }
@@ -62,7 +62,7 @@ void timer_start(struct timer *timer, int duration) {
 
     timer->duration = duration;
     timer->start_time = SDL_GetTicks();
-    timer->state = RUNNING;
+    timer->is_over = 0;
     timer->remaining = timer->duration;
 }
 
@@ -70,7 +70,7 @@ void timer_update(struct timer *timer) {
     assert(timer);
 
     if ((timer->remaining = timer->duration - (int) (SDL_GetTicks() - timer->start_time)) < 0) {
-        timer->state = IS_OVER;
+        timer->is_over = 1;
     }
 }
 
@@ -89,12 +89,12 @@ void timer_set_start_time(struct timer *timer, long start_time) {
     timer->start_time = start_time;
 }
 
-enum state_timer timer_get_state(struct timer *timer) {
+int timer_is_over(struct timer *timer) {
     assert(timer);
-    return timer->state;
+    return timer->is_over;
 }
 
-void timer_set_state(struct timer *timer, enum state_timer state) {
+void timer_set_is_over(struct timer *timer, int is_over) {
     assert(timer);
-    timer->state = state;
+    timer->is_over = is_over;
 }

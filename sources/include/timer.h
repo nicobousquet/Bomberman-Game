@@ -4,14 +4,6 @@
 #include <stdio.h>
 
 /**
- * @brief Enumeration of timer states.
- */
-enum state_timer {
-    RUNNING = 0, /**< Timer is running. */
-    IS_OVER /**< Timer has finished. */
-};
-
-/**
  * @brief Initialize a timer.
  * @return A pointer to the initialized timer.
  */
@@ -67,9 +59,9 @@ void timer_update(struct timer *timer);
 /**
  * @brief Get the state of the timer.
  * @param timer The timer to get the state from.
- * @return The state of the timer (RUNNING or IS_OVER).
+ * @return The state of the timer (is_over or not).
  */
-enum state_timer timer_get_state(struct timer *timer);
+int timer_is_over(struct timer *timer);
 
 /**
  * @brief Start the timer with a specified duration.

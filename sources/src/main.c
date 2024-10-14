@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         game_display(game);
 
         timer_update(timer);
-        if (timer_get_state(timer) != IS_OVER) {
+        if (timer_is_over(timer) == 0) {
             SDL_Delay(timer_get_remaining(timer));
         }
     }
