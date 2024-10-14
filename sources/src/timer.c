@@ -8,7 +8,7 @@
  */
 struct timer {
     int duration;          /**< The duration of the timer. */
-    int is_over; /**< The state of the timer. */
+    int is_over;           /**< The state of the timer. */
     long start_time;       /**< The start time of the timer. */
     int remaining;         /**< The remaining time of the timer. */
 };
