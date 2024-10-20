@@ -31,7 +31,7 @@ struct game *game_new(void) {
 
     memset(game, 0, sizeof(struct game));
 
-    FILE *data_file = fopen("data/game_data.txt", "r");
+    FILE *data_file = fopen(GAME_DATA_FILE, "r");
 
     if (!data_file) {
         perror("fopen data file");
@@ -46,6 +46,8 @@ struct game *game_new(void) {
         exit(EXIT_FAILURE);
     }
 
+    fclose(data_file);
+
     game->player = player_new(x_player, y_player, NUM_BOMBS_MAX);
     game->is_paused = 0;
     game->sprites = sprites_new();
@@ -59,7 +61,7 @@ struct game *game_new(void) {
     char map_filename[100];
 
     for (int i = 0; i < game->num_levels; i++) {
-        snprintf(map_filename, sizeof(map_filename), "maps/%s_%i", name_pattern, i);
+        snprintf(map_filename, sizeof(map_filename), "%s/%s_%i", MAPS_FOLDER, name_pattern, i);
         game->list_maps[i] = map_new(map_filename);
     }
 
@@ -230,7 +232,7 @@ static void change_current_level(struct game *game, int level) {
 static void save_game(struct game *game) {
     assert(game);
 
-    FILE *file = fopen(FILENAME_BACKUP, "wb");
+    FILE *file = fopen(BACKUP_FILE, "wb");
 
     if (file) {
         game_write(game, file);
@@ -238,7 +240,7 @@ static void save_game(struct game *game) {
         fclose(file);
 
         printf("#########################################\n");
-        printf("  Current game saved in %s\n", FILENAME_BACKUP);
+        printf("  Current game saved in %s\n", BACKUP_FILE);
         printf("#########################################\n");
     } else {
         perror("fopen save_game");

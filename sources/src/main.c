@@ -13,12 +13,12 @@ int main(int argc, char *argv[]) {
 
     struct game *game = NULL;
 
-    FILE *backup_file = fopen(FILENAME_BACKUP, "rb");
+    FILE *backup_file = fopen(BACKUP_FILE, "rb");
 
     if (backup_file) {
         game = game_read(backup_file);
         fclose(backup_file);
-        remove(FILENAME_BACKUP);
+        remove(BACKUP_FILE);
     } else {
         game = game_new();
     }

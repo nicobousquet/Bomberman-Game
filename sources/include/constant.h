@@ -69,7 +69,17 @@
 /**
  * @brief File where game is saved.
  */
-#define FILENAME_BACKUP "backup/data.bin"
+#define BACKUP_FILE "backup/data.bin"
+
+/**
+ * @brief File where game data are stored for the initialization of the game.
+ */
+#define GAME_DATA_FILE "data/game_data.txt"
+
+/**
+ * @brief File where maps' data are stored for the initialization of the game.
+ */
+#define MAPS_FOLDER "maps"
 
 /**
  * @brief Number of directions (NORTH, SOUTH, EAST, WEST)
